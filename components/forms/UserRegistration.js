@@ -21,7 +21,7 @@ const UserRegistration = () => {
   const [msg, setMsg] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     dispatch(setPageTitle('VetEZ - Registration'));
