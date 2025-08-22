@@ -1,8 +1,11 @@
 import AuthLayout from '@/components/layouts/AuthLayout';
+import ForgotPasswordForm from '@/components/forms/ForgotPasswordForm';
 
 const ForgotPassword = () => {
   return (
-    <AuthLayout title="Ineeda - Forgot Password">ForgotPassword</AuthLayout>
+    <AuthLayout title="VetEZ - Forgot Password">
+      <ForgotPasswordForm />
+    </AuthLayout>
   );
 };
 
