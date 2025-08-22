@@ -5,28 +5,28 @@ import { object, string } from 'yup';
 import { useRouter } from 'next/router';
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { useDispatch, useSelector } from 'react-redux';
-import { currentUser, loginUser, verifyUser } from '@/store/slices/authSlice';
+import {
+  loginUser,
+  verifyOtpToUser,
+  sendOtpToUser,
+} from '@/store/slices/authSlice';
 import Button from '../FormInputs/Button';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { CutIcon } from '@/components/icons/SvgIcons';
-import { showAlert, getBrowserName, getOS, getPlatform } from '@/utils';
-import { seed } from '@/helpers/sessionHelper';
+import { getBrowserName, getOS, getPlatform } from '@/utils';
 import { FaRegUser } from 'react-icons/fa';
 import { GoLock } from 'react-icons/go';
-
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-
-import { auth } from '@/firebase/firebase';
-import SignInwithGoogle from './LoginWithGoogle';
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
+  const { uid } = useSelector((state) => state.auth);
   const [error, setError] = useState(null);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const dispatch = useDispatch();
   const [eye, setEye] = useState(false);
   const [capsLockOn, setCapsLockOn] = useState(false);
   const deviceModel = `${getOS()}-${getPlatform()} ${getBrowserName()}`;
-  const formikRef = useRef(null); // 🔑 Store Formik helpers
+  const formikRef = useRef(null);
 
   const rememberInfo = getCookie('rememberInfo');
   let isRemember = rememberInfo && JSON.parse(rememberInfo);
@@ -41,8 +41,14 @@ const LoginForm = () => {
 
   // Validators
   const loginValidationSchema = object().shape({
-    email: string().email('Invalid email').required('Email is required'),
-    password: string().required('Password is required'),
+    email: string()
+      .required('Email is required.')
+      .matches(
+        /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
+        'Invalid email address format'
+      )
+      .email('Invalid email address.'),
+    password: string().required('Password is required.'),
   });
 
   const otpValidationSchema = object().shape({
@@ -65,9 +71,11 @@ const LoginForm = () => {
     const { values, validateForm, setTouched, setSubmitting } =
       formikRef.current;
 
-    const validationErrors = await validateForm();
+    setSubmitting(true);
+    console.log(' >> handleLogin >> ', values);
 
-    // Only care about errors in login-related fields
+    // validate form
+    const validationErrors = await validateForm();
     const loginFields = ['email', 'password'];
     const hasLoginErrors = loginFields.some((field) => validationErrors[field]);
 
@@ -77,37 +85,34 @@ const LoginForm = () => {
       return;
     }
 
+    // prepare data
     const userPass = {
       email: values.email,
       password: values.password,
       rememberMe: values.rememberMe,
     };
-    console.log('Login Values:', userPass);
+
+    // rememberMe cookie
     if (values.rememberMe.length > 0 && values.rememberMe[0] === 'remember') {
       const options = { sameSite: 'Lax', path: '/' };
       setCookie('rememberInfo', userPass, options);
     } else {
       deleteCookie('rememberInfo');
     }
+
     setError('');
     try {
-      setSubmitting(true);
-      const postBody = {
-        email: values.email,
-        password: values.password,
-      };
+      const postBody = { email: values.email, password: values.password };
       const response = await dispatch(loginUser(postBody)).unwrap();
-      if (response?.success) {
-        console.log('Login-success');
-        setSubmitting(false);
-        setIsOtpSent(true);
-      } else {
-        showAlert('You are not authorized', 'error');
-      }
-    } catch (error) {
-      setError(error.message);
-      setSubmitting(false);
-      showAlert(error.message, 'error');
+      await dispatch(
+        sendOtpToUser({ id: response.uid, email: values.email })
+      ).unwrap();
+
+      setIsOtpSent(true);
+      toast.success('OTP sent. Please verify to continue.');
+    } catch (err) {
+      console.error('Login failed:', err);
+      toast.error(err || 'Invalid email or password');
     } finally {
       setSubmitting(false);
     }
@@ -118,6 +123,7 @@ const LoginForm = () => {
   };
 
   const handleOtpSubmission = async () => {
+    setError('');
     const { values, validateForm, setTouched, setSubmitting } =
       formikRef.current;
 
@@ -129,30 +135,21 @@ const LoginForm = () => {
       return;
     }
 
-    console.log('OTP Values:', values.otp);
-
     try {
       setSubmitting(true);
       const postBody = {
-        email: values.email,
+        id: uid,
         otp: values.otp,
       };
-
-      const response = await dispatch(verifyUser(postBody)).unwrap();
-      if (response?.success) {
-        console.log('verification-successful');
-        await dispatch(currentUser()).unwrap();
-        showAlert(response?.message, 'success');
-        setTimeout(() => {
-          window.location.replace('/');
-        }, 500);
-      } else {
-        showAlert('You are not authorized', 'error');
-      }
+      await dispatch(verifyOtpToUser(postBody)).unwrap();
+      toast.success('OTP verified successfully');
+      setTimeout(() => {
+        window.location.replace('/');
+      }, 500);
     } catch (error) {
-      setError(error.message);
+      setError(error);
       setSubmitting(false);
-      showAlert(error.message, 'error');
+      toast.error(error);
     } finally {
       setSubmitting(false);
     }
@@ -291,8 +288,9 @@ const LoginForm = () => {
 
             {!isOtpSent && (
               <div className="mt-5">
-                <div className="flex justify-between">
-                  <label className="cursor-pointer">
+                <div className="flex items-center justify-between">
+                  {/* Remember Me */}
+                  <label className="flex cursor-pointer items-center gap-2">
                     <Field
                       type="checkbox"
                       className="form-checkbox"
@@ -301,6 +299,14 @@ const LoginForm = () => {
                     />
                     <span className="text-white">Remember me</span>
                   </label>
+
+                  {/* Forgot Password */}
+                  <a
+                    href="/forgot-password"
+                    className="font-bold text-green-400 hover:no-underline"
+                  >
+                    Forgot Password?
+                  </a>
                 </div>
               </div>
             )}
@@ -309,7 +315,7 @@ const LoginForm = () => {
               <Button
                 type="button"
                 loading={isSubmitting}
-                onClick={handleGoogleLogin}
+                onClick={isOtpSent ? handleOtpSubmission : handleLogin}
               >
                 {isOtpSent ? 'Submit OTP' : 'Sign In'}
               </Button>
@@ -320,7 +326,7 @@ const LoginForm = () => {
                 <Button
                   type="button"
                   loading={isSubmitting}
-                  onClick={isOtpSent ? handleOtpSubmission : handleLogin}
+                  onClick={handleGoogleLogin}
                   className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-800 hover:bg-gray-100"
                 >
                   {/* Google Icon */}
