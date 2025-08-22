@@ -6,8 +6,16 @@ export const login = (payload) => {
   });
 };
 
-export const verifyPortalUser = (payload) => {
-  return ApiService.post(`/auth/verify-user`, payload, { noAuth: true }).then(
+export const sendOtp = (payload) => {
+  return ApiService.post(`/users/sent-otp`, payload, { noAuth: true }).then(
+    (res) => {
+      return res;
+    }
+  );
+};
+
+export const verifyOtp = (payload) => {
+  return ApiService.post(`/users/verify-otp`, payload, { noAuth: true }).then(
     (res) => {
       return res;
     }
