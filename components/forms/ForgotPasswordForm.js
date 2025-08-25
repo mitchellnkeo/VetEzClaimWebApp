@@ -30,9 +30,7 @@ const ForgotPasswordForm = () => {
       setLoading(true);
       await sendPasswordResetEmail(auth, email);
 
-      toast.success(`Reset link sent to: ${email}`, {
-        position: 'top-center',
-      });
+      toast.success(`Reset link sent to: ${email}`);
     } catch (error) {
       console.log('Reset password error =>', error);
       if (error.code === 'auth/user-not-found') {
@@ -40,9 +38,7 @@ const ForgotPasswordForm = () => {
       } else if (error.code === 'auth/invalid-email') {
         toast.error(`Invalid Email`);
       } else {
-        toast.error(`Something went wrong.`, {
-          position: 'top-center',
-        });
+        toast.error(`Something went wrong.`);
       }
     } finally {
       setLoading(false);
