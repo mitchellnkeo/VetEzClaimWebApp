@@ -2,13 +2,13 @@ import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { object, string } from 'yup';
-import { useRouter } from 'next/router';
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loginUser,
   verifyOtpToUser,
   sendOtpToUser,
+  googleLogin,
 } from '@/store/slices/authSlice';
 import Button from '../FormInputs/Button';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
@@ -27,6 +27,7 @@ const LoginForm = () => {
   const [capsLockOn, setCapsLockOn] = useState(false);
   const deviceModel = `${getOS()}-${getPlatform()} ${getBrowserName()}`;
   const formikRef = useRef(null);
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
 
   const rememberInfo = getCookie('rememberInfo');
   let isRemember = rememberInfo && JSON.parse(rememberInfo);
@@ -119,7 +120,19 @@ const LoginForm = () => {
   };
 
   const handleGoogleLogin = async () => {
-    // implement later
+    setLoadingGoogle(true);
+    try {
+      const result = await dispatch(googleLogin()).unwrap();
+      toast.success('Login Success!');
+      setTimeout(() => {
+        window.location.replace('/');
+      }, 500);
+      console.log('User:', result);
+    } catch (err) {
+      toast.error(err || 'Authentication failed!');
+    } finally {
+      setLoadingGoogle(false);
+    }
   };
 
   const handleOtpSubmission = async () => {
@@ -325,35 +338,39 @@ const LoginForm = () => {
               <div className="mt-4">
                 <Button
                   type="button"
-                  loading={isSubmitting}
+                  disabled={loadingGoogle}
                   onClick={handleGoogleLogin}
                   className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-800 hover:bg-gray-100"
                 >
-                  {/* Google Icon */}
-                  <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 533.5 544.3"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M533.5 278.4c0-18.9-1.5-37-4.4-54.6H272.1v103.5h147.6c-6.4 34.5-25.4 63.7-54.3 83.3v69.3h87.5c51.2-47.2 80.6-116.5 80.6-201.5z"
-                      fill="#4285F4"
-                    />
-                    <path
-                      d="M272.1 544.3c73.7 0 135.6-24.5 180.8-66.5l-87.5-69.3c-24.3 16.3-55.2 25.9-93.3 25.9-71.7 0-132.5-48.4-154.1-113.4H30.1v71.3c45.5 89.6 137.5 152 242 152z"
-                      fill="#34A853"
-                    />
-                    <path
-                      d="M118 321.4c-10.6-31.6-10.6-65.7 0-97.3V152.8H30.1c-43.1 84.3-43.1 184.7 0 269l87.9-69.4z"
-                      fill="#FBBC05"
-                    />
-                    <path
-                      d="M272.1 107.8c38.8 0 73.4 13.3 100.9 39.4l75.5-75.5C408.1 24.5 346.2 0 272.1 0 167.6 0 75.5 62.4 30.1 152.8l87.9 71.3c21.6-65 82.4-113.4 154.1-113.4z"
-                      fill="#EA4335"
-                    />
-                  </svg>
-
-                  <span>Continue with Google</span>
+                  {loadingGoogle ? (
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-gray-600 border-t-transparent"></span>
+                  ) : (
+                    <>
+                      <svg
+                        className="h-5 w-5"
+                        viewBox="0 0 533.5 544.3"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M533.5 278.4c0-18.9-1.5-37-4.4-54.6H272.1v103.5h147.6c-6.4 34.5-25.4 63.7-54.3 83.3v69.3h87.5c51.2-47.2 80.6-116.5 80.6-201.5z"
+                          fill="#4285F4"
+                        />
+                        <path
+                          d="M272.1 544.3c73.7 0 135.6-24.5 180.8-66.5l-87.5-69.3c-24.3 16.3-55.2 25.9-93.3 25.9-71.7 0-132.5-48.4-154.1-113.4H30.1v71.3c45.5 89.6 137.5 152 242 152z"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M118 321.4c-10.6-31.6-10.6-65.7 0-97.3V152.8H30.1c-43.1 84.3-43.1 184.7 0 269l87.9-69.4z"
+                          fill="#FBBC05"
+                        />
+                        <path
+                          d="M272.1 107.8c38.8 0 73.4 13.3 100.9 39.4l75.5-75.5C408.1 24.5 346.2 0 272.1 0 167.6 0 75.5 62.4 30.1 152.8l87.9 71.3c21.6-65 82.4-113.4 154.1-113.4z"
+                          fill="#EA4335"
+                        />
+                      </svg>
+                      <span>Continue with Google</span>
+                    </>
+                  )}
                 </Button>
               </div>
             )}

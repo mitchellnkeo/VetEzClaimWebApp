@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { signInWithEmailAndPassword, deleteUser } from 'firebase/auth';
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
-import { auth, db } from '@/firebase/firebase';
+import { auth, db, provider } from '@/firebase/firebase';
 import { sendOtp, verifyOtp } from '@/services/auth';
 import { seed, deltCookie } from '@/helpers/sessionHelper';
+import { signInWithPopup, signOut } from 'firebase/auth';
 
 export const loginUser = createAsyncThunk(
   'auth/login',
@@ -50,6 +51,7 @@ export const loginUser = createAsyncThunk(
       }
       return { uid, profileData };
     } catch (error) {
+      console.log('Login Error : >> ', error);
       let errorMsg = error.message;
       if (
         error.message === 'Invalid email or password.' ||
@@ -71,6 +73,87 @@ export const loginUser = createAsyncThunk(
       }
 
       return rejectWithValue(errorMsg || 'Login failed');
+    }
+  }
+);
+
+export const googleLogin = createAsyncThunk(
+  'auth/googleLogin',
+  async (_, { rejectWithValue }) => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      if (!user) {
+        return rejectWithValue('No user found');
+      }
+
+      const profileRef = doc(db, 'profile', user.uid);
+      const profileSnap = await getDoc(profileRef);
+      const profileData = profileSnap.data();
+
+      if (
+        profileData?.isDeactivated ||
+        (profileData?.deletionDate && profileData.deletionDate.length > 0)
+      ) {
+        if (profileData.isDeactivated) {
+          await signOut(auth);
+          return rejectWithValue('Your account is deactivated.');
+        } else {
+          const delDate = profileData.deletionDate.slice(3, 5);
+          const deletionMonth = profileData.deletionDate.slice(0, 2);
+          const todaysDate = new Date().getDate().toString();
+          const currentMonth = new Date().getMonth() + 1;
+          const currentMonthStr =
+            currentMonth < 10 ? `0${currentMonth}` : currentMonth.toString();
+
+          if (todaysDate === delDate && deletionMonth === currentMonthStr) {
+            await deleteDoc(profileRef);
+            await user.delete();
+            await signOut(auth);
+            return rejectWithValue('Invalid email or password.');
+          } else {
+            await signOut(auth);
+            return rejectWithValue('Your account is scheduled for deletion.');
+          }
+        }
+      } else if (!profileData) {
+        await deleteDoc(profileRef);
+        await user.delete();
+        await signOut(auth);
+        return rejectWithValue('Register with email and password first.');
+      }
+      seed(user.uid);
+      return {
+        uid: user.uid,
+        email: user.email,
+        profile: profileData,
+        accessToken: user.uid,
+      };
+    } catch (error) {
+      let errorMsg = error.message;
+      if (
+        error.message === 'Invalid email or password.' ||
+        error.code === 'auth/user-not-found' ||
+        error.code === 'auth/invalid-credential' ||
+        error.code === 'auth/wrong-password' ||
+        error.code === 'auth/invalid-email' ||
+        error.code === 'auth/missing-password'
+      ) {
+        errorMsg = `Invalid email or password.`;
+      } else if (error.code === 'auth/user-disabled') {
+        errorMsg = `Your account is disabled.`;
+      } else if (error.code === 'auth/network-request-failed') {
+        errorMsg = `Check your internet connection.`;
+      } else if (error.code === 'auth/user-disabled') {
+        errorMsg = `Your account is disabled.`;
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        errorMsg = `Authentication failed.`;
+      } else {
+        errorMsg = `Something went wrong.`;
+      }
+
+      return rejectWithValue(errorMsg || 'Authentication failed.');
     }
   }
 );
@@ -167,6 +250,25 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isLoggedIn = false;
       state.error = action.payload;
+    });
+
+    // google login
+    builder.addCase(googleLogin.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(googleLogin.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isLoggedIn = true;
+      state.uid = action.payload.uid;
+      state.user = action.payload.profileData;
+      state.accessToken = action.payload.accessToken;
+      state.error = null;
+    });
+    builder.addCase(googleLogin.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isLoggedIn = false;
+      state.error = action.payload || 'Login failed';
     });
   },
 });
