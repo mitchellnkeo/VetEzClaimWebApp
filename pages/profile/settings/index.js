@@ -4,6 +4,7 @@ import { setPageTitle } from '../../../store/slices/themeConfigSlice';
 import { useDispatch } from 'react-redux';
 import FrontLayout from '@/components/layouts/FrontLayout';
 import UpdateProfileForm from '@/components/forms/UpdateProfile';
+import { useSelector } from 'react-redux';
 import ChangePasswordForm from '@/components/forms/ChangePassword';
 import {
   AccountUpdateIcon,
@@ -12,6 +13,7 @@ import {
 
 const AccountSetting = () => {
   const dispatch = useDispatch();
+  const { user, uid } = useSelector((state) => state.auth);
   useEffect(() => {
     dispatch(setPageTitle('Account Setting'));
   });
@@ -39,6 +41,34 @@ const AccountSetting = () => {
             User Account Settings
           </h5>
         </div>
+        <div className="mb-5 rounded-md border border-[#ebedf2] bg-white p-4 dark:border-[#191e3a] dark:bg-black">
+          {/* Row 1 */}
+          <div className="mb-4 grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm font-bold text-gray-500">Name</p>
+              <p className="font-semibold">
+                {user.firstName} {user.lastName}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-500">Birth Date</p>
+              <p className="font-semibold">{user.birthday}</p>
+            </div>
+          </div>
+
+          {/* Row 2 */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm font-bold text-gray-500">Email</p>
+              <p className="font-semibold">{user.email}</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-500">Phone Number</p>
+              <p className="font-semibold">{user.phone}</p>
+            </div>
+          </div>
+        </div>
+
         <div>
           <ul className="mb-5 overflow-y-auto whitespace-nowrap border-b border-[#ebedf2] font-semibold dark:border-[#191e3a] sm:flex">
             <li className="inline-block">

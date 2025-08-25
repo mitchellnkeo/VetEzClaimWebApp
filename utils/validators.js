@@ -197,3 +197,40 @@ export const SignUpValidationSchema = yup.object().shape({
     .oneOf([true], 'You need to agree to receive mails regarding updates.')
     .required('You need to agree to receive mails regarding updates.'),
 });
+
+export const profileValidation = yup.object().shape({
+  firstName: firstNameValidation,
+  lastName: lastNameValidation,
+  dob: yup.string().required('Date of Birth is required'),
+  phone: yup
+    .string()
+    .matches(
+      /^\d{3}-\d{3}-\d{4}$/,
+      'Phone number must be in the format xxx-xxx-xxxx.'
+    )
+    .required('Phone Number is required.'),
+  ssn: ssnValidation,
+  branchOfService: yup.string().required('Branch of Service is required.'),
+  accountType: yup.string(),
+  routingNo: yup.string(),
+  accountNo: yup.string(),
+  financialInstitution: yup.string(),
+  street: validStreetCharacters.required('Street is required'),
+  unitNumber: unitNumberValidation,
+  city: yup
+    .string()
+    .matches(cityRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true,
+    })
+    .required('City is required'),
+  province: yup
+    .string()
+    .matches(validCharactersRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true,
+    })
+    .required('Province is required'),
+  country: yup.string().required('Country is required'),
+  zipCode: zipCodeValidation,
+});
