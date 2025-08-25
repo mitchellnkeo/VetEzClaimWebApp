@@ -91,7 +91,6 @@ export const googleLogin = createAsyncThunk(
       const profileRef = doc(db, 'profile', user.uid);
       const profileSnap = await getDoc(profileRef);
       const profileData = profileSnap.data();
-
       if (
         profileData?.isDeactivated ||
         (profileData?.deletionDate && profileData.deletionDate.length > 0)
@@ -127,10 +126,11 @@ export const googleLogin = createAsyncThunk(
       return {
         uid: user.uid,
         email: user.email,
-        profile: profileData,
+        profileData: profileData,
         accessToken: user.uid,
       };
     } catch (error) {
+      console.log('err >> ', error);
       let errorMsg = error.message;
       if (
         error.message === 'Invalid email or password.' ||
@@ -147,7 +147,10 @@ export const googleLogin = createAsyncThunk(
         errorMsg = `Check your internet connection.`;
       } else if (error.code === 'auth/user-disabled') {
         errorMsg = `Your account is disabled.`;
-      } else if (error.code === 'auth/popup-closed-by-user') {
+      } else if (
+        error.code === 'auth/popup-closed-by-user' ||
+        error.code === 'auth/user-cancelled'
+      ) {
         errorMsg = `Authentication failed.`;
       } else {
         errorMsg = `Something went wrong.`;

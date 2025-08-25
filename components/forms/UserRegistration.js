@@ -14,6 +14,7 @@ import { SignUpValidationSchema } from '@/utils/validators';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
 import moment from 'moment';
+import DateSelector from '../Common/DateSelector';
 
 const UserRegistration = () => {
   const router = useRouter();
@@ -177,18 +178,16 @@ const UserRegistration = () => {
             <div className="m-1 flex gap-4">
               <div className="flex-1">
                 <label htmlFor="dob">Date of Birth</label>
-                <Field
-                  id="dob"
+                <DateSelector
                   name="dob"
-                  className="form-input w-full"
-                  placeholder="MM/DD/YYYY"
-                  type="text"
-                  maxLength={10}
-                />
-                <ErrorMessage
-                  name="dob"
-                  component="div"
-                  className="mt-1 text-danger"
+                  label="Date of Birth"
+                  value={values.dob}
+                  placeholder="XXXX"
+                  onChange={(val) => {
+                    setFieldValue('dob', val);
+                  }}
+                  errorMessage={errors.dob}
+                  isDOB={true}
                 />
               </div>
 
