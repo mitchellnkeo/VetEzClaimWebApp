@@ -1313,7 +1313,7 @@ export const ReloadIcon = ({ height, width }) => {
     </>
   );
 };
-export const DashboardIcon = ({
+export const DashboardIcon1 = ({
   height = '20',
   width = '20',
   opacity = '0.5',
@@ -1903,5 +1903,97 @@ export const ReportIcon = ({ height = '20', width = '20' }) => {
         />
       </svg>
     </>
+  );
+};
+
+// icons.js
+
+export const DashboardIcon = ({
+  height = '20',
+  width = '20',
+  className = '',
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+    >
+      <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+    </svg>
+  );
+};
+export const FormsIcon = ({ height = '20', width = '20', className = '' }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+    >
+      <path d="M4 4h16v2H4V4zm0 4h10v2H4V8zm0 4h16v2H4v-2zm0 4h10v2H4v-2z" />
+    </svg>
+  );
+};
+
+export const SubscriptionIcon = ({
+  height = '20',
+  width = '20',
+  className = '',
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+    >
+      <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.93V17h-2v-.07a8.001 8.001 0 010-15.86V7h2V2.07a8.001 8.001 0 010 15.86z" />
+    </svg>
+  );
+};
+
+export const HistoryIcon = ({
+  height = '20',
+  width = '20',
+  className = '',
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+    >
+      <path d="M13 3a9 9 0 100 18 9 9 0 000-18zm0 2a7 7 0 110 14 7 7 0 010-14zm-.5 3v5l4 2 .75-1.23-3.25-1.77V8H12.5z" />
+    </svg>
+  );
+};
+
+export const InProgressIcon = ({
+  height = '20',
+  width = '20',
+  className = '',
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+    >
+      <path d="M12 2v2a8 8 0 11-8 8H2C2 6.48 6.48 2 12 2zm0 20c-5.52 0-10-4.48-10-10h2a8 8 0 1016 0h2c0 5.52-4.48 10-10 10z" />
+    </svg>
   );
 };
