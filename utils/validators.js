@@ -171,7 +171,7 @@ export const SignUpValidationSchema = yup.object().shape({
     .string()
     .required('Confirm Password is required.')
     .oneOf([yup.ref('password'), ''], "Password didn't match."),
-  dob: yup
+  birthday: yup
     .string()
     .required('Birthdate is required.')
     .matches(
@@ -201,7 +201,7 @@ export const SignUpValidationSchema = yup.object().shape({
 export const profileValidation = yup.object().shape({
   firstName: firstNameValidation,
   lastName: lastNameValidation,
-  dob: yup.string().required('Date of Birth is required'),
+  birthday: yup.string().required('Date of Birth is required'),
   phone: yup
     .string()
     .matches(
@@ -211,10 +211,6 @@ export const profileValidation = yup.object().shape({
     .required('Phone Number is required.'),
   ssn: ssnValidation,
   branchOfService: yup.string().required('Branch of Service is required.'),
-  accountType: yup.string(),
-  routingNo: yup.string(),
-  accountNo: yup.string(),
-  financialInstitution: yup.string(),
   street: validStreetCharacters.required('Street is required'),
   unitNumber: unitNumberValidation,
   city: yup
@@ -233,4 +229,5 @@ export const profileValidation = yup.object().shape({
     .required('Province is required'),
   country: yup.string().required('Country is required'),
   zipCode: zipCodeValidation,
+  signature: yup.string().required('Signature is required'),
 });

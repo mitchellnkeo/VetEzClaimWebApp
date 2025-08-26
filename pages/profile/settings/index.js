@@ -10,10 +10,12 @@ import {
   AccountUpdateIcon,
   ChangePasswordIcon,
 } from '@/components/icons/SvgIcons';
+import Loader from '@/components/Common/Loader';
 
 const AccountSetting = () => {
   const dispatch = useDispatch();
   const { user, uid } = useSelector((state) => state.auth);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     dispatch(setPageTitle('Account Setting'));
   });
@@ -40,33 +42,6 @@ const AccountSetting = () => {
           <h5 className="text-lg font-semibold dark:text-white-light">
             User Account Settings
           </h5>
-        </div>
-        <div className="mb-5 rounded-md border border-[#ebedf2] bg-white p-4 dark:border-[#191e3a] dark:bg-black">
-          {/* Row 1 */}
-          <div className="mb-4 grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-bold text-gray-500">Name</p>
-              <p className="font-semibold">
-                {user.firstName} {user.lastName}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-bold text-gray-500">Birth Date</p>
-              <p className="font-semibold">{user.birthday}</p>
-            </div>
-          </div>
-
-          {/* Row 2 */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-bold text-gray-500">Email</p>
-              <p className="font-semibold">{user.email}</p>
-            </div>
-            <div>
-              <p className="text-sm font-bold text-gray-500">Phone Number</p>
-              <p className="font-semibold">{user.phone}</p>
-            </div>
-          </div>
         </div>
 
         <div>

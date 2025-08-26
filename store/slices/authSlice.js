@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { signInWithEmailAndPassword, deleteUser } from 'firebase/auth';
-import { doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { auth, db, provider } from '@/firebase/firebase';
 import { sendOtp, verifyOtp } from '@/services/auth';
 import { seed, deltCookie } from '@/helpers/sessionHelper';
@@ -204,6 +204,21 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+export const updateProfile = createAsyncThunk(
+  'auth/update',
+  async (profileData, { rejectWithValue }) => {
+    try {
+      const docRef = doc(db, 'profile', profileData.uid);
+      await updateDoc(docRef, { ...profileData });
+
+      return profileData; // this will be used to update state.user
+    } catch (error) {
+      // console.error('error while updating profile', error);
+      return rejectWithValue(error.message || 'Profile update failed');
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -272,6 +287,21 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isLoggedIn = false;
       state.error = action.payload || 'Login failed';
+    });
+
+    // update profile
+    builder.addCase(updateProfile.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateProfile.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateProfile.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = 'Update failed';
     });
   },
 });
