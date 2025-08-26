@@ -295,3 +295,142 @@ export const StateData = [
     selected: false,
   },
 ];
+
+export const branchOfServiceData = [
+  'Army',
+  'Navy',
+  'Marine Corps',
+  'Air Force',
+  'Coast Guard',
+  'Space Force',
+  'NOAA',
+  'USPHA',
+];
+
+export const menuData = [
+  {
+    id: 'request_cfile',
+    title: 'Request C-file/DD 214',
+    status: true,
+    submenu: [
+      {
+        id: 'req_cfile_1',
+        title: 'Request C-file Sub 1',
+        path: '/request-cfile/sub1',
+        status: true,
+      },
+      {
+        id: 'req_cfile_2',
+        title: 'Request C-file Sub 2',
+        path: '/request-cfile/sub2',
+        status: true,
+      },
+      {
+        id: 'req_cfile_3',
+        title: 'Request C-file Sub 3',
+        path: '/request-cfile/sub3',
+        status: true,
+      },
+    ],
+  },
+  {
+    id: 'misc_forms',
+    title: 'Sworn Statements and Misc Forms',
+    status: true,
+    submenu: [
+      {
+        id: 'misc_1',
+        title: 'Misc Form Sub 1',
+        path: '/misc-forms/sub1',
+        status: true,
+      },
+      {
+        id: 'misc_2',
+        title: 'Misc Form Sub 2',
+        path: '/misc-forms/sub2',
+        status: true,
+      },
+      {
+        id: 'misc_3',
+        title: 'Misc Form Sub 3',
+        path: '/misc-forms/sub3',
+        status: true,
+      },
+    ],
+  },
+  {
+    id: 'file_appeal',
+    title: 'File An Appeal',
+    status: true,
+    submenu: [
+      {
+        id: 'appeal_1',
+        title: 'File Appeal Sub 1',
+        path: '/file-appeal/sub1',
+        status: true,
+      },
+      {
+        id: 'appeal_2',
+        title: 'File Appeal Sub 2',
+        path: '/file-appeal/sub2',
+        status: true,
+      },
+      {
+        id: 'appeal_3',
+        title: 'File Appeal Sub 3',
+        path: '/file-appeal/sub3',
+        status: true,
+      },
+    ],
+  },
+  {
+    id: 'court_appeal',
+    title: 'Court of Appeals for Veterans Claims',
+    status: true,
+    submenu: [
+      {
+        id: 'court_1',
+        title: 'Court Appeal Sub 1',
+        path: '/court-appeal/sub1',
+        status: true,
+      },
+      {
+        id: 'court_2',
+        title: 'Court Appeal Sub 2',
+        path: '/court-appeal/sub2',
+        status: true,
+      },
+      {
+        id: 'court_3',
+        title: 'Court Appeal Sub 3',
+        path: '/court-appeal/sub3',
+        status: true,
+      },
+    ],
+  },
+  {
+    id: 'submit_claim',
+    title: 'Submit a Claim',
+    status: true,
+    submenu: [
+      {
+        id: 'claim_1',
+        title: 'Submit Claim Sub 1',
+        path: '/submit-claim/sub1',
+        status: true,
+      },
+      {
+        id: 'claim_2',
+        title: 'Submit Claim Sub 2',
+        path: '/submit-claim/sub2',
+        status: true,
+      },
+      {
+        id: 'claim_3',
+        title: 'Submit Claim Sub 3',
+        path: '/submit-claim/sub3',
+        status: true,
+      },
+    ],
+  },
+];
