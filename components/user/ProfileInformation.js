@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import moment from 'moment';
 import { ClockIcon, EmailIcon, UserNameIcon } from '../icons/SvgIcons';
+import { useSelector, useDispatch } from 'react-redux';
 
 const ProfileInformation = ({ data }) => {
+  const { user, uid } = useSelector((state) => state.auth);
+
   return (
     <>
       <div className="panel">
@@ -44,27 +47,48 @@ const ProfileInformation = ({ data }) => {
           </Link>
         </div>
 
-        <div className="mb-5">
-          <ul className="mt-5 flex max-w-[180px] flex-col space-y-4 font-semibold text-white-dark">
-            <li className="flex items-center gap-2">
-              <UserNameIcon />
-              Name : {data?.firstName + ' ' + data?.lastName}
-            </li>
-            <li>
-              <button className="flex items-center gap-2">
-                <EmailIcon />
-                <span className="truncate text-primary">{data?.email}</span>
-              </button>
-            </li>
-            <li className="flex items-center gap-2">
-              <ClockIcon />
-              Join :{moment(data?.createdAt).format('YYYY-MM-DD')}
-            </li>
-            <li className="flex items-center gap-2">
-              <ClockIcon />
-              Update :{moment(data?.updatedAt).format('YYYY-MM-DD')}
-            </li>
-          </ul>
+        <div className="mb-5 rounded-md border border-[#ebedf2] bg-white p-4 dark:border-[#191e3a] dark:bg-black">
+          {/* Row 1 */}
+          <div className="mb-4 grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm font-bold text-gray-500">Name</p>
+              <p className="font-semibold">
+                {user.firstName} {user.lastName}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-500">Birth Date</p>
+              <p className="font-semibold">{user.birthday}</p>
+            </div>
+          </div>
+
+          {/* Row 2 */}
+          <div className="mb-4 grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm font-bold text-gray-500">Email</p>
+              <p className="font-semibold">{user.email}</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-500">Phone Number</p>
+              <p className="font-semibold">{user.phone}</p>
+            </div>
+          </div>
+
+          {/* Row 3 */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <li className="flex items-center gap-2 text-sm font-bold text-gray-500">
+                <ClockIcon />
+                Join: {moment(data?.createdAt).format('YYYY-MM-DD')}
+              </li>
+            </div>
+            <div>
+              <li className="flex items-center gap-2 text-sm font-bold text-gray-500">
+                <ClockIcon />
+                Update: {moment(data?.updatedAt).format('YYYY-MM-DD')}
+              </li>
+            </div>
+          </div>
         </div>
       </div>
     </>

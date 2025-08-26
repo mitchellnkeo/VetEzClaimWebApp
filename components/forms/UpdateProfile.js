@@ -11,43 +11,31 @@ import { profileValidation } from '@/utils/validators';
 import { db } from '@/firebase/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import Loader from '../Common/Loader';
-import { StateData } from '@/utils/staticData';
+import { StateData, branchOfServiceData } from '@/utils/staticData';
 import DropDown from '../Common/DropDown';
 import SignatureField from '../Common/SignatureField';
-
-const branchOfServiceData = [
-  'Army',
-  'Navy',
-  'Marine Corps',
-  'Air Force',
-  'Coast Guard',
-  'Space Force',
-  'NOAA',
-  'USPHA',
-];
+import { toast } from 'react-toastify';
 
 const UpdateProfileForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { user, uid } = useSelector((state) => state.auth);
-  const { id } = user || {};
   const [isLoading, setLoading] = useState(false);
-  const sigPadRef = useRef(null);
   const [initialValues, setInitialValues] = useState({
     firstName: '',
     lastName: '',
-    dob: '',
+    birthday: '',
     phone: '',
     ssn: '',
     email: '',
     branchOfService: '',
-    signature: '',
     street: '',
     unitNumber: '',
     city: '',
     province: '',
     country: 'US',
     zipCode: '',
+    signature: '',
   });
 
   const fetchDataOnMount = async () => {
@@ -61,7 +49,7 @@ const UpdateProfileForm = () => {
         setInitialValues({
           firstName: userDataNode.firstName || '',
           lastName: userDataNode.lastName || '',
-          dob: userDataNode.birthday || '',
+          birthday: userDataNode.birthday || '',
           phone: userDataNode.phone || '',
           email: userDataNode.email || '',
           ssn: userDataNode.ssn || '',
@@ -92,23 +80,24 @@ const UpdateProfileForm = () => {
   }, [uid]);
 
   const handleUpdateProfile = async (values, { setSubmitting }) => {
+    console.log(' >> handleUpdateProfile : ', values);
     try {
       const updatePostBody = Object.fromEntries(
         Object.entries(values).filter(
           ([, value]) => value !== '' && value !== null
         )
       );
-
-      const response = await dispatch(
-        updateProfile({ id, updatePostBody })
+      updatePostBody.uid = uid;
+      await dispatch(
+        updateProfile({
+          uid: uid,
+          ...updatePostBody,
+        })
       ).unwrap();
-
-      if (response) {
-        showAlert('Update done!', 'success');
-        router.push('/');
-      }
+      await fetchDataOnMount();
+      toast.success('Profile update successfully!');
     } catch (error) {
-      showAlert(error.message, 'error');
+      toast.error('Profile update failed!');
       console.log('error', error);
     } finally {
       setSubmitting(false);
@@ -131,6 +120,8 @@ const UpdateProfileForm = () => {
         >
           {({ values, errors, touched, setFieldValue, isSubmitting }) => (
             <Form className="space-y-5">
+              {console.log('🔥 Form Values:', values)}
+              {console.log('🔥 Form Errors:', errors)}
               {/* Row 1: First Name & Last Name */}
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
@@ -161,15 +152,15 @@ const UpdateProfileForm = () => {
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label htmlFor="dob">Date of Birth</label>
+                  <label htmlFor="birthday">Date of Birth</label>
                   <DateSelector
-                    name="dob"
-                    value={values.dob}
+                    name="birthday"
+                    value={values.birthday}
                     placeholder="Select Date"
-                    onChange={(val) => setFieldValue('dob', val)}
+                    onChange={(val) => setFieldValue('birthday', val)}
                     isDOB
                   />
-                  <ErrorMessage name="dob" component={TextError} />
+                  <ErrorMessage name="birthday" component={TextError} />
                 </div>
                 <div>
                   <label htmlFor="phone">Phone Number</label>
@@ -210,26 +201,6 @@ const UpdateProfileForm = () => {
                   />
                   <ErrorMessage name="branchOfService" component={TextError} />
                 </div>
-
-                {/* <div>
-                  <label htmlFor="branchOfService">Branch of Service</label>
-                  <Field
-                    as="select"
-                    id="branchOfService"
-                    name="branchOfService"
-                    className="form-input"
-                  >
-                    <option value="">Select</option>
-                    {branchOfServiceData.map((branch) => (
-                      <option
-                        key={branch}
-                        value={branch.toLowerCase().replace(/\s+/g, '')} // normalize value if needed
-                      >
-                        {branch}
-                      </option>
-                    ))}
-                  </Field>
-                </div> */}
               </div>
 
               {/* Mailing Address */}
@@ -291,7 +262,7 @@ const UpdateProfileForm = () => {
                 </div>
                 <div>
                   <label htmlFor="country">
-                    Country<small> * read-only</small>{' '}
+                    Country<small> * read-only</small>
                   </label>
                   <Field
                     type="text"
@@ -319,6 +290,9 @@ const UpdateProfileForm = () => {
               {/* Mailing Address */}
               <div className="mb-5 flex items-center rounded bg-primary-light p-3.5 text-primary dark:bg-primary-dark-light">
                 <h6 className="text-lg font-bold">Signature</h6>
+                <small className="text-md font-semibold text-danger">
+                  * required
+                </small>
               </div>
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -329,7 +303,9 @@ const UpdateProfileForm = () => {
                   imgHeight={220}
                   style={`.m-signature-pad { border: 1px solid #ccc; }`}
                 />
-                <ErrorMessage name="signature" component={TextError} />
+                <div className="flex items-center justify-start">
+                  <ErrorMessage name="signature" component={TextError} />
+                </div>
               </div>
 
               {/* Submit Button */}

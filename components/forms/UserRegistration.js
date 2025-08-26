@@ -32,7 +32,7 @@ const UserRegistration = () => {
     firstName: '',
     lastName: '',
     email: '',
-    dob: '',
+    birthday: '',
     phone: '',
     password: '',
     confirmPassword: '',
@@ -55,7 +55,7 @@ const UserRegistration = () => {
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
-        birthday: values.dob,
+        birthday: values.birthday,
         phone: values.phone,
         street: '',
         unitNumber: '',
@@ -177,16 +177,15 @@ const UserRegistration = () => {
             </div>
             <div className="m-1 flex gap-4">
               <div className="flex-1">
-                <label htmlFor="dob">Date of Birth</label>
+                <label htmlFor="birthday">Date of Birth</label>
                 <DateSelector
-                  name="dob"
+                  name="birthday"
                   label="Date of Birth"
-                  value={values.dob}
-                  placeholder="XXXX"
+                  value={values.birthday}
+                  placeholder="MM/DD/YYYY"
                   onChange={(val) => {
-                    setFieldValue('dob', val);
+                    setFieldValue('birthday', val);
                   }}
-                  errorMessage={errors.dob}
                   isDOB={true}
                 />
               </div>
