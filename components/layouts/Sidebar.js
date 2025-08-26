@@ -7,37 +7,17 @@ import AnimateHeight from 'react-animate-height';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import MenuItem from './MenuItem';
+import { isUserOver18 } from '@/utils/common';
 import { FaFile, FaFileAlt, FaFileExport } from 'react-icons/fa';
 import { FaFileInvoice, FaFileCircleExclamation } from 'react-icons/fa6';
 
 import {
-  AvailabilityIcon,
-  CaseManagementIcon,
-  CategoryIcon,
-  ChatIcon,
-  Cities,
-  ComplaintIcon,
-  Counties,
-  Countries,
   DashboardIcon,
-  FormBuilderIcon,
-  FunctionIcon,
-  Invoice,
-  Order,
-  ProviderManagementIcon,
-  ReportIcon,
-  RoleIcon,
-  ServiceIcon,
-  ServiceMenuIcon,
-  SettingIcon,
+  FormsIcon,
+  HistoryIcon,
+  InProgressIcon,
+  SubscriptionIcon,
   SideToggleCloseIcon,
-  State,
-  SystemIcon,
-  SystemLogIcon,
-  TaxIcon,
-  Transaction,
-  UserManagementIcon,
-  UserNameIcon,
 } from '../icons/SvgIcons';
 
 const Sidebar = () => {
@@ -45,58 +25,45 @@ const Sidebar = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { user } = useSelector((state) => state.auth);
-  const { id: RoleID } = user?.role || {};
   const [currentMenu, setCurrentMenu] = useState('');
-  const [errorSubMenu, setErrorSubMenu] = useState(false);
   const themeConfig = useSelector((state) => state.themeConfig);
   const semidark = useSelector((state) => state.themeConfig.semidark);
-  const toggleMenu = (value) => {
-    setCurrentMenu((oldValue) => {
-      return value;
-    });
-  };
+  const [buttonStatus, setButtonStatus] = useState(0);
 
-  useEffect(() => {
-    let pathValue = window.location.pathname.split('/');
-    toggleMenu(pathValue[2]);
-    const selector = document.querySelector(
-      '.sidebar ul a[href="' + window.location.pathname + '"]'
-    );
+  const toggleMenu = (value) => setCurrentMenu(value);
 
-    if (selector) {
-      selector.classList.add('active');
-      const ul = selector.closest('ul.sub-menu');
-      if (ul) {
-        let ele = ul.closest('li.menu').querySelectorAll('.nav-link') || [];
-        if (ele.length > 0) {
-          ele = ele[0];
-          setTimeout(() => {
-            ele.click();
-          });
-        }
+  const isProfileComplete = async () => {
+    if (
+      user.firstName &&
+      user.lastName &&
+      user.email &&
+      user.birthday &&
+      user.phone &&
+      user.ssn &&
+      user.branchOfService &&
+      user.street &&
+      user.city &&
+      user.province &&
+      user.zipCode &&
+      user.country &&
+      user.signature
+    ) {
+      const isOver18 = await isUserOver18(user.birthday);
+      if (isOver18) {
+        setButtonStatus(2);
+      } else {
+        setButtonStatus(1);
       }
+    } else {
+      setButtonStatus(0);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    setActiveRoute();
-    if (window.innerWidth < 1024 && themeConfig.sidebar) {
-      dispatch(toggleSidebar());
+    if (user) {
+      isProfileComplete();
     }
-  }, [router.pathname]);
-
-  const setActiveRoute = () => {
-    let allLinks = document.querySelectorAll('.sidebar ul a.active');
-    for (let i = 0; i < allLinks.length; i++) {
-      const element = allLinks[i];
-      element?.classList.remove('active');
-    }
-    const selector = document.querySelector(
-      '.sidebar ul a[href="' + window.location.pathname + '"]'
-    );
-
-    selector?.classList.add('active');
-  };
+  }, [user]);
 
   const menuList = [
     {
@@ -105,72 +72,30 @@ const Sidebar = () => {
       icon: <DashboardIcon />,
     },
     {
-      path: '/users',
-      title: 'Users',
-      icon: <UserManagementIcon />,
-      keyID: 'Users',
+      path: '/forms',
+      title: 'Forms',
+      icon: <FormsIcon />,
+      keyID: 'Forms',
+      disabled: buttonStatus < 2,
     },
     {
-      path: '/notice-of-appeals',
-      title: 'Court Appeals',
-      icon: <SystemLogIcon />,
-      keyID: 'noa',
+      path: '/in-progress',
+      title: 'In-Progress',
+      icon: <InProgressIcon />,
+      keyID: 'In-Progress',
     },
-
-    // {
-    //   path: '/fillforms',
-    //   title: 'Fill Forms',
-    //   icon: <FaFileAlt color="white" />,
-    //   keyID: 'Fill Forms',
-    // },
-    // {
-    //   path: '/submitclaims',
-    //   title: 'Submit Claims',
-    //   icon: <FaFileCircleExclamation color="white" />,
-    //   keyID: 'Submit Claims',
-    // },
-    // {
-    //   path: '/fileappeals',
-    //   title: 'File Appeals',
-    //   icon: <FaFile color="white" />,
-    //   keyID: 'File Appeals',
-    // },
-    // {
-    //   path: '/miscforms',
-    //   title: 'Misc Forms',
-    //   icon: <FaFileInvoice color="white" />,
-    //   keyID: 'Misc Forms',
-    // },
-    // {
-    //   path: '/requestfiles',
-    //   title: 'Request Files',
-    //   icon: <FaFileExport color="white" />,
-    //   keyID: 'Request Files',
-    // },
-    // {
-    //   path: '/admin-users',
-    //   title: 'Admin User',
-    //   icon: <RoleIcon />,
-    //   keyID: 'Admin User',
-    // },
-
-    // {
-    //   path: '#',
-    //   title: 'System Logs',
-    //   icon: <SystemLogIcon />,
-    //   keyID: 'System Logs',
-    // },
-    // {
-    //   path: '/',
-    //   title: 'Reports',
-    //   icon: <ReportIcon />,
-    //   keyID: 'Reports',
-    //   submenu: [
-    //     { path: '#', title: 'Notifications' },
-    //     { path: '#', title: 'Report-1' },
-    //     { path: '#', title: 'Report-2' },
-    //   ],
-    // },
+    {
+      path: '/history',
+      title: 'History',
+      icon: <HistoryIcon />,
+      keyID: 'History',
+    },
+    {
+      path: '/subscription',
+      title: 'Subscription',
+      icon: <SubscriptionIcon />,
+      keyID: 'Subscription',
+    },
   ];
 
   return (
@@ -181,6 +106,7 @@ const Sidebar = () => {
         }`}
       >
         <div className="h-full bg-[#006092] dark:bg-gray-400">
+          {/* Logo & toggle button */}
           <div className="flex items-center justify-between px-4 py-3 ">
             <Link href="/" className="main-logo flex shrink-0 items-center">
               <img
@@ -198,6 +124,7 @@ const Sidebar = () => {
               <SideToggleCloseIcon />
             </button>
           </div>
+
           <PerfectScrollbar className="relative h-[calc(100vh-80px)]">
             <ul className="relative space-y-0.5 p-4 py-0 font-semibold">
               {menuList.map((item, id) => {
@@ -212,6 +139,7 @@ const Sidebar = () => {
                     submenu={item?.submenu}
                     deepMenuTitle={item?.deepMenuTitle}
                     deepSubMenu={item?.deepSubMenu}
+                    disabled={item?.disabled}
                   />
                 ) : (
                   <MenuItem
@@ -219,6 +147,7 @@ const Sidebar = () => {
                     path={item?.path}
                     title={item?.title}
                     icon={item?.icon}
+                    disabled={item?.disabled}
                   />
                 );
               })}
