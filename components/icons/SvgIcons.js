@@ -1919,7 +1919,7 @@ export const DashboardIcon = ({
       width={width}
       height={height}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill="#ffffff"
       className={className}
     >
       <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
@@ -1933,7 +1933,7 @@ export const FormsIcon = ({ height = '20', width = '20', className = '' }) => {
       width={width}
       height={height}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill="#ffffff"
       className={className}
     >
       <path d="M4 4h16v2H4V4zm0 4h10v2H4V8zm0 4h16v2H4v-2zm0 4h10v2H4v-2z" />
@@ -1952,7 +1952,7 @@ export const SubscriptionIcon = ({
       width={width}
       height={height}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill="#ffffff"
       className={className}
     >
       <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.93V17h-2v-.07a8.001 8.001 0 010-15.86V7h2V2.07a8.001 8.001 0 010 15.86z" />
@@ -1971,7 +1971,7 @@ export const HistoryIcon = ({
       width={width}
       height={height}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill="#ffffff"
       className={className}
     >
       <path d="M13 3a9 9 0 100 18 9 9 0 000-18zm0 2a7 7 0 110 14 7 7 0 010-14zm-.5 3v5l4 2 .75-1.23-3.25-1.77V8H12.5z" />
@@ -1990,7 +1990,7 @@ export const InProgressIcon = ({
       width={width}
       height={height}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill="#ffffff"
       className={className}
     >
       <path d="M12 2v2a8 8 0 11-8 8H2C2 6.48 6.48 2 12 2zm0 20c-5.52 0-10-4.48-10-10h2a8 8 0 1016 0h2c0 5.52-4.48 10-10 10z" />
