@@ -12,7 +12,7 @@ const FormsMenu = () => {
   const homeScreenButtonData = [
     {
       name: 'Submit Intent to File',
-      onPress: () => router.push('/SubmitIntentFile?isFromInProgress=false'),
+      onPress: () => router.push('/forms/submit-to-intent'),
       disabled: false,
     },
     {

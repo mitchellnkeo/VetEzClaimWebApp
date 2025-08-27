@@ -7,9 +7,6 @@ export default function MenuPage() {
   const selectedForm = useSelector((state) => state.form.selectedForm);
   const menuItem = menuData.find((item) => item.id === selectedForm.id);
 
-  // console.log(' >> selectedForm :', selectedForm);
-  // console.log(' >> menuItem :', menuData);
-
   return (
     <FrontLayout title="Form Menu">
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -22,32 +19,26 @@ export default function MenuPage() {
         </div>
       </div>
       <div className="mx-5 my-5 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        <div className="p-4">
-          {menuItem ? (
-            <>
-              <ul className="space-y-2">
-                {menuItem.submenu.map((sub) => (
-                  <li key={sub.id}>
-                    {sub.status ? (
-                      <Link
-                        href={sub.path}
-                        className="block rounded bg-[#035F92] p-2 text-white hover:bg-[#024a6f]"
-                      >
-                        {sub.title}
-                      </Link>
-                    ) : (
-                      <span className="block cursor-not-allowed rounded bg-gray-400 p-2 text-gray-700">
-                        {sub.title} (Locked)
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : (
-            <p>No form selected. Please go back.</p>
-          )}
-        </div>
+        {menuItem ? (
+          <>
+            {menuItem.submenu.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={item.onPress}
+                disabled={item.disabled}
+                className={`w-full rounded-lg p-4 font-semibold text-white transition ${
+                  item.disabled
+                    ? 'cursor-not-allowed bg-gray-400'
+                    : 'cursor-pointer bg-[#035F92] hover:bg-[#024b70]'
+                }`}
+              >
+                {item.title}
+              </button>
+            ))}
+          </>
+        ) : (
+          <p>No form selected. Please go back.</p>
+        )}
       </div>
     </FrontLayout>
   );
