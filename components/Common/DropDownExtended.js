@@ -13,7 +13,7 @@ const DropDownExtended = ({
   const error = meta.touched && meta.error;
 
   return (
-    <div style={{ width: '90%', margin: '10px auto' }}>
+    <div>
       {/* Label + Top Counter */}
       <div
         style={{
@@ -25,7 +25,7 @@ const DropDownExtended = ({
         {label && (
           <label
             htmlFor={props.id || props.name}
-            style={{ fontSize: '14px', color: '#4361ee', fontWeight: 500 }}
+            style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
           >
             {label}
           </label>
@@ -80,14 +80,15 @@ const DropDownExtended = ({
         }}
       >
         <div>
-          {error && (
-            <span style={{ fontSize: '12px', color: 'red' }}>{error}</span>
-          )}
-
           {hintsMessage && (
             <span style={{ fontSize: '12px', color: '#20c997' }}>
-              {/* Muted teal / greenish */}
-              {hintsMessage}
+              <p> {hintsMessage}</p>
+            </span>
+          )}
+          {error && (
+            <span style={{ fontSize: '12px', color: 'red' }}>
+              {' '}
+              <p> {error}</p>{' '}
             </span>
           )}
         </div>

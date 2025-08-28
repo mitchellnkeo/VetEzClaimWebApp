@@ -4,7 +4,6 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import Button from '@/components/FormInputs/Button';
 import { updateProfile } from '@/store/slices/authSlice';
 import TextError from '@/components/TextError';
-import { showAlert } from '@/utils';
 import DateSelector from '../Common/DateSelector';
 import { useRouter } from 'next/router';
 import { profileValidation } from '@/utils/validators';

@@ -48,7 +48,12 @@ export default function FormContent({
       </div>
 
       {/* Scrollable Children */}
-      <div className="flex-1 space-y-6 overflow-y-auto p-6">{children}</div>
+      <div
+        style={{ width: '80%', margin: '10px auto' }}
+        className="flex-1 space-y-6 overflow-y-auto p-6"
+      >
+        {children}
+      </div>
     </div>
   );
 }

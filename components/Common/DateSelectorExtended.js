@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Field } from 'formik';
+import { useField, Field } from 'formik';
 
 export default function DateSelectorExtended({
   name,
@@ -9,7 +9,6 @@ export default function DateSelectorExtended({
   fieldCounter, // new prop: "2 of 13"
   value,
   onChange,
-  errorMessage,
   hintsMessageText,
   editable = true,
   allowFutureDates = false,
@@ -24,6 +23,8 @@ export default function DateSelectorExtended({
   errorClassName = 'text-red-500',
   hintClassName = 'text-yellow-600',
 }) {
+  const [field, meta, helpers] = useField(name);
+  const errorMessage = meta.touched && meta.error;
   const [dateValue, setDateValue] = useState(
     value ? moment(value, 'MM/DD/YYYY').format('YYYY-MM-DD') : ''
   );
@@ -73,10 +74,7 @@ export default function DateSelectorExtended({
   };
 
   return (
-    <div
-      className={`relative w-full ${className}`}
-      style={{ width: '90%', margin: '10px auto' }}
-    >
+    <div className={`relative w-full ${className}`}>
       {/* Label + Field Counter */}
       {label && (
         <div
@@ -89,7 +87,7 @@ export default function DateSelectorExtended({
         >
           <label
             htmlFor={name}
-            style={{ fontSize: '14px', color: '#4361ee', fontWeight: 500 }}
+            style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
           >
             {label}
           </label>
@@ -146,7 +144,6 @@ DateSelectorExtended.propTypes = {
   fieldCounter: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  errorMessage: PropTypes.string,
   hintsMessageText: PropTypes.string,
   editable: PropTypes.bool,
   allowFutureDates: PropTypes.bool,

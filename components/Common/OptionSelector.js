@@ -73,7 +73,7 @@ export default function OptionSelector({
   const error = meta.touched && meta.error;
 
   return (
-    <div style={{ width: '90%', margin: '10px auto' }}>
+    <div>
       {/* Label + Counter */}
       <div
         style={{
@@ -85,7 +85,7 @@ export default function OptionSelector({
         {label && (
           <label
             htmlFor={name}
-            style={{ fontSize: '14px', color: '#4361ee', fontWeight: 500 }}
+            style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
           >
             {label}
           </label>

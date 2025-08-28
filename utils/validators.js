@@ -259,7 +259,6 @@ export const SubmitIntentFileValidation = yup.object().shape({
   phone: phoneValidation,
   phoneI: internationalPhoneValidation,
   email: emailValidation,
-  emailE: yup.bool(),
   vet: yup.bool(),
   claimantsName: yup.string().when('vet', {
     is: true,
@@ -406,21 +405,19 @@ export const SubmitIntentFileValidation = yup.object().shape({
         .required('This field is required to save PDF'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  claimantsEmailE: yup.bool(),
   benefitElection: yup
     .array()
     .of(
       yup.object().shape({
-        name: yup.string(),
-        selected: yup.boolean(),
+        option: yup.string(),
+        isSelected: yup.boolean(),
       })
     )
     .test(
       'at-least-one-selected',
       'This field is required to save PDF',
-      (benefits) => benefits?.some((benefit) => benefit.selected)
+      (benefits) => benefits?.some((benefit) => benefit.isSelected)
     ),
-  dic: yup.boolean(),
   veteranDateSigned: yup
     .string()
     .required('This field is required to save PDF'),
