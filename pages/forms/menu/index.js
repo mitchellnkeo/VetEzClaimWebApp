@@ -1,10 +1,21 @@
 import { useSelector } from 'react-redux';
 import { menuData } from '@/utils/staticData';
 import FrontLayout from '@/components/layouts/FrontLayout';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 export default function MenuPage() {
   const selectedForm = useSelector((state) => state.form.selectedForm);
   const menuItem = menuData.find((item) => item.id === selectedForm.id);
+  const router = useRouter();
+
+  const handlePress = (item) => {
+    if (item.disabled) {
+      toast.error(`${item.title} is disabled`);
+      return;
+    }
+    router.push(item.path);
+  };
 
   return (
     <FrontLayout title="Form Menu">
@@ -23,7 +34,7 @@ export default function MenuPage() {
             {menuItem.submenu.map((item, idx) => (
               <button
                 key={idx}
-                onClick={item.onPress}
+                onClick={() => handlePress(item)}
                 disabled={item.disabled}
                 className={`w-full rounded-lg p-4 font-semibold text-white transition ${
                   item.disabled

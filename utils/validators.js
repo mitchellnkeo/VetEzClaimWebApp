@@ -423,3 +423,380 @@ export const SubmitIntentFileValidation = yup.object().shape({
     .required('This field is required to save PDF'),
   signature: yup.string().required('Add signature to Profile'),
 });
+
+export const NewClaimFileValidation = yup.object().shape({
+  program: yup.string().required('This field is required to save PDF'),
+  firstName: firstNameValidation,
+  lastName: lastNameValidation,
+  ssn: ssnValidation,
+  claim: yup.string().required('This field is required to save PDF'),
+  currentVa: vaFileNumberValidation,
+  birthday: yup.string().required('This field is required to save PDF'),
+  serviceNumber: serviceNumberValidationAlt,
+  bddDate: yup.string(),
+  phone: phoneValidation,
+  phoneI: internationalPhoneValidation,
+  street: validStreetCharacters.required('This field is required to save PDF'),
+  unitNumber: unitNumberValidation,
+  city: yup
+    .string()
+    .matches(cityRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true,
+    })
+    .required('This field is required to save PDF'),
+  province: yup.string().required('This field is required to save PDF'),
+  country: yup.string().required('This field is required to save PDF'),
+  zipCode: zipCodeValidation,
+  email: emailValidation,
+  emailE: yup.bool(),
+  currentlyEmployee: yup.bool(),
+  typeAddressChange: yup.string().default(''),
+  newAddressstreet: yup.string().when('typeAddressChange', {
+    is: (value) => value === 'Permanent' || value === 'Temporary',
+    then: (schema) =>
+      schema
+        .matches(streetRegex, {
+          message: 'Must contain valid characters',
+          excludeEmptyString: true,
+        })
+        .required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  newAddressunitNumber: unitNumberValidation,
+  newAddresscity: yup.string().when('typeAddressChange', {
+    is: (value) => value === 'Permanent' || value === 'Temporary',
+    then: (schema) =>
+      schema
+        .matches(cityRegex, {
+          message: 'Must contain valid characters',
+          excludeEmptyString: true,
+        })
+        .required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  newAddressprovince: yup.string().when('typeAddressChange', {
+    is: (value) => value === 'Permanent' || value === 'Temporary',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  newAddresscountry: yup.string().when('typeAddressChange', {
+    is: (value) => value === 'Permanent' || value === 'Temporary',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  newAddresszipCode: yup
+    .string()
+    .when('typeAddressChange', {
+      is: (value) => value === 'Permanent' || value === 'Temporary',
+      then: (schema) => schema.required('This field is required to save PDF'),
+      otherwise: (schema) => schema.notRequired(),
+    })
+    .matches(
+      /^\d{5}(-\d{4})?$/,
+      'Zip Code must be in the format XXXXX or XXXXX-XXXX'
+    ),
+  newAddressEffectiveBeginning: yup.string().when('typeAddressChange', {
+    is: (value) => value === 'Permanent' || value === 'Temporary',
+    then: (schema) => schema.required('This field is required.'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  newAddressEffectiveEnding: yup.string().when('typeAddressChange', {
+    is: (value) => value === 'Permanent' || value === 'Temporary',
+    then: (schema) => schema.required('This field is required.'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  currentlyHomeless: yup
+    .string()
+    .required('This field is required to save PDF'),
+  currentlyHomelesslivingSituation: yup.string().when('currentlyHomeless', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  currentlyHomelessspecify: yup
+    .string()
+    .when(
+      ['currentlyHomeless', 'currentlyHomelesslivingSituation'],
+      ([currentlyHomeless, currentlyHomelesslivingSituation], schema) => {
+        if (
+          currentlyHomeless === 'Yes' &&
+          currentlyHomelesslivingSituation === 'Other'
+        ) {
+          return schema.required('This field is required to save PDF');
+        }
+        return schema.notRequired();
+      }
+    ),
+  riskOfHomeless: yup.string().when('currentlyHomeless', {
+    is: (value) => value === 'No',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  riskOfHomelesslivingSituation: yup.string().when('riskOfHomeless', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  riskOfHomelessspecify: yup
+    .string()
+    .when(
+      ['riskOfHomeless', 'riskOfHomelesslivingSituation'],
+      ([riskOfHomeless, riskOfHomelesslivingSituation], schema) => {
+        if (
+          riskOfHomeless === 'Yes' &&
+          riskOfHomelesslivingSituation == 'Other'
+        ) {
+          return schema.required('This field is required to save PDF');
+        }
+        return schema.notRequired();
+      }
+    ),
+  pointOfContactName: yup
+    .string()
+    .matches(nameRegex, 'Name can only contain letters')
+    .min(2, 'Name must be at least 2 characters'),
+  toxicExposures: yup.string().required('This field is required to save PDF'),
+  hazardLocation: yup.string(),
+  hazardLocationDateFrom: yup.string(),
+  hazardLocationDateTo: yup.string(),
+  herbicideLocation: yup.string(),
+  herbicideLocationDateFrom: yup.string(),
+  herbicideLocationDateTo: yup.string(),
+  herbicideLocationList: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true,
+  }),
+  haveExposed_Asbestos: yup.boolean(),
+  haveExposed_MustardGas: yup.boolean(),
+  haveExposed_Radiation: yup.boolean(),
+  haveExposed_SHAD: yup.boolean(),
+  haveExposed_MOSRelatedToxin: yup.boolean(),
+  haveExposed_ContaminatedWater: yup.boolean(),
+  haveExposed_Other: yup.boolean(),
+  haveExposed_OtherSpecify: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true,
+  }),
+  haveExposed_multipleTimes: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true,
+  }),
+  haveExposed_dateFrom: yup.string(),
+  haveExposed_dateTo: yup.string(),
+  disabilities: yup.array().of(
+    yup.object().shape({
+      currentDisability: yup
+        .string()
+        .matches(disabilityRegex, {
+          message: 'Enter as: Disability Code: Description (e.g., 1212: Acen.)',
+          excludeEmptyString: true,
+        })
+        .required('This is required to save PDF'),
+      specifications: yup.string().matches(validCharactersRegex, {
+        message: 'Must contain valid characters',
+        excludeEmptyString: true,
+      }),
+      explanation: yup.string().matches(validCharactersRegex, {
+        message: 'Must contain valid characters',
+        excludeEmptyString: true,
+      }),
+      date: yup.string(),
+    })
+  ),
+  treatmentFacilities: yup.array().of(
+    yup.object().shape({
+      facility: yup
+        .string()
+        .matches(validCharactersRegex, {
+          message: 'Must contain valid characters',
+          excludeEmptyString: true,
+        })
+        .required('This is required to save PDF'),
+      date: yup.string(),
+      notAvailable: yup.boolean(),
+    })
+  ),
+  anotherName: yup.string().required('This field is required to save PDF'),
+  anotherNamenamesList: yup.string().when('anotherName', {
+    is: (value) => value === 'Yes',
+    then: (schema) =>
+      schema
+        .matches(validCharactersRegex, {
+          message: 'Must contain valid characters',
+          excludeEmptyString: true,
+        })
+        .required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  branchOfService: yup.string().required('This field is required to save PDF'),
+  component: yup.string(),
+  recentDatesFrom: yup.string().required('This field is required.'),
+  recentDatesTo: yup.string().required('This field is required.'),
+  placeOfSeparation: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true,
+  }),
+  combatZone: yup.string(),
+  combatZoneDateFrom: yup.string(),
+  combatZoneDateTo: yup.string(),
+  reservesNationalGuard: yup.string(),
+  reservesNationalGuardComponent: yup.string().when('reservesNationalGuard', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  reservesNationalGuardDateFrom: yup.string().when('reservesNationalGuard', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  reservesNationalGuardDateTo: yup.string().when('reservesNationalGuard', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  reservesNationalGuardNameAddressUnit: yup
+    .string()
+    .when('reservesNationalGuard', {
+      is: (value) => value === 'Yes',
+      then: (schema) =>
+        schema
+          .matches(validCharactersRegex, {
+            message: 'Must contain valid characters',
+            excludeEmptyString: true,
+          })
+          .required('This field is required to save PDF'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  reservesNationalGuardPhoneNumber: yup.string().when('reservesNationalGuard', {
+    is: (value) => value === 'Yes',
+    then: (schema) =>
+      schema
+        .matches(
+          /^\d{3}-\d{3}-\d{4}$/,
+          'Phone number must be in the format xxx-xxx-xxxx'
+        )
+        .required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  reservesNationalGuardTrainingPay: yup.string().when('reservesNationalGuard', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  federalsOrders: yup.string(),
+  federalsOrdersActivationDate: yup.string().when('federalsOrders', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  federalsOrdersSeparationDate: yup.string().when('federalsOrders', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  prisionerOfWar: yup.string(),
+  prisionerOfWarOneDateFrom: yup.string().when('prisionerOfWar', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required.'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  prisionerOfWarOneDateTo: yup.string().when('prisionerOfWar', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required.'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  prisionerOfWarTwoDateFrom: yup.string(),
+  prisionerOfWarTwoDateTo: yup.string(),
+  retiredPay: yup.string(),
+  retiredPayFuture: yup.string(),
+  retiredPayExplanation: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true,
+  }),
+  retiredPayBranchOfService: yup
+    .string()
+    .when(['retiredPay', 'retiredPayFuture'], {
+      is: (retiredPay, retiredPayFuture) =>
+        retiredPay === 'Yes' || retiredPayFuture === 'Yes',
+      then: (schema) => schema.required('This field is required to save PDF'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  retiredPayMonthlyAmount: yup
+    .string()
+    .when(['retiredPay', 'retiredPayFuture'], {
+      is: (retiredPay, retiredPayFuture) =>
+        retiredPay === 'Yes' || retiredPayFuture === 'Yes',
+      then: (schema) =>
+        schema
+          .matches(/^\d+$/, {
+            message: 'Amount must contain only digits',
+            excludeEmptyString: true,
+          })
+          .required('This field is required to save PDF'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  retiredPayRetiredStatus: yup
+    .string()
+    .when(['retiredPay', 'retiredPayFuture'], {
+      is: (retiredPay, retiredPayFuture) =>
+        retiredPay === 'Yes' || retiredPayFuture === 'Yes',
+      then: (schema) => schema.required('This field is required to save PDF'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  separationPay: yup.string(),
+  separationPayPaymentDate: yup.string().when('separationPay', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  separationPayBranchOfService: yup.string().when('separationPay', {
+    is: (value) => value === 'Yes',
+    then: (schema) => schema.required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  separationPayAmountReceived: yup.string().when('separationPay', {
+    is: (value) => value === 'Yes',
+    then: (schema) =>
+      schema
+        .matches(/^\d+$/, {
+          message: 'Amount must contain only digits',
+          excludeEmptyString: true,
+        })
+        .required('This field is required to save PDF'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  noInactivePayment: yup.bool(),
+  noRetiredPayment: yup.bool(),
+  directDeposit: yup.bool(),
+  veteranDateSigned: yup
+    .string()
+    .required('This field is required to save PDF'),
+  pointOfContactTelephone: phoneValidation,
+  pointOfContactTelephoneI: internationalPhoneValidation,
+  directDepositAccountType: yup.string(),
+  directDepositRoutingNumber: yup
+    .string()
+    .matches(/^\d{9}$/, 'Routing Number must be exactly 9 digits'),
+  directDepositAccountNumber: yup
+    .string()
+    .matches(/^\d{15}$/, 'Account Number must be exactly 15 digits'),
+  directDepositFinancialInstitution: yup
+    .string()
+    .matches(validCharactersRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true,
+    }),
+  signature: yup.string(),
+  firstWitness: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true,
+  }),
+  secondWitness: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true,
+  }),
+  alternateSignatureDate: yup.string(),
+  poaSignatureDate: yup.string(),
+});
