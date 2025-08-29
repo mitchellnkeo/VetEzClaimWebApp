@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 import { menuData } from '@/utils/staticData';
-import Link from 'next/link';
 import FrontLayout from '@/components/layouts/FrontLayout';
 
 export default function MenuPage() {

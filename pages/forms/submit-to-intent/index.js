@@ -22,6 +22,7 @@ import { generateSubmitToIntentPdf } from '@/utils/pdfObjectMaker';
 import { generateSubmitToIntentFormPdf } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 
 const yesNoData = ['Yes', 'No'];
 const relationshipToVeteranData = [
@@ -78,6 +79,10 @@ export default function SubmitToIntentForm() {
   const [guid, setGuid] = useState('');
   const [timestamp, setTimestamp] = useState('');
   const [count, setCount] = useState(0);
+  const router = useRouter();
+  const { ['in-progress']: inProgress } = router.query;
+
+  console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
     firstName: '',
@@ -200,7 +205,12 @@ export default function SubmitToIntentForm() {
               setCount(data?.count === undefined ? 0 : data.count);
               const isUploaded = data?.isUploadedAlready || false;
               console.log('Form data from Firebase:', data);
-              if (isUploaded) {
+              console.log('inProgress : ', inProgress);
+
+              if (inProgress === 'true') {
+                await loadDataFromFirebase(data);
+                setIsLoading(false);
+              } else if (isUploaded) {
                 await loadDataFromLocalStorage();
                 setIsLoading(false);
               } else {
@@ -230,8 +240,9 @@ export default function SubmitToIntentForm() {
           };
 
           useEffect(() => {
+            if (!router.isReady) return;
             loadData();
-          }, [uid]);
+          }, [uid, router.isReady, router.query]);
 
           const transformFormValues = async (formData) => {
             return {
@@ -275,7 +286,7 @@ export default function SubmitToIntentForm() {
             var saveStatus = await saveData({ isUploadedAlready: false }, true);
             setIsLoading(false);
             if (saveStatus) {
-              toast.success('Saved form data successfully!');
+              toast.success('Saved successfully!');
             }
           };
           const generatePdf = async (formValues, isFromGeneratePdf = false) => {
@@ -413,6 +424,7 @@ export default function SubmitToIntentForm() {
                       )}|${timestamp}`,
                       count: count + 1,
                       urlDocspring: url,
+                      isUploadedAlready: true,
                     };
 
                     await postFormData({
@@ -432,7 +444,10 @@ export default function SubmitToIntentForm() {
                         await loadData();
                       },
                       secondaryButtonText: 'No',
-                      secondaryButtonAction: () => setToastOpen(false),
+                      secondaryButtonAction: () => {
+                        setToastOpen(false);
+                        router.push('/forms');
+                      },
                     });
                     setToastOpen(true);
                   } else {

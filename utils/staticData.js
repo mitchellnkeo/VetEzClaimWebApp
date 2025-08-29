@@ -394,7 +394,7 @@ export const menuData = [
   },
   {
     id: 'court_appeal',
-    title: 'Court of Appeals for Veterans Claims',
+    title: 'Court of Appeals for Veterans Claims-File Appeal',
     status: true,
     submenu: [
       {
