@@ -3,99 +3,114 @@ import { useField } from 'formik';
 
 const DropDownExtended = ({
   label,
-  fieldCounter, // e.g., "2 of 13"
+  name,
+  fieldCounter,
   hasCounter = false,
   data = [],
   hintsMessage,
+  isTextFieldEnabled = false,
   ...props
 }) => {
-  const [field, meta] = useField(props);
+  const [field, meta, helpers] = useField(name);
+  const { value, onBlur } = field;
+  const { setValue } = helpers;
   const error = meta.touched && meta.error;
+
+  const handleSelect = (val) => {
+    setValue(val);
+  };
 
   return (
     <div>
-      {/* Label + Top Counter */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginBottom: '5px',
-        }}
-      >
+      {/* Label + Counter */}
+      <div className="mb-1 flex justify-between">
         {label && (
           <label
-            htmlFor={props.id || props.name}
-            style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
+            htmlFor={props.id || name}
+            className="text-sm font-medium text-blue-800"
           >
             {label}
           </label>
         )}
-
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          {fieldCounter && (
-            <span style={{ fontSize: '12px', color: '#999' }}>
-              {fieldCounter}
-            </span>
-          )}
-        </div>
+        {fieldCounter && (
+          <span className="text-xs text-gray-500">{fieldCounter}</span>
+        )}
       </div>
 
-      {/* Select Dropdown */}
-      <select
-        {...field}
-        {...props}
-        id={props.id || props.name}
-        value={field.value}
-        onChange={(e) => field.onChange(e)}
-        style={{
-          width: '100%',
-          borderBottom: '1px solid #ccc',
-          fontSize: '14px',
-          padding: '6px 4px',
-        }}
-      >
-        <option value="">Select</option>
-        {data.map((item, index) => {
-          let displayName, val;
-          if (typeof item === 'string') {
-            displayName = val = item;
-          } else {
-            displayName = item.name;
-            val = item.abbreviation || item.name;
-          }
-          return (
-            <option key={index} value={val}>
-              {displayName}
-            </option>
-          );
-        })}
-      </select>
+      {/* Input + Dropdown */}
+      {isTextFieldEnabled ? (
+        <div className="flex items-center gap-2">
+          <textarea
+            {...field}
+            id={props.id || name}
+            value={value || ''}
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={onBlur}
+            placeholder="Enter or select"
+            className="flex-1 rounded-md border border-gray-300 p-2 text-sm"
+          />
 
-      {/* Error + Field Counter */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginTop: '5px',
-        }}
-      >
+          <select
+            value=""
+            onChange={(e) => handleSelect(e.target.value)}
+            className="w-24 rounded-md border border-gray-300 p-1 text-sm"
+          >
+            <option value="" disabled hidden>
+              Select
+            </option>
+            {data.map((item, index) => {
+              let displayName, val;
+              if (typeof item === 'string') {
+                displayName = val = item;
+              } else {
+                displayName = item.option || item.name;
+                val = item.value || item.option || item.name;
+              }
+              return (
+                <option key={index} value={val}>
+                  {displayName}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      ) : (
+        <select
+          {...field}
+          {...props}
+          id={props.id || name}
+          className="w-full border-b border-gray-300 p-1 text-sm"
+        >
+          <option value="">Select</option>
+          {data.map((item, index) => {
+            let displayName, val;
+            if (typeof item === 'string') {
+              displayName = val = item;
+            } else {
+              displayName = item.option || item.name;
+              val = item.value || item.option || item.name;
+            }
+            return (
+              <option key={index} value={val}>
+                {displayName}
+              </option>
+            );
+          })}
+        </select>
+      )}
+
+      {/* Error + Hints + Counter */}
+      <div className="mt-1 flex justify-between">
         <div>
           {hintsMessage && (
-            <span style={{ fontSize: '12px', color: '#20c997' }}>
-              <p> {hintsMessage}</p>
-            </span>
+            <p className="text-xs text-green-500">{hintsMessage}</p>
           )}
-          {error && (
-            <span style={{ fontSize: '12px', color: 'red' }}>
-              {' '}
-              <p> {error}</p>{' '}
-            </span>
-          )}
+          {error && <p className="text-xs text-red-500">{error}</p>}
         </div>
         {hasCounter && (
           <div>
-            <span style={{ fontSize: '12px', color: '#999' }}>
-              {field.value ? field.value.length : 0}/{data.length}
+            <span className="text-xs text-gray-500">
+              {value ? value.length : 0}/{data.length}
             </span>
           </div>
         )}
