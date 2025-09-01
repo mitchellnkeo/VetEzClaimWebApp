@@ -449,8 +449,6 @@ export const NewClaimFileValidation = yup.object().shape({
   country: yup.string().required('This field is required to save PDF'),
   zipCode: zipCodeValidation,
   email: emailValidation,
-  emailE: yup.bool(),
-  currentlyEmployee: yup.bool(),
   typeAddressChange: yup.string().default(''),
   newAddressstreet: yup.string().when('typeAddressChange', {
     is: (value) => value === 'Permanent' || value === 'Temporary',
@@ -614,7 +612,6 @@ export const NewClaimFileValidation = yup.object().shape({
         })
         .required('This is required to save PDF'),
       date: yup.string(),
-      notAvailable: yup.boolean(),
     })
   ),
   anotherName: yup.string().required('This field is required to save PDF'),
@@ -767,9 +764,6 @@ export const NewClaimFileValidation = yup.object().shape({
         .required('This field is required to save PDF'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  noInactivePayment: yup.bool(),
-  noRetiredPayment: yup.bool(),
-  directDeposit: yup.bool(),
   veteranDateSigned: yup
     .string()
     .required('This field is required to save PDF'),

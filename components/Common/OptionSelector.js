@@ -10,6 +10,7 @@ export default function OptionSelector({
   fieldCounter,
   hasCounter = false,
   hintsMessage,
+  onSelectionChange,
 }) {
   const [field, meta, helpers] = useField(name);
   const [localOptions, setLocalOptions] = useState([]);
@@ -26,20 +27,29 @@ export default function OptionSelector({
     }
   }, [field.value, options]);
 
+  const triggerCallback = (updatedOptions) => {
+    if (onSelectionChange) {
+      onSelectionChange(updatedOptions);
+    }
+  };
+
   const handleSelect = (selectedOption) => {
     let updatedOptions;
     if (multiSelect) {
-      updatedOptions = localOptions.map((o) =>
+      updatedOptions = localOptions.map((o, i) =>
         o.option === selectedOption ? { ...o, isSelected: !o.isSelected } : o
       );
     } else {
-      updatedOptions = localOptions.map((o) => ({
+      updatedOptions = localOptions.map((o, i) => ({
         ...o,
-        isSelected: o.option === selectedOption,
+        isSelected: o.option === selectedOption && !o.isSelected,
       }));
     }
+
+    console.log('handleSelect >> ', updatedOptions);
     setLocalOptions(updatedOptions);
     helpers.setValue(updatedOptions);
+    triggerCallback(updatedOptions);
   };
 
   const handleOtherCheck = () => {
@@ -59,15 +69,17 @@ export default function OptionSelector({
     }
     setLocalOptions(updatedOptions);
     helpers.setValue(updatedOptions);
+    triggerCallback(updatedOptions);
   };
 
   const handleOtherText = (text) => {
     setOtherText(text);
-    const updatedOptions = localOptions.map((o) =>
+    const updatedOptions = localOptions.map((o, i) =>
       o.option === 'Other' ? { ...o, value: text, isSelected: true } : o
     );
     setLocalOptions(updatedOptions);
     helpers.setValue(updatedOptions);
+    triggerCallback(updatedOptions);
   };
 
   const error = meta.touched && meta.error;
@@ -113,8 +125,8 @@ export default function OptionSelector({
                 type="text"
                 value={otherText}
                 onChange={(e) => handleOtherText(e.target.value)}
-                placeholder="Enter other..."
-                className="ml-2 rounded border p-1"
+                placeholder="Specify Other.."
+                className="ml-5 rounded border p-1"
               />
             )}
           </div>
@@ -134,7 +146,7 @@ export default function OptionSelector({
                 type="text"
                 value={otherText}
                 onChange={(e) => handleOtherText(e.target.value)}
-                placeholder="Enter other..."
+                placeholder="Specify Other.."
                 className="ml-2 rounded border p-1"
               />
             )}
