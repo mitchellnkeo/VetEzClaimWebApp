@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Loader from '@/components/Common/Loader';
 import { generateSubmitToIntentPdf } from '@/utils/pdfObjectMaker';
-import { generateSubmitToIntentFormPdf } from '@/services/pdfGenerationService';
+import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -293,7 +293,7 @@ export default function SubmitToIntentForm() {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
             const pdfObject = await generateSubmitToIntentPdf(formData);
-            await generateSubmitToIntentFormPdf(pdfObject)
+            await generatePdfService(pdfObject, 'generate')
               .then(async (res) => {
                 if (isFromGeneratePdf) {
                   await saveData({ pdf: true }, false);
@@ -392,7 +392,7 @@ export default function SubmitToIntentForm() {
               const pdfObject = await generateSubmitToIntentPdf(formData);
               console.log('2  faxData >> ', pdfObject);
 
-              await generateSubmitToIntentFormPdf(pdfObject)
+              await generatePdfService(pdfObject, 'generate')
                 .then(async (res) => {
                   console.log(res.download_url);
                   const faxBody = await getFaxBodyData(

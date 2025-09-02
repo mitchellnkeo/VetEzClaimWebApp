@@ -33,7 +33,7 @@ export default function OptionSelector({
     }
   };
 
-  const handleSelect = (selectedOption) => {
+  const handleSelect = async (selectedOption) => {
     let updatedOptions;
     if (multiSelect) {
       updatedOptions = localOptions.map((o, i) =>
@@ -48,11 +48,11 @@ export default function OptionSelector({
 
     console.log('handleSelect >> ', updatedOptions);
     setLocalOptions(updatedOptions);
-    helpers.setValue(updatedOptions);
+    await helpers.setValue(updatedOptions);
     triggerCallback(updatedOptions);
   };
 
-  const handleOtherCheck = () => {
+  const handleOtherCheck = async () => {
     let updatedOptions = [...localOptions];
     const otherIndex = updatedOptions.findIndex((o) => o.option === 'Other');
     if (otherIndex === -1) {
@@ -68,17 +68,17 @@ export default function OptionSelector({
         updatedOptions[otherIndex].value = '';
     }
     setLocalOptions(updatedOptions);
-    helpers.setValue(updatedOptions);
+    await helpers.setValue(updatedOptions);
     triggerCallback(updatedOptions);
   };
 
-  const handleOtherText = (text) => {
+  const handleOtherText = async (text) => {
     setOtherText(text);
     const updatedOptions = localOptions.map((o, i) =>
       o.option === 'Other' ? { ...o, value: text, isSelected: true } : o
     );
     setLocalOptions(updatedOptions);
-    helpers.setValue(updatedOptions);
+    await helpers.setValue(updatedOptions);
     triggerCallback(updatedOptions);
   };
 
