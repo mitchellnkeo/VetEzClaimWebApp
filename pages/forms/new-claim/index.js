@@ -18,8 +18,8 @@ import { postFormData, getFormData } from '@/firebase/firebaseOperations';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Loader from '@/components/Common/Loader';
-import { generateSubmitToIntentPdf } from '@/utils/pdfObjectMaker';
-import { generateSubmitToIntentFormPdf } from '@/services/pdfGenerationService';
+import { generateNewClaimPdfObject } from '@/utils/pdfObjectMaker';
+import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -335,7 +335,7 @@ export default function NewClaimForm() {
   });
 
   return (
-    <FrontLayout title="New Claim or Increase">
+    <FrontLayout title="New Claim or Increas (Form 21-526EZ)">
       <Formik
         initialValues={initialValues}
         validationSchema={NewClaimFileValidation}
@@ -385,8 +385,10 @@ export default function NewClaimForm() {
               ...values,
               currentlyHomelesslivingSituation: selectedValue,
               currentlyHomelessspecify: othersData,
+              currentlyHomelesslivingSituationHolder: selectedOptions,
             });
           };
+
           const riskOfHomelessCallback = async (selectedOptions) => {
             let selectedValue = '';
             let othersData = '';
@@ -403,8 +405,10 @@ export default function NewClaimForm() {
               ...values,
               riskOfHomelesslivingSituation: selectedValue,
               riskOfHomelessspecify: othersData,
+              riskOfHomelesslivingSituationHolder: selectedOptions,
             });
           };
+
           const exposedDataCallback = async (selectedOptions) => {
             const optionToFieldMap = {
               Asbestos: 'haveExposed_Asbestos',
@@ -430,6 +434,7 @@ export default function NewClaimForm() {
               }
             }
           };
+
           const loadDataFromLocalStorage = async () => {
             console.log('loading data from local storage : ', user);
             await setValues({
@@ -448,39 +453,59 @@ export default function NewClaimForm() {
               signature: user.signature ? user.signature : '',
             });
           };
+
           const loadDataFromFirebase = async (data) => {
             var dataBody = {
               ...data,
               emailE: data.emailE
                 ? [{ ...receivingEmail[0], isSelected: true }]
                 : [...receivingEmail],
-              claimantsEmailE: data.claimantsEmailE
-                ? [{ ...receivingEmail[0], isSelected: true }]
-                : [...receivingEmail],
-              dic: data.dic
-                ? [{ ...dicOption[0], isSelected: true }]
-                : [...dicOption],
-              benefitElection: (data.benefitElection || beifitOption).map(
-                (item, idx) => ({
-                  option: item.name || beifitOption[idx]?.option,
-                  isSelected: !!item.selected,
-                })
-              ),
-              signatureOption: data.signature
+
+              currentlyEmployee: data.currentlyEmployee
+                ? [{ ...currentEmpoyee[0], isSelected: true }]
+                : [...currentEmpoyee],
+
+              signatureOption: data.signatureOption
                 ? [{ ...signatureOption[0], isSelected: true }]
                 : [...signatureOption],
-              signature: data.signature
-                ? data.signature
-                : user?.signature || '',
+
+              noInactivePayment: data.noInactivePayment
+                ? [{ ...noInactivePaymentOption[0], isSelected: true }]
+                : [...noInactivePaymentOption],
+
+              noRetiredPayment: data.noRetiredPayment
+                ? [{ ...noRetiredPaymentOption[0], isSelected: true }]
+                : [...noRetiredPaymentOption],
+
+              directDeposit: data.directDeposit
+                ? [{ ...directDepositOption[0], isSelected: true }]
+                : [...directDepositOption],
+
+              alternateSignature: data.alternateSignature
+                ? [{ ...alternateSignatureOption[0], isSelected: true }]
+                : [...alternateSignatureOption],
+
+              poaSignature: data.poaSignature
+                ? [{ ...poaSignatureOption[0], isSelected: true }]
+                : [...poaSignatureOption],
+
+              treatmentFacilities: data.treatmentFacilities.map((item) => ({
+                facility: item.facility,
+                date: item.date,
+                notAvailable: item.notAvailable
+                  ? [{ ...notAvailableOption[0], isSelected: true }]
+                  : [...notAvailableOption],
+              })),
             };
 
             setValues(dataBody);
           };
+
           const loadData = async () => {
             setIsLoading(true);
             const data = await getFormData({
               uid: uid,
-              formName: 'fillform',
+              formName: 'newclaim',
             });
             if (data) {
               setRecordsExists(true);
@@ -491,8 +516,6 @@ export default function NewClaimForm() {
               setTimestamp(data?.timestamp === undefined ? '' : data.timestamp);
               setCount(data?.count === undefined ? 0 : data.count);
               const isUploaded = data?.isUploadedAlready || false;
-              console.log('Form data from Firebase:', data);
-              console.log('inProgress : ', inProgress);
 
               if (inProgress === 'true') {
                 await loadDataFromFirebase(data);
@@ -521,14 +544,13 @@ export default function NewClaimForm() {
               }
             } else {
               await loadDataFromLocalStorage();
-              console.log('No data found');
             }
             setIsLoading(false);
           };
 
           useEffect(() => {
             if (!router.isReady) return;
-            // loadData();
+            loadData();
           }, [uid, router.isReady, router.query]);
 
           const transformFormValues = async (formData) => {
@@ -540,46 +562,39 @@ export default function NewClaimForm() {
               signatureOption:
                 formData.signatureOption?.[0]?.isSelected || false,
               noInactivePayment:
-                formData.noInactivePaymentOption?.[0]?.isSelected || false,
+                formData.noInactivePayment?.[0]?.isSelected || false,
               noRetiredPayment:
-                formData.noRetiredPaymentOption?.[0]?.isSelected || false,
-              directDeposit:
-                formData.directDepositOption?.[0]?.isSelected || false,
+                formData.noRetiredPayment?.[0]?.isSelected || false,
+              directDeposit: formData.directDeposit?.[0]?.isSelected || false,
               alternateSignature:
-                formData.alternateSignatureOption?.[0]?.isSelected || false,
-              poaSignature:
-                formData.poaSignatureOption?.[0]?.isSelected || false,
+                formData.alternateSignature?.[0]?.isSelected || false,
+              poaSignature: formData.poaSignature?.[0]?.isSelected || false,
               treatmentFacilities: formData.treatmentFacilities.map((item) => ({
                 facility: item.facility,
                 date: item.date,
                 notAvailable: item.notAvailable?.[0]?.isSelected || false,
               })),
-              signature: formData.signatureOption?.[0]?.isSelected
-                ? formData.signature
-                : '',
             };
           };
 
           const saveData = async (fields, isFromSaveData = false) => {
             var formData = await transformFormValues(values);
-            console.log('data >> ', formData);
-            // formData = { ...formData, ...fields };
-            // console.log('>> save Data : ', formData);
-            // try {
-            //   await postFormData({
-            //     docName: 'fillform',
-            //     uid: uid,
-            //     formId: 'Submit\nIntent',
-            //     recordExists: recordExists,
-            //     formData: formData,
-            //   });
-            //   return true;
-            // } catch (error) {
-            //   if (isFromSaveData) {
-            //     toast.error('Save failed. Something went wrong!');
-            //     return false;
-            //   }
-            // }
+            formData = { ...formData, ...fields };
+            try {
+              await postFormData({
+                docName: 'newclaim',
+                uid: uid,
+                formId: '21-526EZ',
+                recordExists: recordExists,
+                formData: formData,
+              });
+              return true;
+            } catch (error) {
+              if (isFromSaveData) {
+                toast.error('Save failed. Something went wrong!');
+                return false;
+              }
+            }
           };
 
           const handleSaveOperation = async () => {
@@ -594,9 +609,11 @@ export default function NewClaimForm() {
           const generatePdf = async (formValues, isFromGeneratePdf = false) => {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
-            const pdfObject = await generateSubmitToIntentPdf(formData);
-            await generateSubmitToIntentFormPdf(pdfObject)
+            const pdfObject = await generateNewClaimPdfObject(formData);
+            console.log('pdfObject >> ', pdfObject);
+            await generatePdfService(pdfObject, 'generatepdf6')
               .then(async (res) => {
+                console.log('generatePdf >> res : ', res);
                 if (isFromGeneratePdf) {
                   await saveData({ pdf: true }, false);
                 }
@@ -604,7 +621,6 @@ export default function NewClaimForm() {
                 window.open(res?.download_url, '_blank');
               })
               .catch((err) => {
-                console.log('error', err);
                 toast.error('Error generating PDF. Please try again.');
               })
               .finally(() => {
@@ -612,13 +628,20 @@ export default function NewClaimForm() {
               });
           };
 
-          const setTouchedAction = () => {
-            setTouched(
-              Object.keys(values).reduce((acc, key) => {
-                acc[key] = true;
+          const buildTouched = (obj) => {
+            if (Array.isArray(obj)) {
+              return obj.map((item) => buildTouched(item));
+            } else if (typeof obj === 'object' && obj !== null) {
+              return Object.keys(obj).reduce((acc, key) => {
+                acc[key] = buildTouched(obj[key]);
                 return acc;
-              }, {})
-            );
+              }, {});
+            }
+            return true;
+          };
+
+          const setTouchedAction = () => {
+            setTouched(buildTouched(values));
           };
 
           const onViewDetails = async () => {
@@ -697,16 +720,13 @@ export default function NewClaimForm() {
               setIsLoading(true);
               const formData = await transformFormValues(values);
               console.log('1  faxData >> ', formData);
-              const pdfObject = await generateSubmitToIntentPdf(formData);
+              const pdfObject = await generateNewClaimPdfObject(formData);
               console.log('2  faxData >> ', pdfObject);
 
-              await generateSubmitToIntentFormPdf(pdfObject)
+              await generatePdfService(pdfObject, 'generatepdf6')
                 .then(async (res) => {
                   console.log(res.download_url);
-                  const faxBody = await getFaxBodyData(
-                    'fillsubmitform.pdf',
-                    false
-                  );
+                  const faxBody = await getFaxBodyData('newclaim.pdf', false);
                   const faxData = {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
@@ -736,9 +756,9 @@ export default function NewClaimForm() {
                     };
 
                     await postFormData({
-                      docName: 'fillform',
+                      docName: 'newclaim',
                       uid: uid,
-                      formId: 'Submit\nIntent',
+                      formId: '21-526EZ',
                       recordExists: recordExists,
                       formData: formData,
                     });
@@ -776,7 +796,7 @@ export default function NewClaimForm() {
 
           return (
             <FormContent
-              title="New Claim or Increase"
+              title="New Claim or Increase (Form 21-526EZ)"
               onViewDetails={onViewDetails}
               onSave={onSave}
               onReview={onReview}
@@ -1432,6 +1452,18 @@ export default function NewClaimForm() {
                           options={values.treatmentFacilities[ind].notAvailable}
                           multiSelect={true}
                           isOtherAllowed={false}
+                          onSelectionChange={(selectedOptions) => {
+                            console.log(selectedOptions);
+                            setValues({
+                              ...values,
+                              treatmentFacilities:
+                                values.treatmentFacilities.map((item, i) =>
+                                  i === ind
+                                    ? { ...item, notAvailable: selectedOptions }
+                                    : item
+                                ),
+                            });
+                          }}
                         />
                       </div>
                     );
@@ -2005,6 +2037,7 @@ export default function NewClaimForm() {
                     placeholder="Enter account number"
                     fieldCounter="(30 of 37)"
                     limit={15}
+                    hasCounter
                   />
 
                   <DropDownExtended
@@ -2028,6 +2061,7 @@ export default function NewClaimForm() {
                     placeholder="Enter routing number"
                     fieldCounter="(32 of 37)"
                     limit={9}
+                    hasCounter1212
                   />
                 </>
 
