@@ -169,3 +169,1688 @@ export const generateSubmitToIntentPdf = async (form) => {
   };
   return infoToPDF;
 };
+
+export const generateNewClaimPdfObject = async (form) => {
+  const infoToPDF = {
+    content: {
+      documentKey: 'tpl_HYmmEYgDRcPRfQHcrk',
+      f: {
+        page_1: {
+          fully_developed_claim: form.program
+            ? form.program == 'FDC Program'
+              ? true
+              : false
+            : false,
+          scp: form.program
+            ? form.program == 'Standard Claim Progress'
+              ? true
+              : false
+            : false,
+          ides: form.program ? (form.program == 'IDES' ? true : false) : false,
+          bdd: form.program
+            ? form.program == 'BDD Program Claim'
+              ? true
+              : false
+            : false,
+
+          firstname: form.firstName ? form.firstName.slice(0, 12) : '',
+          last_name: form.lastName ? form.lastName.slice(0, 18) : '',
+          ssn1: form.ssn ? form.ssn.slice(0, 3) : '',
+          ssn2: form.ssn ? form.ssn.slice(3, 5) : '',
+          ssn3: form.ssn ? form.ssn.slice(5, 9) : '',
+          file_yes: form.claim ? (form.claim == 'Yes' ? true : false) : false,
+          file_no: form.claim ? (form.claim == 'No' ? true : false) : false,
+          va_file_number: form.currentVa ? form.currentVa : '',
+          service_number: form.serviceNumber ? form.serviceNumber : '',
+          birth_month: form.birthday ? form.birthday.slice(0, 2) : '',
+          birth_day: form.birthday ? form.birthday.slice(3, 5) : '',
+          birth_year: form.birthday ? form.birthday.slice(6, 10) : '',
+          phone_area_code: form.phone ? form.phone.slice(0, 3) : '',
+          telephone1: form.phone ? form.phone.slice(4, 7) : '',
+          telephone2: form.phone ? form.phone.slice(8, 12) : '',
+          release_month: form.bddDate ? form.bddDate.slice(0, 2) : '',
+          release_day: form.bddDate ? form.bddDate.slice(3, 5) : '',
+          release_year: form.bddDate ? form.bddDate.slice(6, 10) : '',
+          international_tel: form.phoneI ? form.phoneI : '',
+
+          curren_address: form.street ? form.street.slice(0, 30) : '',
+          apartment_number: form.unitNumber ? form.unitNumber.slice(0, 5) : '',
+          city: form.city ? form.city.slice(0, 18) : '',
+          state: form.province ? form.province.slice(0, 2) : '',
+          country: form.country ? form.country.slice(0, 2) : '',
+          zip_code: form.zipCode ? form.zipCode.slice(0, 5) : '',
+          postal_code: form.zipCode ? form.zipCode.slice(6, 10) : '',
+
+          email_address_1: form.email ? form.email.slice(0, 25) : '',
+          email_address_2: form.email ? form.email.slice(25, 50) : '',
+          isNewFormat: true,
+          email_address_3: form.email ? form.email.slice(0, 13) : '',
+          email_address_4: form.email ? form.email.slice(13, 25) : '',
+          email_address_5: form.email ? form.email.slice(25, 38) : '',
+          email_address_6: form.email ? form.email.slice(38, 50) : '',
+
+          agree_correspondence: form.emailE ? form.emailE : false,
+          current_va_employee_check_box: form.currentlyEmployee
+            ? form.currentlyEmployee
+            : false,
+
+          address_temp: form.typeAddressChange
+            ? form.typeAddressChange == 'Temporary'
+              ? true
+              : false
+            : false,
+          address_perm: form.typeAddressChange
+            ? form.typeAddressChange == 'Permanent'
+              ? true
+              : false
+            : false,
+
+          new_address: form.newAddressstreet
+            ? form.newAddressstreet.slice(0, 30)
+            : '',
+          new_address_number: form.newAddressunitNumber
+            ? form.newAddressunitNumber.slice(0, 5)
+            : '',
+          new_address_city: form.newAddresscity
+            ? form.newAddresscity.slice(0, 18)
+            : '',
+          new_address_state: form.newAddressprovince
+            ? form.newAddressprovince.slice(0, 2)
+            : '',
+          new_address_country: form.newAddresscountry
+            ? form.newAddresscountry.slice(0, 2)
+            : '',
+          new_address_zip: form.newAddresszipCode
+            ? form.newAddresszipCode.slice(0, 5)
+            : '',
+          new_address_postalcode: form.newAddresszipCode
+            ? form.newAddresszipCode.slice(6, 10)
+            : '',
+          beginning_month: form.newAddressEffectiveBeginning
+            ? form.newAddressEffectiveBeginning.slice(0, 2)
+            : '',
+          beginning_day: form.newAddressEffectiveBeginning
+            ? form.newAddressEffectiveBeginning.slice(3, 5)
+            : '',
+          beginning_year: form.newAddressEffectiveBeginning
+            ? form.newAddressEffectiveBeginning.slice(6, 10)
+            : '',
+
+          ending_month: form.newAddressEffectiveEnding
+            ? form.newAddressEffectiveEnding.slice(0, 2)
+            : '',
+          ending_day: form.newAddressEffectiveEnding
+            ? form.newAddressEffectiveEnding.slice(3, 5)
+            : '',
+          ending_year: form.newAddressEffectiveEnding
+            ? form.newAddressEffectiveEnding.slice(6, 10)
+            : '',
+
+          '14a_opt_1': form.currentlyHomeless
+            ? form.currentlyHomeless == 'Yes'
+              ? true
+              : false
+            : false,
+          '14a_opt_2': form.currentlyHomeless
+            ? form.currentlyHomeless == 'No'
+              ? true
+              : false
+            : false,
+
+          '14b_opt_1': form.currentlyHomelesslivingSituation
+            ? form.currentlyHomelesslivingSituation == 'Shelter'
+              ? true
+              : false
+            : false,
+          '14b_opt_2': form.currentlyHomelesslivingSituation
+            ? form.currentlyHomelesslivingSituation ==
+              'Non-sheltered Enviroment'
+              ? true
+              : false
+            : false,
+          '14b_opt_3': form.currentlyHomelesslivingSituation
+            ? form.currentlyHomelesslivingSituation == 'Another'
+              ? true
+              : false
+            : false,
+          '14b_opt_4': form.currentlyHomelesslivingSituation
+            ? form.currentlyHomelesslivingSituation == 'Fleeing Residence'
+              ? true
+              : false
+            : false,
+          '14b_opt_5': form.currentlyHomelesslivingSituation
+            ? form.currentlyHomelesslivingSituation == 'Other'
+              ? true
+              : false
+            : false,
+          '14a_str_1':
+            form.currentlyHomeless == 'Yes' &&
+            form.currentlyHomelesslivingSituation == 'Other' &&
+            form.currentlyHomelessspecify
+              ? form.currentlyHomelessspecify
+              : '',
+
+          '14c_opt_1': form.riskOfHomeless
+            ? form.riskOfHomeless == 'Yes'
+              ? true
+              : false
+            : false,
+          '14c_opt_2': form.riskOfHomeless
+            ? form.riskOfHomeless == 'No'
+              ? true
+              : false
+            : false,
+          '14d_opt_1': form.riskOfHomelesslivingSituation
+            ? form.riskOfHomelesslivingSituation ==
+              'Housing will be lost in 30 days'
+              ? true
+              : false
+            : false,
+          '14d_opt_2': form.riskOfHomelesslivingSituation
+            ? form.riskOfHomelesslivingSituation ==
+              'Leaving publicly funded system of care (e.g., homeless shelter)'
+              ? true
+              : false
+            : false,
+          '14d_opt_3': form.riskOfHomelesslivingSituation
+            ? form.riskOfHomelesslivingSituation == 'Other'
+              ? true
+              : false
+            : false,
+          '14a_str_2':
+            form.riskOfHomeless == 'Yes' &&
+            form.riskOfHomelesslivingSituation == 'Other' &&
+            form.riskOfHomelessspecify
+              ? form.riskOfHomelessspecify
+              : '',
+
+          '14e_str_1': form.pointOfContactName ? form.pointOfContactName : '',
+          '14f_str_tel_1': form.pointOfContactTelephone
+            ? form.pointOfContactTelephone.slice(0, 3)
+            : '',
+          '14f_str_tel_2': form.pointOfContactTelephone
+            ? form.pointOfContactTelephone.slice(4, 7)
+            : '',
+          '14f_str_tel_3': form.pointOfContactTelephone
+            ? form.pointOfContactTelephone.slice(8, 12)
+            : '',
+          '14f_str_tel_4': form.pointOfContactTelephoneI
+            ? form.pointOfContactTelephoneI
+            : '',
+
+          '15a_opt_1': form.toxicExposures
+            ? form.toxicExposures == 'Yes'
+              ? true
+              : false
+            : false,
+          '15a_opt_2': form.toxicExposures
+            ? form.toxicExposures == 'No'
+              ? true
+              : false
+            : false,
+          '15b_opt_1': form.hazardLocation
+            ? form.hazardLocation == 'Yes'
+              ? true
+              : false
+            : false,
+          '15b_opt_2': form.hazardLocation
+            ? form.hazardLocation == 'No'
+              ? true
+              : false
+            : false,
+          '15b_date_month': form.hazardLocation
+            ? form.hazardLocation == 'Yes' && form.hazardLocationDateFrom
+              ? form.hazardLocationDateFrom.slice(0, 2)
+              : ''
+            : '',
+          '15b_date_year': form.hazardLocation
+            ? form.hazardLocation == 'Yes'
+              ? form.hazardLocationDateFrom
+                ? form.hazardLocationDateFrom.slice(6, 10)
+                : ''
+              : ''
+            : '',
+          '15b_date_month_2': form.hazardLocation
+            ? form.hazardLocation == 'Yes' && form.hazardLocationDateTo
+              ? form.hazardLocationDateTo.slice(0, 2)
+              : ''
+            : '',
+          '15b_date_year_2': form.hazardLocation
+            ? form.hazardLocation == 'Yes' && form.hazardLocationDateTo
+              ? form.hazardLocationDateTo.slice(6, 10)
+              : ''
+            : '',
+          '15c_opt_1': form.herbicideLocation
+            ? form.herbicideLocation == 'Yes'
+              ? true
+              : false
+            : false,
+          '15c_opt_2': form.herbicideLocation
+            ? form.herbicideLocation == 'No'
+              ? true
+              : false
+            : false,
+          '15c_str_loc': form.herbicideLocation
+            ? form.herbicideLocationList
+            : '',
+          '15c_month_1': form.herbicideLocation
+            ? form.herbicideLocation == 'Yes' && form.herbicideLocationDateFrom
+              ? form.herbicideLocationDateFrom.slice(0, 2)
+              : ''
+            : '',
+          '15c_year_1': form.herbicideLocation
+            ? form.herbicideLocation == 'Yes' && form.herbicideLocationDateFrom
+              ? form.herbicideLocationDateFrom.slice(6, 10)
+              : ''
+            : '',
+          '15c_month_2': form.herbicideLocation
+            ? form.herbicideLocation == 'Yes' && form.herbicideLocationDateTo
+              ? form.herbicideLocationDateTo.slice(0, 2)
+              : ''
+            : '',
+          '15c_year_2': form.herbicideLocation
+            ? form.herbicideLocation == 'Yes' && form.herbicideLocationDateTo
+              ? form.herbicideLocationDateTo.slice(6, 10)
+              : ''
+            : '',
+          '15d_opt_1': form.haveExposed_Asbestos ? true : false,
+          '15d_opt_4': form.haveExposed_MustardGas ? true : false,
+          '15d_opt_6': form.haveExposed_Radiation ? true : false,
+          '15d_opt_2': form.haveExposed_SHAD ? true : false,
+          '15d_opt_5': form.haveExposed_MOSRelatedToxin ? true : false,
+          '15d_opt_7': form.haveExposed_ContaminatedWater ? true : false,
+          '15d_opt_3': form.haveExposed_Other ? true : false,
+          '15d_str': form.haveExposed_OtherSpecify
+            ? form.haveExposed_OtherSpecify
+            : '',
+          '15d_date_month': form.haveExposed_dateFrom
+            ? form.haveExposed_dateFrom.slice(0, 2)
+            : '',
+          '15d_date_year': form.haveExposed_dateFrom
+            ? form.haveExposed_dateFrom.slice(6, 10)
+            : '',
+          '15d_date_month_2': form.haveExposed_dateTo
+            ? form.haveExposed_dateTo.slice(0, 2)
+            : '',
+          '15d_date_year_2': form.haveExposed_dateTo
+            ? form.haveExposed_dateTo.slice(6, 10)
+            : '',
+          '15e_str': form.haveExposed_multipleTimes
+            ? form.haveExposed_multipleTimes
+            : '',
+
+          currentdisability_0: form.disabilities
+            ? form.disabilities.length > 0
+              ? form.disabilities[0].currentDisability
+              : ''
+            : '',
+          injury_0: form.disabilities
+            ? form.disabilities.length > 0
+              ? form.disabilities[0].specifications
+              : ''
+            : '',
+          disability_0: form.disabilities
+            ? form.disabilities.length > 0
+              ? form.disabilities[0].explanation
+              : ''
+            : '',
+          date_disability_0: form.disabilities
+            ? form.disabilities.length > 0
+              ? form.disabilities[0].date
+              : ''
+            : '',
+          currentdisability_1: form.disabilities
+            ? form.disabilities.length > 1
+              ? form.disabilities[1].currentDisability
+              : ''
+            : '',
+          injury_1: form.disabilities
+            ? form.disabilities.length > 1
+              ? form.disabilities[1].specifications
+              : ''
+            : '',
+          disability_1: form.disabilities
+            ? form.disabilities.length > 1
+              ? form.disabilities[1].explanation
+              : ''
+            : '',
+          date_disability_1: form.disabilities
+            ? form.disabilities.length > 1
+              ? form.disabilities[1].date
+              : ''
+            : '',
+          currentdisability_2: form.disabilities
+            ? form.disabilities.length > 2
+              ? form.disabilities[2].currentDisability
+              : ''
+            : '',
+          injury_2: form.disabilities
+            ? form.disabilities.length > 2
+              ? form.disabilities[2].specifications
+              : ''
+            : '',
+          disability_2: form.disabilities
+            ? form.disabilities.length > 2
+              ? form.disabilities[2].explanation
+              : ''
+            : '',
+          date_disability_2: form.disabilities
+            ? form.disabilities.length > 2
+              ? form.disabilities[2].date
+              : ''
+            : '',
+          currentdisability_3: form.disabilities
+            ? form.disabilities.length > 3
+              ? form.disabilities[3].currentDisability
+              : ''
+            : '',
+          injury_3: form.disabilities
+            ? form.disabilities.length > 3
+              ? form.disabilities[3].specifications
+              : ''
+            : '',
+          disability_3: form.disabilities
+            ? form.disabilities.length > 3
+              ? form.disabilities[3].explanation
+              : ''
+            : '',
+          date_disability_3: form.disabilities
+            ? form.disabilities.length > 3
+              ? form.disabilities[3].date
+              : ''
+            : '',
+          currentdisability_4: form.disabilities
+            ? form.disabilities.length > 4
+              ? form.disabilities[4].currentDisability
+              : ''
+            : '',
+          injury_4: form.disabilities
+            ? form.disabilities.length > 4
+              ? form.disabilities[4].specifications
+              : ''
+            : '',
+          disability_4: form.disabilities
+            ? form.disabilities.length > 4
+              ? form.disabilities[4].explanation
+              : ''
+            : '',
+          date_disability_4: form.disabilities
+            ? form.disabilities.length > 4
+              ? form.disabilities[4].date
+              : ''
+            : '',
+          currentdisability_5: form.disabilities
+            ? form.disabilities.length > 5
+              ? form.disabilities[5].currentDisability
+              : ''
+            : '',
+          injury_5: form.disabilities
+            ? form.disabilities.length > 5
+              ? form.disabilities[5].specifications
+              : ''
+            : '',
+          disability_5: form.disabilities
+            ? form.disabilities.length > 5
+              ? form.disabilities[5].explanation
+              : ''
+            : '',
+          date_disability_5: form.disabilities
+            ? form.disabilities.length > 5
+              ? form.disabilities[5].date
+              : ''
+            : '',
+          currentdisability_6: form.disabilities
+            ? form.disabilities.length > 6
+              ? form.disabilities[6].currentDisability
+              : ''
+            : '',
+          injury_6: form.disabilities
+            ? form.disabilities.length > 6
+              ? form.disabilities[6].specifications
+              : ''
+            : '',
+          disability_6: form.disabilities
+            ? form.disabilities.length > 6
+              ? form.disabilities[6].explanation
+              : ''
+            : '',
+          date_disability_6: form.disabilities
+            ? form.disabilities.length > 6
+              ? form.disabilities[6].date
+              : ''
+            : '',
+          currentdisability_7: form.disabilities
+            ? form.disabilities.length > 7
+              ? form.disabilities[7].currentDisability
+              : ''
+            : '',
+          injury_7: form.disabilities
+            ? form.disabilities.length > 7
+              ? form.disabilities[7].specifications
+              : ''
+            : '',
+          disability_7: form.disabilities
+            ? form.disabilities.length > 7
+              ? form.disabilities[7].explanation
+              : ''
+            : '',
+          date_disability_7: form.disabilities
+            ? form.disabilities.length > 7
+              ? form.disabilities[7].date
+              : ''
+            : '',
+          currentdisability_8: form.disabilities
+            ? form.disabilities.length > 8
+              ? form.disabilities[8].currentDisability
+              : ''
+            : '',
+          injury_8: form.disabilities
+            ? form.disabilities.length > 8
+              ? form.disabilities[8].specifications
+              : ''
+            : '',
+          disability_8: form.disabilities
+            ? form.disabilities.length > 8
+              ? form.disabilities[8].explanation
+              : ''
+            : '',
+          date_disability_8: form.disabilities
+            ? form.disabilities.length > 8
+              ? form.disabilities[8].date
+              : ''
+            : '',
+          currentdisability_9: form.disabilities
+            ? form.disabilities.length > 9
+              ? form.disabilities[9].currentDisability
+              : ''
+            : '',
+          injury_9: form.disabilities
+            ? form.disabilities.length > 9
+              ? form.disabilities[9].specifications
+              : ''
+            : '',
+          disability_9: form.disabilities
+            ? form.disabilities.length > 9
+              ? form.disabilities[9].explanation
+              : ''
+            : '',
+          date_disability_9: form.disabilities
+            ? form.disabilities.length > 9
+              ? form.disabilities[9].date
+              : ''
+            : '',
+          currentdisability_10: form.disabilities
+            ? form.disabilities.length > 10
+              ? form.disabilities[10].currentDisability
+              : ''
+            : '',
+          injury_10: form.disabilities
+            ? form.disabilities.length > 10
+              ? form.disabilities[10].specifications
+              : ''
+            : '',
+          disability_10: form.disabilities
+            ? form.disabilities.length > 10
+              ? form.disabilities[10].explanation
+              : ''
+            : '',
+          date_disability_10: form.disabilities
+            ? form.disabilities.length > 10
+              ? form.disabilities[10].date
+              : ''
+            : '',
+          currentdisability_11: form.disabilities
+            ? form.disabilities.length > 11
+              ? form.disabilities[11].currentDisability
+              : ''
+            : '',
+          injury_11: form.disabilities
+            ? form.disabilities.length > 11
+              ? form.disabilities[11].specifications
+              : ''
+            : '',
+          disability_11: form.disabilities
+            ? form.disabilities.length > 11
+              ? form.disabilities[11].explanation
+              : ''
+            : '',
+          date_disability_11: form.disabilities
+            ? form.disabilities.length > 11
+              ? form.disabilities[11].date
+              : ''
+            : '',
+          currentdisability_12: form.disabilities
+            ? form.disabilities.length > 12
+              ? form.disabilities[12].currentDisability
+              : ''
+            : '',
+          injury_12: form.disabilities
+            ? form.disabilities.length > 12
+              ? form.disabilities[12].specifications
+              : ''
+            : '',
+          disability_12: form.disabilities
+            ? form.disabilities.length > 12
+              ? form.disabilities[12].explanation
+              : ''
+            : '',
+          date_disability_12: form.disabilities
+            ? form.disabilities.length > 12
+              ? form.disabilities[12].date
+              : ''
+            : '',
+          currentdisability_13: form.disabilities
+            ? form.disabilities.length > 13
+              ? form.disabilities[13].currentDisability
+              : ''
+            : '',
+          injury_13: form.disabilities
+            ? form.disabilities.length > 13
+              ? form.disabilities[13].specifications
+              : ''
+            : '',
+          disability_13: form.disabilities
+            ? form.disabilities.length > 13
+              ? form.disabilities[13].explanation
+              : ''
+            : '',
+          date_disability_13: form.disabilities
+            ? form.disabilities.length > 13
+              ? form.disabilities[13].date
+              : ''
+            : '',
+          currentdisability_14: form.disabilities
+            ? form.disabilities.length > 14
+              ? form.disabilities[14].currentDisability
+              : ''
+            : '',
+          injury_14: form.disabilities
+            ? form.disabilities.length > 14
+              ? form.disabilities[14].specifications
+              : ''
+            : '',
+          disability_14: form.disabilities
+            ? form.disabilities.length > 14
+              ? form.disabilities[14].explanation
+              : ''
+            : '',
+          date_disability_14: form.disabilities
+            ? form.disabilities.length > 14
+              ? form.disabilities[14].date
+              : ''
+            : '',
+          currentdisability_15: form.disabilities
+            ? form.disabilities.length > 15
+              ? form.disabilities[15].currentDisability
+              : ''
+            : '',
+          injury_15: form.disabilities
+            ? form.disabilities.length > 15
+              ? form.disabilities[15].specifications
+              : ''
+            : '',
+          disability_15: form.disabilities
+            ? form.disabilities.length > 15
+              ? form.disabilities[15].explanation
+              : ''
+            : '',
+          date_disability_15: form.disabilities
+            ? form.disabilities.length > 15
+              ? form.disabilities[15].date
+              : ''
+            : '',
+          currentdisability_16: form.disabilities
+            ? form.disabilities.length > 16
+              ? form.disabilities[16].currentDisability
+              : ''
+            : '',
+          injury_16: form.disabilities
+            ? form.disabilities.length > 16
+              ? form.disabilities[16].specifications
+              : ''
+            : '',
+          disability_16: form.disabilities
+            ? form.disabilities.length > 16
+              ? form.disabilities[16].explanation
+              : ''
+            : '',
+          date_disability_16: form.disabilities
+            ? form.disabilities.length > 16
+              ? form.disabilities[16].date
+              : ''
+            : '',
+          currentdisability_17: form.disabilities
+            ? form.disabilities.length > 17
+              ? form.disabilities[17].currentDisability
+              : ''
+            : '',
+          injury_17: form.disabilities
+            ? form.disabilities.length > 17
+              ? form.disabilities[17].specifications
+              : ''
+            : '',
+          disability_17: form.disabilities
+            ? form.disabilities.length > 17
+              ? form.disabilities[17].explanation
+              : ''
+            : '',
+          date_disability_17: form.disabilities
+            ? form.disabilities.length > 17
+              ? form.disabilities[17].date
+              : ''
+            : '',
+          currentdisability_18: form.disabilities
+            ? form.disabilities.length > 18
+              ? form.disabilities[18].currentDisability
+              : ''
+            : '',
+          injury_18: form.disabilities
+            ? form.disabilities.length > 18
+              ? form.disabilities[18].specifications
+              : ''
+            : '',
+          disability_18: form.disabilities
+            ? form.disabilities.length > 18
+              ? form.disabilities[18].explanation
+              : ''
+            : '',
+          date_disability_18: form.disabilities
+            ? form.disabilities.length > 18
+              ? form.disabilities[18].date
+              : ''
+            : '',
+          currentdisability_19: form.disabilities
+            ? form.disabilities.length > 19
+              ? form.disabilities[19].currentDisability
+              : ''
+            : '',
+          injury_19: form.disabilities
+            ? form.disabilities.length > 19
+              ? form.disabilities[19].specifications
+              : ''
+            : '',
+          disability_19: form.disabilities
+            ? form.disabilities.length > 19
+              ? form.disabilities[19].explanation
+              : ''
+            : '',
+          date_disability_19: form.disabilities
+            ? form.disabilities.length > 19
+              ? form.disabilities[19].date
+              : ''
+            : '',
+
+          // add more disabilities here
+          currentdisability_20: form.disabilities
+            ? form.disabilities.length > 20
+              ? form.disabilities[20].currentDisability
+              : ''
+            : '',
+          injury_20: form.disabilities
+            ? form.disabilities.length > 20
+              ? form.disabilities[20].specifications
+              : ''
+            : '',
+          disability_20: form.disabilities
+            ? form.disabilities.length > 20
+              ? form.disabilities[20].explanation
+              : ''
+            : '',
+          date_disability_20: form.disabilities
+            ? form.disabilities.length > 20
+              ? form.disabilities[20].date
+              : ''
+            : '',
+
+          currentdisability_21: form.disabilities
+            ? form.disabilities.length > 21
+              ? form.disabilities[21].currentDisability
+              : ''
+            : '',
+          injury_21: form.disabilities
+            ? form.disabilities.length > 21
+              ? form.disabilities[21].specifications
+              : ''
+            : '',
+          disability_21: form.disabilities
+            ? form.disabilities.length > 21
+              ? form.disabilities[21].explanation
+              : ''
+            : '',
+          date_disability_21: form.disabilities
+            ? form.disabilities.length > 21
+              ? form.disabilities[21].date
+              : ''
+            : '',
+
+          currentdisability_22: form.disabilities
+            ? form.disabilities.length > 22
+              ? form.disabilities[22].currentDisability
+              : ''
+            : '',
+          injury_22: form.disabilities
+            ? form.disabilities.length > 22
+              ? form.disabilities[22].specifications
+              : ''
+            : '',
+          disability_22: form.disabilities
+            ? form.disabilities.length > 22
+              ? form.disabilities[22].explanation
+              : ''
+            : '',
+          date_disability_22: form.disabilities
+            ? form.disabilities.length > 22
+              ? form.disabilities[22].date
+              : ''
+            : '',
+
+          currentdisability_23: form.disabilities
+            ? form.disabilities.length > 23
+              ? form.disabilities[23].currentDisability
+              : ''
+            : '',
+          injury_23: form.disabilities
+            ? form.disabilities.length > 23
+              ? form.disabilities[23].specifications
+              : ''
+            : '',
+          disability_23: form.disabilities
+            ? form.disabilities.length > 23
+              ? form.disabilities[23].explanation
+              : ''
+            : '',
+          date_disability_23: form.disabilities
+            ? form.disabilities.length > 23
+              ? form.disabilities[23].date
+              : ''
+            : '',
+
+          currentdisability_24: form.disabilities
+            ? form.disabilities.length > 24
+              ? form.disabilities[24].currentDisability
+              : ''
+            : '',
+          injury_24: form.disabilities
+            ? form.disabilities.length > 24
+              ? form.disabilities[24].specifications
+              : ''
+            : '',
+          disability_24: form.disabilities
+            ? form.disabilities.length > 24
+              ? form.disabilities[24].explanation
+              : ''
+            : '',
+          date_disability_24: form.disabilities
+            ? form.disabilities.length > 24
+              ? form.disabilities[24].date
+              : ''
+            : '',
+
+          currentdisability_25: form.disabilities
+            ? form.disabilities.length > 25
+              ? form.disabilities[25].currentDisability
+              : ''
+            : '',
+          injury_25: form.disabilities
+            ? form.disabilities.length > 25
+              ? form.disabilities[25].specifications
+              : ''
+            : '',
+          disability_25: form.disabilities
+            ? form.disabilities.length > 25
+              ? form.disabilities[25].explanation
+              : ''
+            : '',
+          date_disability_25: form.disabilities
+            ? form.disabilities.length > 25
+              ? form.disabilities[25].date
+              : ''
+            : '',
+
+          currentdisability_26: form.disabilities
+            ? form.disabilities.length > 26
+              ? form.disabilities[26].currentDisability
+              : ''
+            : '',
+          injury_26: form.disabilities
+            ? form.disabilities.length > 26
+              ? form.disabilities[26].specifications
+              : ''
+            : '',
+          disability_26: form.disabilities
+            ? form.disabilities.length > 26
+              ? form.disabilities[26].explanation
+              : ''
+            : '',
+          date_disability_26: form.disabilities
+            ? form.disabilities.length > 26
+              ? form.disabilities[26].date
+              : ''
+            : '',
+
+          currentdisability_27: form.disabilities
+            ? form.disabilities.length > 27
+              ? form.disabilities[27].currentDisability
+              : ''
+            : '',
+          injury_27: form.disabilities
+            ? form.disabilities.length > 27
+              ? form.disabilities[27].specifications
+              : ''
+            : '',
+          disability_27: form.disabilities
+            ? form.disabilities.length > 27
+              ? form.disabilities[27].explanation
+              : ''
+            : '',
+          date_disability_27: form.disabilities
+            ? form.disabilities.length > 27
+              ? form.disabilities[27].date
+              : ''
+            : '',
+
+          currentdisability_28: form.disabilities
+            ? form.disabilities.length > 28
+              ? form.disabilities[28].currentDisability
+              : ''
+            : '',
+          injury_28: form.disabilities
+            ? form.disabilities.length > 28
+              ? form.disabilities[28].specifications
+              : ''
+            : '',
+          disability_28: form.disabilities
+            ? form.disabilities.length > 28
+              ? form.disabilities[28].explanation
+              : ''
+            : '',
+          date_disability_28: form.disabilities
+            ? form.disabilities.length > 28
+              ? form.disabilities[28].date
+              : ''
+            : '',
+
+          currentdisability_29: form.disabilities
+            ? form.disabilities.length > 29
+              ? form.disabilities[29].currentDisability
+              : ''
+            : '',
+          injury_29: form.disabilities
+            ? form.disabilities.length > 29
+              ? form.disabilities[29].specifications
+              : ''
+            : '',
+          disability_29: form.disabilities
+            ? form.disabilities.length > 29
+              ? form.disabilities[29].explanation
+              : ''
+            : '',
+          date_disability_29: form.disabilities
+            ? form.disabilities.length > 29
+              ? form.disabilities[29].date
+              : ''
+            : '',
+
+          currentdisability_30: form.disabilities
+            ? form.disabilities.length > 30
+              ? form.disabilities[30].currentDisability
+              : ''
+            : '',
+          injury_30: form.disabilities
+            ? form.disabilities.length > 30
+              ? form.disabilities[30].specifications
+              : ''
+            : '',
+          disability_30: form.disabilities
+            ? form.disabilities.length > 30
+              ? form.disabilities[30].explanation
+              : ''
+            : '',
+          date_disability_30: form.disabilities
+            ? form.disabilities.length > 30
+              ? form.disabilities[30].date
+              : ''
+            : '',
+
+          currentdisability_31: form.disabilities
+            ? form.disabilities.length > 31
+              ? form.disabilities[31].currentDisability
+              : ''
+            : '',
+          injury_31: form.disabilities
+            ? form.disabilities.length > 31
+              ? form.disabilities[31].specifications
+              : ''
+            : '',
+          disability_31: form.disabilities
+            ? form.disabilities.length > 31
+              ? form.disabilities[31].explanation
+              : ''
+            : '',
+          date_disability_31: form.disabilities
+            ? form.disabilities.length > 31
+              ? form.disabilities[31].date
+              : ''
+            : '',
+
+          currentdisability_32: form.disabilities
+            ? form.disabilities.length > 32
+              ? form.disabilities[32].currentDisability
+              : ''
+            : '',
+          injury_32: form.disabilities
+            ? form.disabilities.length > 32
+              ? form.disabilities[32].specifications
+              : ''
+            : '',
+          disability_32: form.disabilities
+            ? form.disabilities.length > 32
+              ? form.disabilities[32].explanation
+              : ''
+            : '',
+          date_disability_32: form.disabilities
+            ? form.disabilities.length > 32
+              ? form.disabilities[32].date
+              : ''
+            : '',
+
+          currentdisability_33: form.disabilities
+            ? form.disabilities.length > 33
+              ? form.disabilities[33].currentDisability
+              : ''
+            : '',
+          injury_33: form.disabilities
+            ? form.disabilities.length > 33
+              ? form.disabilities[33].specifications
+              : ''
+            : '',
+          disability_33: form.disabilities
+            ? form.disabilities.length > 33
+              ? form.disabilities[33].explanation
+              : ''
+            : '',
+          date_disability_33: form.disabilities
+            ? form.disabilities.length > 33
+              ? form.disabilities[33].date
+              : ''
+            : '',
+
+          currentdisability_34: form.disabilities
+            ? form.disabilities.length > 34
+              ? form.disabilities[34].currentDisability
+              : ''
+            : '',
+          injury_34: form.disabilities
+            ? form.disabilities.length > 34
+              ? form.disabilities[34].specifications
+              : ''
+            : '',
+          disability_34: form.disabilities
+            ? form.disabilities.length > 34
+              ? form.disabilities[34].explanation
+              : ''
+            : '',
+          date_disability_34: form.disabilities
+            ? form.disabilities.length > 34
+              ? form.disabilities[34].date
+              : ''
+            : '',
+
+          '17a_str_1': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 0
+              ? form.treatmentFacilities[0].facility
+              : ''
+            : '',
+          '17b_date_month_1': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 0
+              ? form.treatmentFacilities[0].notAvailable
+                ? ''
+                : form.treatmentFacilities[0].date
+                ? form.treatmentFacilities[0].date.slice(0, 2)
+                : ''
+              : ''
+            : '',
+          '17b_date_year_1': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 0
+              ? form.treatmentFacilities[0].notAvailable
+                ? ''
+                : form.treatmentFacilities[0].date
+                ? form.treatmentFacilities[0].date.slice(6, 10)
+                : ''
+              : ''
+            : '',
+          '17c_opt_1': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 0
+              ? form.treatmentFacilities[0].notAvailable
+                ? true
+                : false
+              : false
+            : false,
+          '17a_str_2': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 1
+              ? form.treatmentFacilities[1].facility
+              : ''
+            : '',
+          '17b_date_month_2': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 1
+              ? form.treatmentFacilities[1].notAvailable
+                ? ''
+                : form.treatmentFacilities[1].date
+                ? form.treatmentFacilities[1].date.slice(0, 2)
+                : ''
+              : ''
+            : '',
+          '17b_date_year_2': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 1
+              ? form.treatmentFacilities[1].notAvailable
+                ? ''
+                : form.treatmentFacilities[1].date
+                ? form.treatmentFacilities[1].date.slice(6, 10)
+                : ''
+              : ''
+            : '',
+          '17c_opt_2': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 1
+              ? form.treatmentFacilities[1].notAvailable
+                ? true
+                : false
+              : false
+            : false,
+
+          '17a_str_3': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 2
+              ? form.treatmentFacilities[2].facility
+              : ''
+            : '',
+          '17b_date_month_3': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 2
+              ? form.treatmentFacilities[2].notAvailable
+                ? ''
+                : form.treatmentFacilities[2].date
+                ? form.treatmentFacilities[2].date.slice(0, 2)
+                : ''
+              : ''
+            : '',
+          '17b_date_year_3': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 2
+              ? form.treatmentFacilities[2].notAvailable
+                ? ''
+                : form.treatmentFacilities[2].date
+                ? form.treatmentFacilities[2].date.slice(6, 10)
+                : ''
+              : ''
+            : '',
+          '17c_opt_3': form.treatmentFacilities
+            ? form.treatmentFacilities.length > 2
+              ? form.treatmentFacilities[2].notAvailable
+                ? true
+                : false
+              : false
+            : false,
+
+          '18a_opt_1': form.anotherName
+            ? form.anotherName == 'Yes'
+              ? true
+              : false
+            : false,
+          '18a_opt_2': form.anotherName
+            ? form.anotherName == 'No'
+              ? true
+              : false
+            : false,
+          '18b_str': form.anotherName
+            ? form.anotherName == 'Yes' && form.anotherNamenamesList
+              ? form.anotherNamenamesList
+              : ''
+            : '',
+          '19a_opt_1': form.branchOfService
+            ? form.branchOfService == 'Army'
+              ? true
+              : false
+            : false,
+          '19a_opt_4': form.branchOfService
+            ? form.branchOfService == 'Navy'
+              ? true
+              : false
+            : false,
+          '19a_opt_7': form.branchOfService
+            ? form.branchOfService == 'Marine Corps'
+              ? true
+              : false
+            : false,
+          '19a_opt_2': form.branchOfService
+            ? form.branchOfService == 'Air Force'
+              ? true
+              : false
+            : false,
+          '19a_opt_5': form.branchOfService
+            ? form.branchOfService == 'Coast Guard'
+              ? true
+              : false
+            : false,
+          '19a_opt_8': form.branchOfService
+            ? form.branchOfService == 'Space Force'
+              ? true
+              : false
+            : false,
+          '19a_opt_3': form.branchOfService
+            ? form.branchOfService == 'NOAA'
+              ? true
+              : false
+            : false,
+          '19a_opt_6': form.branchOfService
+            ? form.branchOfService == 'USPHS'
+              ? true
+              : false
+            : false,
+          '19b_opt_1': form.component
+            ? form.component == 'Active'
+              ? true
+              : false
+            : false,
+          '19b_opt_2': form.component
+            ? form.component == 'Reserves'
+              ? true
+              : false
+            : false,
+          '19b_opt_3': form.component
+            ? form.component == 'National Guard'
+              ? true
+              : false
+            : false,
+          '20a_date_month_1': form.recentDatesFrom
+            ? form.recentDatesFrom.slice(0, 2)
+            : '',
+          '20a_date_day_1': form.recentDatesFrom
+            ? form.recentDatesFrom.slice(3, 5)
+            : '',
+          '20a_date_year_1': form.recentDatesFrom
+            ? form.recentDatesFrom.slice(6, 10)
+            : '',
+          '20a_date_month_2': form.recentDatesTo
+            ? form.recentDatesTo.slice(0, 2)
+            : '',
+          '20a_date_day_2': form.recentDatesTo
+            ? form.recentDatesTo.slice(3, 5)
+            : '',
+          '20a_date_year_2': form.recentDatesTo
+            ? form.recentDatesTo.slice(6, 10)
+            : '',
+
+          '20b_str_1': form.placeOfSeparation
+            ? form.placeOfSeparation.slice(0, 15)
+            : '',
+          '20b_str_2': form.placeOfSeparation
+            ? form.placeOfSeparation.slice(15, 30)
+            : '',
+          '20c_opt_1': form.combatZone
+            ? form.combatZone == 'Yes'
+              ? true
+              : false
+            : false,
+          '20c_opt_2': form.combatZone
+            ? form.combatZone == 'No'
+              ? true
+              : false
+            : false,
+
+          '20b_date_month_1': form.combatZone
+            ? form.combatZone == 'Yes' && form.combatZoneDateFrom
+              ? form.combatZoneDateFrom.slice(0, 2)
+              : ''
+            : '',
+          '20b_date_day_1': form.combatZone
+            ? form.combatZone == 'Yes' && form.combatZoneDateFrom
+              ? form.combatZoneDateFrom.slice(3, 5)
+              : ''
+            : '',
+          '20b_date_year_1': form.combatZone
+            ? form.combatZone == 'Yes' && form.combatZoneDateFrom
+              ? form.combatZoneDateFrom.slice(6, 10)
+              : ''
+            : '',
+          '20b_date_month_2': form.combatZone
+            ? form.combatZone == 'Yes' && form.combatZoneDateTo
+              ? form.combatZoneDateTo.slice(0, 2)
+              : ''
+            : '',
+          '20b_date_day_2': form.combatZone
+            ? form.combatZone == 'Yes' && form.combatZoneDateTo
+              ? form.combatZoneDateTo.slice(3, 5)
+              : ''
+            : '',
+          '20b_date_year_2': form.combatZone
+            ? form.combatZone == 'Yes' && form.combatZoneDateTo
+              ? form.combatZoneDateTo.slice(6, 10)
+              : ''
+            : '',
+
+          '21a_opt_1': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes'
+              ? true
+              : false
+            : false,
+          '21a_opt_2': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'No'
+              ? true
+              : false
+            : false,
+
+          '21b_opt_1': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardComponent == 'National Guard'
+              ? true
+              : false
+            : false,
+          '21b_opt_2': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardComponent == 'Reserves'
+              ? true
+              : false
+            : false,
+
+          '21c_date_month_1': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardDateFrom
+              ? form.reservesNationalGuardDateFrom.slice(0, 2)
+              : ''
+            : '',
+          '21c_date_day_1': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardDateFrom
+              ? form.reservesNationalGuardDateFrom.slice(3, 5)
+              : ''
+            : '',
+          '21c_date_year_1': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardDateFrom
+              ? form.reservesNationalGuardDateFrom.slice(6, 10)
+              : ''
+            : '',
+          '21c_date_month_2': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardDateTo
+              ? form.reservesNationalGuardDateTo.slice(0, 2)
+              : ''
+            : '',
+          '21c_date_day_2': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardDateTo
+              ? form.reservesNationalGuardDateTo.slice(3, 5)
+              : ''
+            : '',
+          '21c_date_year_2': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardDateTo
+              ? form.reservesNationalGuardDateTo.slice(6, 10)
+              : ''
+            : '',
+          '21d_str': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardNameAddressUnit
+              ? form.reservesNationalGuardNameAddressUnit
+              : ''
+            : '',
+          '21e_str': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardPhoneNumber
+              ? form.reservesNationalGuardPhoneNumber
+              : ''
+            : '',
+          '21f_opt_1': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardTrainingPay == 'Yes'
+              ? true
+              : false
+            : false,
+          '21f_opt_2': form.reservesNationalGuard
+            ? form.reservesNationalGuard == 'Yes' &&
+              form.reservesNationalGuardTrainingPay == 'No'
+              ? true
+              : false
+            : false,
+
+          '22a_opt_1': form.federalsOrders
+            ? form.federalsOrders == 'Yes'
+              ? true
+              : false
+            : false,
+          '22a_opt_2': form.federalsOrders
+            ? form.federalsOrders == 'No'
+              ? true
+              : false
+            : false,
+          '22b_date_month': form.federalsOrders
+            ? form.federalsOrders == 'Yes' && form.federalsOrdersActivationDate
+              ? form.federalsOrdersActivationDate.slice(0, 2)
+              : ''
+            : '',
+          '22b_date_day': form.federalsOrders
+            ? form.federalsOrders == 'Yes' && form.federalsOrdersActivationDate
+              ? form.federalsOrdersActivationDate.slice(3, 5)
+              : ''
+            : '',
+          '22b_date_year': form.federalsOrders
+            ? form.federalsOrders == 'Yes' && form.federalsOrdersActivationDate
+              ? form.federalsOrdersActivationDate.slice(6, 10)
+              : ''
+            : '',
+          '22c_date_month': form.federalsOrders
+            ? form.federalsOrders == 'Yes' && form.federalsOrdersSeparationDate
+              ? form.federalsOrdersSeparationDate.slice(0, 2)
+              : ''
+            : '',
+          '22c_date_day': form.federalsOrders
+            ? form.federalsOrders == 'Yes' && form.federalsOrdersSeparationDate
+              ? form.federalsOrdersSeparationDate.slice(3, 5)
+              : ''
+            : '',
+          '22c_date_year': form.federalsOrders
+            ? form.federalsOrders == 'Yes' && form.federalsOrdersSeparationDate
+              ? form.federalsOrdersSeparationDate.slice(6, 10)
+              : ''
+            : '',
+
+          '23a_opt_1': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes'
+              ? true
+              : false
+            : false,
+          '23a_opt_2': form.prisionerOfWar
+            ? form.prisionerOfWar == 'No'
+              ? true
+              : false
+            : false,
+          '23b_from_month_1': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarOneDateFrom
+              ? form.prisionerOfWarOneDateFrom.slice(0, 2)
+              : ''
+            : '',
+          '23b_from_day_1': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarOneDateFrom
+              ? form.prisionerOfWarOneDateFrom.slice(3, 5)
+              : ''
+            : '',
+          '23b_from_year_1': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarOneDateFrom
+              ? form.prisionerOfWarOneDateFrom.slice(6, 10)
+              : ''
+            : '',
+          '23b_to_month_1': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarOneDateTo
+              ? form.prisionerOfWarOneDateTo.slice(0, 2)
+              : ''
+            : '',
+          '23b_to_day_1': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarOneDateTo
+              ? form.prisionerOfWarOneDateTo.slice(3, 5)
+              : ''
+            : '',
+          '23b_to_year_1': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarOneDateTo
+              ? form.prisionerOfWarOneDateTo.slice(6, 10)
+              : ''
+            : '',
+          '23b_from_month_2': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarTwoDateFrom
+              ? form.prisionerOfWarTwoDateFrom.slice(0, 2)
+              : ''
+            : '',
+          '23b_from_day_2': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarTwoDateFrom
+              ? form.prisionerOfWarTwoDateFrom.slice(3, 5)
+              : ''
+            : '',
+          '23b_from_year_2': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarTwoDateFrom
+              ? form.prisionerOfWarTwoDateFrom.slice(6, 10)
+              : ''
+            : '',
+          '23b_to_month_2': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarTwoDateTo
+              ? form.prisionerOfWarTwoDateTo.slice(0, 2)
+              : ''
+            : '',
+          '23b_to_day_2': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarTwoDateTo
+              ? form.prisionerOfWarTwoDateTo.slice(3, 5)
+              : ''
+            : '',
+          '23b_to_year_2': form.prisionerOfWar
+            ? form.prisionerOfWar == 'Yes' && form.prisionerOfWarTwoDateTo
+              ? form.prisionerOfWarTwoDateTo.slice(6, 10)
+              : ''
+            : '',
+
+          '24a_opt_1': form.retiredPay
+            ? form.retiredPay == 'Yes'
+              ? true
+              : false
+            : false,
+          '24a_opt_2': form.retiredPay
+            ? form.retiredPay == 'No'
+              ? true
+              : false
+            : false,
+          '24b_opt_1': form.retiredPayFuture
+            ? form.retiredPayFuture == 'Yes'
+              ? true
+              : false
+            : false,
+          '24b_opt_2': form.retiredPayFuture
+            ? form.retiredPayFuture == 'No'
+              ? true
+              : false
+            : false,
+          '24b_str': form.retiredPayFuture
+            ? form.retiredPayFuture == 'Yes' && form.retiredPayExplanation
+              ? form.retiredPayExplanation
+              : ''
+            : '',
+          '24c_opt_1':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayBranchOfService == 'Army'
+              ? true
+              : false,
+          '24c_opt_4':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayBranchOfService == 'Navy'
+              ? true
+              : false,
+          '24c_opt_7':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayBranchOfService == 'Marine Corps'
+              ? true
+              : false,
+          '24c_opt_2':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayBranchOfService == 'Air Force'
+              ? true
+              : false,
+          '24c_opt_5':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayBranchOfService == 'Coast Guard'
+              ? true
+              : false,
+          '24c_opt_8':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayBranchOfService == 'Space Force'
+              ? true
+              : false,
+          '24c_opt_3':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayBranchOfService == 'NOAA'
+              ? true
+              : false,
+          '24c_opt_6':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayBranchOfService == 'USPHS'
+              ? true
+              : false,
+          '24d_num_1':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayMonthlyAmount
+              ? form.retiredPayMonthlyAmount.slice(0, 3)
+              : '',
+          '24d_num_2':
+            ((form.retiredPay && form.retiredPay == 'Yes') ||
+              (form.retiredPayFuture && form.retiredPayFuture == 'Yes')) &&
+            form.retiredPayMonthlyAmount
+              ? form.retiredPayMonthlyAmount.slice(3, 6)
+              : '',
+          '25_opt_1': form.retiredPayRetiredStatus
+            ? form.retiredPayRetiredStatus == 'Retired'
+              ? true
+              : false
+            : false,
+          '25_opt_3': form.retiredPayRetiredStatus
+            ? form.retiredPayRetiredStatus ==
+              'Permanent Disability Retired List'
+              ? true
+              : false
+            : false,
+          '25_opt_2': form.retiredPayRetiredStatus
+            ? form.retiredPayRetiredStatus ==
+              'Temporary Disability Retired List'
+              ? true
+              : false
+            : false,
+          '26_opt': form.noRetiredPayment ? true : false,
+          '27a_opt_1': form.separationPay ? true : false,
+          '27a_opt_2': form.separationPay ? false : true,
+          '27b_date_month':
+            form.separationPay && form.separationPayPaymentDate
+              ? form.separationPayPaymentDate.slice(0, 2)
+              : '',
+          '27b_date_day':
+            form.separationPay && form.separationPayPaymentDate
+              ? form.separationPayPaymentDate.slice(3, 5)
+              : '',
+          '27b_date_year':
+            form.separationPay && form.separationPayPaymentDate
+              ? form.separationPayPaymentDate.slice(6, 10)
+              : '',
+          '27c_opt_1': form.separationPay
+            ? form.separationPayBranchOfService == 'Army'
+              ? true
+              : false
+            : false,
+          '27c_opt_4': form.separationPay
+            ? form.separationPayBranchOfService == 'Navy'
+              ? true
+              : false
+            : false,
+          '27c_opt_7': form.separationPay
+            ? form.separationPayBranchOfService == 'Marine Corps'
+              ? true
+              : false
+            : false,
+          '27c_opt_2': form.separationPay
+            ? form.separationPayBranchOfService == 'Air Force'
+              ? true
+              : false
+            : false,
+          '27c_opt_5': form.separationPay
+            ? form.separationPayBranchOfService == 'Coast Guard'
+              ? true
+              : false
+            : false,
+          '27c_opt_8': form.separationPay
+            ? form.separationPayBranchOfService == 'Space Force'
+              ? true
+              : false
+            : false,
+          '27c_opt_3': form.separationPay
+            ? form.separationPayBranchOfService == 'NOAA'
+              ? true
+              : false
+            : false,
+          '27c_opt_6': form.separationPay
+            ? form.separationPayBranchOfService == 'USPHS'
+              ? true
+              : false
+            : false,
+
+          '27d_num_1':
+            form.separationPay && form.separationPayAmountReceived
+              ? form.separationPay == 'Yes' && form.separationPayAmountReceived
+                ? form.separationPayAmountReceived.slice(0, 3)
+                : ''
+              : '',
+          '27d_num_2':
+            form.separationPay && form.separationPayAmountReceived
+              ? form.separationPay == 'Yes' && form.separationPayAmountReceived
+                ? form.separationPayAmountReceived.slice(3, 6)
+                : ''
+              : '',
+          '28_opt': form.noInactivePayment ? form.noInactivePayment : false,
+
+          '29_opt': form.directDeposit ? form.directDeposit : false,
+
+          '30_str': form.directDepositAccountNumber
+            ? form.directDepositAccountNumber.slice(0, 15)
+            : '',
+          '30_opt_1': form.directDepositAccountType
+            ? form.directDepositAccountType == 'Checking'
+              ? true
+              : false
+            : false,
+          '30_opt_2': form.directDepositAccountType
+            ? form.directDepositAccountType == 'Savings'
+              ? true
+              : false
+            : false,
+          '31_str': form.directDepositFinancialInstitution
+            ? form.directDepositFinancialInstitution.slice(0, 9)
+            : '',
+          '32_str': form.directDepositRoutingNumber
+            ? form.directDepositRoutingNumber.slice(0, 9)
+            : '',
+
+          '33b_month': form.veteranDateSigned
+            ? form.veteranDateSigned.slice(0, 2)
+            : '',
+          '33b_day': form.veteranDateSigned
+            ? form.veteranDateSigned.slice(3, 5)
+            : '',
+          '33b_year': form.veteranDateSigned
+            ? form.veteranDateSigned.slice(6, 10)
+            : '',
+          '34b_str': form.firstWitness ? form.firstWitness : '',
+          '35b_str': form.secondWitness ? form.secondWitness : '',
+
+          '36b_month': form.alternateSignatureDate
+            ? form.alternateSignatureDate.slice(0, 2)
+            : '',
+          '36b_day': form.alternateSignatureDate
+            ? form.alternateSignatureDate.slice(3, 5)
+            : '',
+          '36b_year': form.alternateSignatureDate
+            ? form.alternateSignatureDate.slice(6, 10)
+            : '',
+
+          '37b_month': form.poaSignatureDate
+            ? form.poaSignatureDate.slice(0, 2)
+            : '',
+          '37b_day': form.poaSignatureDate
+            ? form.poaSignatureDate.slice(3, 5)
+            : '',
+          '37b_year': form.poaSignatureDate
+            ? form.poaSignatureDate.slice(6, 10)
+            : '',
+          field390: form.signature ? form.signature : '',
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};

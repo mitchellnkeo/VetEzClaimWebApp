@@ -1,7 +1,7 @@
 import ApiService from '@/utils/apiService';
 
-export const generateSubmitToIntentFormPdf = async (pdfObject) => {
-  return ApiService.post(`/docspring/generate`, pdfObject, {
+export const generatePdfService = async (pdfObject, apiEndpoint) => {
+  return ApiService.post(`/docspring/${apiEndpoint}`, pdfObject, {
     noAuth: true,
   }).then((res) => {
     return res;
