@@ -3,19 +3,19 @@ import FormContent from '@/components/Common/FormContent';
 import FrontLayout from '@/components/layouts/FrontLayout';
 import { Formik, Form } from 'formik';
 import TextInput from '@/components/Common/TextInput';
-import { SubmitIntentFileValidation } from '@/utils/validators';
+import { CourtFormsValidationSchema } from '@/utils/validators';
 import SectionTitle from '@/components/Common/SectionTitle';
 import DateSelectorExtended from '@/components/Common/DateSelectorExtended';
 import DropDownExtended from '@/components/Common/DropDownExtended';
 import OptionSelector from '@/components/Common/OptionSelector';
 import { GetErrorFieldsString } from '@/utils/utils';
-import { SubmitIntentFileMap } from '@/utils/FormikFieldMap';
+import { CourtFormFileMap } from '@/utils/FormikFieldMap';
 import ToastModal from '@/components/Common/ToastModal';
 import { postFormData, getFormData } from '@/firebase/firebaseOperations';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Loader from '@/components/Common/Loader';
-import { generateSubmitToIntentPdf } from '@/utils/pdfObjectMaker';
+import { generateNoaPdfObject } from '@/utils/pdfObjectMaker';
 import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
@@ -52,6 +52,7 @@ export default function NoaForm() {
   const [toastOpen, setToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
   const [urlDocspring, setUrlDocspring] = useState('');
+  const [sharedInfo, setSharedInfo] = useState([]);
   const [guid, setGuid] = useState('');
   const [timestamp, setTimestamp] = useState('');
   const [count, setCount] = useState(0);
@@ -70,10 +71,6 @@ export default function NoaForm() {
     relationshipToAppeallant: '',
     receiveEmail: receivingEmail,
     courtSignature: courtSignatureOption,
-    selectedAppearance: {
-      attachedAppearance: false,
-      limitedToFiling: false,
-    },
     personFillingSignatureDateSigned: '',
     financialHardship: '',
     hardshipDocketNo: '',
@@ -89,7 +86,7 @@ export default function NoaForm() {
     <FrontLayout title="Notice of Appeal (NOA) & Optional Fee Waiver">
       <Formik
         initialValues={initialValues}
-        validationSchema={SubmitIntentFileValidation}
+        validationSchema={CourtFormsValidationSchema}
       >
         {({
           values,
@@ -104,55 +101,48 @@ export default function NoaForm() {
             console.log('loading data from local storage : ', user);
             await setValues({
               ...values,
-              firstName: user.firstName ? user.firstName : '',
-              lastName: user.lastName ? user.lastName : '',
-              ssn: user.ssn ? user.ssn : '',
-              birthday: user.birthday ? user.birthday : '',
-              phone: user.phone ? user.phone : '',
-              email: user.email ? user.email : '',
-              street: user.street ? user.street : '',
-              unitNumber: user.unitNumber ? user.unitNumber : '',
-              city: user.city ? user.city : '',
-              province: user.province ? user.province : '',
-              zipCode: user.zipCode ? user.zipCode : '',
-              signature: user.signature ? user.signature : '',
+              appeallantName: user.firstName
+                ? `${user.firstName} ${user.lastName || ''}`.trim()
+                : '',
+              appeallantSsn: user.ssn || '',
+              phone: user.phone || '',
+              email: user.email || '',
+              hardshipAppeallant: user.firstName
+                ? `${user.firstName} ${user.lastName || ''}`.trim()
+                : '',
+              hardshipPhone: user.phone || '',
+              hardshipEmail: user.email || '',
+              signature: user.signature || '',
+              appeallantAddress: user.street
+                ? `${user.street}, ${user.city || ''}, ${
+                    user.province || ''
+                  }`.trim()
+                : '',
             });
           };
           const loadDataFromFirebase = async (data) => {
             var dataBody = {
               ...data,
-              emailE: data.emailE
+              receiveEmail: data.receiveEmail
                 ? [{ ...receivingEmail[0], isSelected: true }]
                 : [...receivingEmail],
-              claimantsEmailE: data.claimantsEmailE
-                ? [{ ...receivingEmail[0], isSelected: true }]
-                : [...receivingEmail],
-              dic: data.dic
-                ? [{ ...dicOption[0], isSelected: true }]
-                : [...dicOption],
-              benefitElection: (data.benefitElection || beifitOption).map(
-                (item, idx) => ({
-                  option: item.name || beifitOption[idx]?.option,
-                  isSelected: !!item.selected,
-                })
-              ),
-              signatureOption: data.signature
-                ? [{ ...signatureOption[0], isSelected: true }]
-                : [...signatureOption],
-              signature: data.signature
-                ? data.signature
-                : user?.signature || '',
+              hardshipSignatureOfAppeallant: data.hardshipSignatureOfAppeallant
+                ? [{ ...hardshipSignatureOption[0], isSelected: true }]
+                : [...hardshipSignatureOption],
+              courtSignature: data.courtSignature
+                ? [{ ...courtSignatureOption[0], isSelected: true }]
+                : [...courtSignatureOption],
             };
-
             setValues(dataBody);
           };
           const loadData = async () => {
             setIsLoading(true);
             const data = await getFormData({
               uid: uid,
-              formName: 'fillform',
+              formName: 'courtform',
             });
             if (data) {
+              console.log('Data Found on Firebase: ', data);
               setRecordsExists(true);
               setUrlDocspring(
                 data?.urlDocspring === undefined ? '' : data.urlDocspring
@@ -160,6 +150,16 @@ export default function NoaForm() {
               setGuid(data?.guid === undefined ? '' : data.guid);
               setTimestamp(data?.timestamp === undefined ? '' : data.timestamp);
               setCount(data?.count === undefined ? 0 : data.count);
+              setSharedInfo(
+                data?.agreedToShareInfo === undefined
+                  ? []
+                  : Array.isArray(data.agreedToShareInfo)
+                  ? data.agreedToShareInfo.map((info) => ({
+                      guid: info.guid ?? '',
+                      isAgree: info.isAgree ?? false,
+                    }))
+                  : []
+              );
               const isUploaded = data?.isUploadedAlready || false;
               console.log('Form data from Firebase:', data);
               console.log('inProgress : ', inProgress);
@@ -198,25 +198,20 @@ export default function NoaForm() {
 
           useEffect(() => {
             if (!router.isReady) return;
-            // loadData();
+            loadData();
           }, [uid, router.isReady, router.query]);
 
           const transformFormValues = async (formData) => {
             return {
               ...formData,
-              emailE: formData.emailE?.[0]?.isSelected || false,
-              claimantsEmailE:
-                formData.claimantsEmailE?.[0]?.isSelected || false,
-              dic: formData.dic?.[0]?.isSelected || false,
-              benefitElection: formData.benefitElection.map((item) => ({
-                name: item.option,
-                selected: item.isSelected,
-              })),
-              signature: formData.signatureOption?.[0]?.isSelected
-                ? formData.signature
-                : '',
+              receiveEmail: formData.receiveEmail?.[0]?.isSelected || false,
+              hardshipSignatureOfAppeallant:
+                formData.hardshipSignatureOfAppeallant?.[0]?.isSelected ||
+                false,
+              courtSignature: formData.courtSignature?.[0]?.isSelected || false,
             };
           };
+
           const saveData = async (fields, isFromSaveData = false) => {
             console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
             var formData = await transformFormValues(values);
@@ -224,9 +219,9 @@ export default function NoaForm() {
             console.log('>> save Data : ', formData);
             try {
               await postFormData({
-                docName: 'fillform',
+                docName: 'courtform',
                 uid: uid,
-                formId: 'Submit\nIntent',
+                formId: 'NOA',
                 recordExists: recordExists,
                 formData: formData,
               });
@@ -238,6 +233,7 @@ export default function NoaForm() {
               }
             }
           };
+
           const handleSaveOperation = async () => {
             setIsLoading(true);
             var saveStatus = await saveData({ isUploadedAlready: false }, true);
@@ -246,11 +242,19 @@ export default function NoaForm() {
               toast.success('Saved successfully!');
             }
           };
-          const generatePdf = async (formValues, isFromGeneratePdf = false) => {
+
+          const generatePdf = async (
+            formValues,
+            isCombined = false,
+            isFromGeneratePdf = false
+          ) => {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
-            const pdfObject = await generateSubmitToIntentPdf(formData);
-            await generatePdfService(pdfObject, 'generate')
+            const pdfObject = await generateNoaPdfObject(formData, isCombined);
+            await generatePdfService(
+              pdfObject,
+              isCombined ? 'generate-noa-fh-pdf' : 'generate-noa-pdf'
+            )
               .then(async (res) => {
                 if (isFromGeneratePdf) {
                   await saveData({ pdf: true }, false);
@@ -266,6 +270,7 @@ export default function NoaForm() {
                 setIsLoading(false);
               });
           };
+
           const setTouchedAction = () => {
             setTouched(
               Object.keys(values).reduce((acc, key) => {
@@ -274,15 +279,31 @@ export default function NoaForm() {
               }, {})
             );
           };
+
           const onViewDetails = async () => {
-            await generatePdf(initialValues, false);
+            setToastConfig({
+              title: 'VetEZ Claim',
+              message: `Do you want to see form details with Declaration of Financial Hardship (Fee Waiver)?`,
+              primaryButtonText: 'Yes',
+              primaryButtonAction: async () => {
+                setToastOpen(false);
+                await generatePdf(initialValues, true, false);
+              },
+              secondaryButtonText: 'No',
+              secondaryButtonAction: async () => {
+                setToastOpen(false);
+                await generatePdf(initialValues, false, false);
+              },
+            });
+            setToastOpen(true);
           };
+
           const onSave = async () => {
             setTouchedAction();
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
-              SubmitIntentFileMap
+              CourtFormFileMap
             );
 
             if (hasErrors) {
@@ -302,12 +323,13 @@ export default function NoaForm() {
               await handleSaveOperation();
             }
           };
+
           const onReview = async () => {
             setTouchedAction();
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
-              SubmitIntentFileMap
+              CourtFormFileMap
             );
 
             if (hasErrors) {
@@ -321,15 +343,20 @@ export default function NoaForm() {
               });
               setToastOpen(true);
             } else {
-              await generatePdf(values, false);
+              await generatePdf(
+                values,
+                values.financialHardship === 'Yes',
+                false
+              );
             }
           };
+
           const onSubmit = async () => {
             setTouchedAction();
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
-              SubmitIntentFileMap
+              CourtFormFileMap
             );
 
             if (hasErrors) {
@@ -346,16 +373,21 @@ export default function NoaForm() {
               setIsLoading(true);
               const formData = await transformFormValues(values);
               console.log('1  faxData >> ', formData);
-              const pdfObject = await generateSubmitToIntentPdf(formData);
+              const pdfObject = await generateNoaPdfObject(
+                formData,
+                values.financialHardship === 'Yes'
+              );
               console.log('2  faxData >> ', pdfObject);
 
-              await generatePdfService(pdfObject, 'generate')
+              await generatePdfService(
+                pdfObject,
+                values.financialHardship === 'Yes'
+                  ? 'generate-noa-fh-pdf'
+                  : 'generate-noa-pdf'
+              )
                 .then(async (res) => {
                   console.log(res.download_url);
-                  const faxBody = await getFaxBodyData(
-                    'fillsubmitform.pdf',
-                    false
-                  );
+                  const faxBody = await getFaxBodyData('courtform.pdf', true);
                   const faxData = {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
@@ -371,10 +403,9 @@ export default function NoaForm() {
                       res?.permanent_download_url + '|' + urlDocspring;
                     const guids = faxResponse.Result + '|' + guid;
 
-                    var formData = await transformFormValues(values);
-                    formData = {
+                    const completeForm = {
                       ...formData,
-                      guid: guid,
+                      guid: guids,
                       pdf: false,
                       timestamp: `${moment().format(
                         'MM/DD/YYYY'
@@ -385,28 +416,13 @@ export default function NoaForm() {
                     };
 
                     await postFormData({
-                      docName: 'fillform',
+                      docName: 'courtform',
                       uid: uid,
-                      formId: 'Submit\nIntent',
+                      formId: 'NOA',
                       recordExists: recordExists,
-                      formData: formData,
+                      formData: completeForm,
                     });
-
-                    setToastConfig({
-                      title: 'VetEZ Claim',
-                      message: `Your submission has been successfully uploaded to VA. Do you want to submit another?`,
-                      primaryButtonText: 'Yes',
-                      primaryButtonAction: async () => {
-                        setToastOpen(false);
-                        await loadData();
-                      },
-                      secondaryButtonText: 'No',
-                      secondaryButtonAction: () => {
-                        setToastOpen(false);
-                        router.push('/forms');
-                      },
-                    });
-                    setToastOpen(true);
+                    await onFaxSent(faxResponse.Result);
                   } else {
                     toast.error('Error uploading to VA. Try again later.');
                   }
@@ -421,6 +437,54 @@ export default function NoaForm() {
                   setIsLoading(false);
                 });
             }
+          };
+
+          const onFaxSent = async (formGuid) => {
+            setToastConfig({
+              title: 'Fax Sent',
+              message: `You may be eligible to be represented by an Attorney for matters before the Court at no cost to you under the Equal Access to Justice Act.\n\nIf you agree to have VetEZ Claim share your contact information (name, telephone, email, address, and date of Board decision) to help find an attorney who may be able to represent you for this matter, simply click 'Agree.`,
+              primaryButtonText: 'Agree',
+              primaryButtonAction: async () => {
+                setToastOpen(false);
+
+                setToastConfig({
+                  title: 'Thank You',
+                  message: `If VetEZ Claim locates an attorney that is possibly able to assist you in this matter under the Equal Access to Justice Act, that attorney will contact you directly at the provided email address or telephone number to discuss this further.\n\nPlease note, each attorney may have their own screening requirements and policies, and there is no guarantee that legal representation will be provided.`,
+                  primaryButtonText: 'Ok',
+                  primaryButtonAction: async () => {
+                    setToastOpen(false);
+                    await updateCourtConsent(true, formGuid);
+                  },
+                });
+                setToastOpen(true);
+              },
+              secondaryButtonText: 'Decline',
+              secondaryButtonAction: async () => {
+                setToastOpen(false);
+                await updateCourtConsent(true, formGuid);
+              },
+            });
+            setToastOpen(true);
+          };
+
+          const updateCourtConsent = async (isAgree, formGuid) => {
+            const data = {
+              faxSentToCourt: true,
+              agreedToShareInfo: [
+                ...sharedInfo,
+                { guid: formGuid, isAgree: isAgree },
+              ],
+            };
+
+            await postFormData({
+              docName: 'courtform',
+              uid: uid,
+              formId: 'NOA',
+              recordExists: true,
+              formData: data,
+            });
+            setIsLoading(false);
+            router.push('/forms');
           };
           return (
             <FormContent
@@ -499,8 +563,9 @@ export default function NoaForm() {
                 <OptionSelector
                   name="courtSignature"
                   options={values.courtSignature}
-                  multiSelect={true}
+                  multiSelect={false}
                   isOtherAllowed={false}
+                  lockOption={true}
                 />
 
                 <DateSelectorExtended
@@ -568,6 +633,7 @@ export default function NoaForm() {
                       options={values.hardshipSignatureOfAppeallant}
                       multiSelect={true}
                       isOtherAllowed={false}
+                      lockOption={true}
                     />
 
                     <DateSelectorExtended

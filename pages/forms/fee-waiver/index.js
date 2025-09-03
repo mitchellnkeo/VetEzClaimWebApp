@@ -3,19 +3,18 @@ import FormContent from '@/components/Common/FormContent';
 import FrontLayout from '@/components/layouts/FrontLayout';
 import { Formik, Form } from 'formik';
 import TextInput from '@/components/Common/TextInput';
-import { SubmitIntentFileValidation } from '@/utils/validators';
+import { FinancialHardshipValidationSchema } from '@/utils/validators';
 import SectionTitle from '@/components/Common/SectionTitle';
 import DateSelectorExtended from '@/components/Common/DateSelectorExtended';
-import DropDownExtended from '@/components/Common/DropDownExtended';
 import OptionSelector from '@/components/Common/OptionSelector';
 import { GetErrorFieldsString } from '@/utils/utils';
-import { SubmitIntentFileMap } from '@/utils/FormikFieldMap';
+import { FinancialHardshipFileMap } from '@/utils/FormikFieldMap';
 import ToastModal from '@/components/Common/ToastModal';
 import { postFormData, getFormData } from '@/firebase/firebaseOperations';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Loader from '@/components/Common/Loader';
-import { generateSubmitToIntentPdf } from '@/utils/pdfObjectMaker';
+import { generateFinancialHardshipPdfObject } from '@/utils/pdfObjectMaker';
 import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
@@ -57,68 +56,37 @@ export default function FeeWaiverForm() {
     <FrontLayout title="Declaration of Financial Hardship (Fee Waiver)">
       <Formik
         initialValues={initialValues}
-        validationSchema={SubmitIntentFileValidation}
+        validationSchema={FinancialHardshipValidationSchema}
       >
-        {({
-          values,
-          setValues,
-          setFieldValue,
-          errors,
-          touched,
-          setTouched,
-          validateForm,
-        }) => {
+        {({ values, setValues, setFieldValue, setTouched, validateForm }) => {
           const loadDataFromLocalStorage = async () => {
             console.log('loading data from local storage : ', user);
             await setValues({
               ...values,
-              firstName: user.firstName ? user.firstName : '',
-              lastName: user.lastName ? user.lastName : '',
-              ssn: user.ssn ? user.ssn : '',
-              birthday: user.birthday ? user.birthday : '',
+              appeallant: user.firstName
+                ? `${user.firstName} ${user.lastName}`
+                : '',
               phone: user.phone ? user.phone : '',
               email: user.email ? user.email : '',
-              street: user.street ? user.street : '',
-              unitNumber: user.unitNumber ? user.unitNumber : '',
-              city: user.city ? user.city : '',
-              province: user.province ? user.province : '',
-              zipCode: user.zipCode ? user.zipCode : '',
               signature: user.signature ? user.signature : '',
             });
           };
+
           const loadDataFromFirebase = async (data) => {
             var dataBody = {
               ...data,
-              emailE: data.emailE
-                ? [{ ...receivingEmail[0], isSelected: true }]
-                : [...receivingEmail],
-              claimantsEmailE: data.claimantsEmailE
-                ? [{ ...receivingEmail[0], isSelected: true }]
-                : [...receivingEmail],
-              dic: data.dic
-                ? [{ ...dicOption[0], isSelected: true }]
-                : [...dicOption],
-              benefitElection: (data.benefitElection || beifitOption).map(
-                (item, idx) => ({
-                  option: item.name || beifitOption[idx]?.option,
-                  isSelected: !!item.selected,
-                })
-              ),
-              signatureOption: data.signature
-                ? [{ ...signatureOption[0], isSelected: true }]
-                : [...signatureOption],
-              signature: data.signature
-                ? data.signature
-                : user?.signature || '',
+              signatureOfAppeallant: data.signatureOfAppeallant
+                ? [{ ...hardshipSignatureOption[0], isSelected: true }]
+                : [...hardshipSignatureOption],
             };
-
             setValues(dataBody);
           };
+
           const loadData = async () => {
             setIsLoading(true);
             const data = await getFormData({
               uid: uid,
-              formName: 'fillform',
+              formName: 'financial_hardship',
             });
             if (data) {
               setRecordsExists(true);
@@ -166,25 +134,17 @@ export default function FeeWaiverForm() {
 
           useEffect(() => {
             if (!router.isReady) return;
-            // loadData();
+            loadData();
           }, [uid, router.isReady, router.query]);
 
           const transformFormValues = async (formData) => {
             return {
               ...formData,
-              emailE: formData.emailE?.[0]?.isSelected || false,
-              claimantsEmailE:
-                formData.claimantsEmailE?.[0]?.isSelected || false,
-              dic: formData.dic?.[0]?.isSelected || false,
-              benefitElection: formData.benefitElection.map((item) => ({
-                name: item.option,
-                selected: item.isSelected,
-              })),
-              signature: formData.signatureOption?.[0]?.isSelected
-                ? formData.signature
-                : '',
+              signatureOfAppeallant:
+                formData.signatureOfAppeallant?.[0]?.isSelected || false,
             };
           };
+
           const saveData = async (fields, isFromSaveData = false) => {
             console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
             var formData = await transformFormValues(values);
@@ -192,9 +152,9 @@ export default function FeeWaiverForm() {
             console.log('>> save Data : ', formData);
             try {
               await postFormData({
-                docName: 'fillform',
+                docName: 'financial_hardship',
                 uid: uid,
-                formId: 'Submit\nIntent',
+                formId: 'Fee Waiver',
                 recordExists: recordExists,
                 formData: formData,
               });
@@ -206,6 +166,7 @@ export default function FeeWaiverForm() {
               }
             }
           };
+
           const handleSaveOperation = async () => {
             setIsLoading(true);
             var saveStatus = await saveData({ isUploadedAlready: false }, true);
@@ -214,11 +175,17 @@ export default function FeeWaiverForm() {
               toast.success('Saved successfully!');
             }
           };
+
           const generatePdf = async (formValues, isFromGeneratePdf = false) => {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
-            const pdfObject = await generateSubmitToIntentPdf(formData);
-            await generatePdfService(pdfObject, 'generate')
+            const pdfObject = await generateFinancialHardshipPdfObject(
+              formData
+            );
+            await generatePdfService(
+              pdfObject,
+              'generate-financial-hardship-pdf'
+            )
               .then(async (res) => {
                 if (isFromGeneratePdf) {
                   await saveData({ pdf: true }, false);
@@ -234,6 +201,7 @@ export default function FeeWaiverForm() {
                 setIsLoading(false);
               });
           };
+
           const setTouchedAction = () => {
             setTouched(
               Object.keys(values).reduce((acc, key) => {
@@ -242,15 +210,17 @@ export default function FeeWaiverForm() {
               }, {})
             );
           };
+
           const onViewDetails = async () => {
             await generatePdf(initialValues, false);
           };
+
           const onSave = async () => {
             setTouchedAction();
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
-              SubmitIntentFileMap
+              FinancialHardshipFileMap
             );
 
             if (hasErrors) {
@@ -270,12 +240,13 @@ export default function FeeWaiverForm() {
               await handleSaveOperation();
             }
           };
+
           const onReview = async () => {
             setTouchedAction();
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
-              SubmitIntentFileMap
+              FinancialHardshipFileMap
             );
 
             if (hasErrors) {
@@ -292,12 +263,13 @@ export default function FeeWaiverForm() {
               await generatePdf(values, false);
             }
           };
+
           const onSubmit = async () => {
             setTouchedAction();
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
-              SubmitIntentFileMap
+              FinancialHardshipFileMap
             );
 
             if (hasErrors) {
@@ -314,14 +286,19 @@ export default function FeeWaiverForm() {
               setIsLoading(true);
               const formData = await transformFormValues(values);
               console.log('1  faxData >> ', formData);
-              const pdfObject = await generateSubmitToIntentPdf(formData);
+              const pdfObject = await generateFinancialHardshipPdfObject(
+                formData
+              );
               console.log('2  faxData >> ', pdfObject);
 
-              await generatePdfService(pdfObject, 'generate')
+              await generatePdfService(
+                pdfObject,
+                'generate-financial-hardship-pdf'
+              )
                 .then(async (res) => {
                   console.log(res.download_url);
                   const faxBody = await getFaxBodyData(
-                    'fillsubmitform.pdf',
+                    'financialhardship.pdf',
                     false
                   );
                   const faxData = {
@@ -339,10 +316,9 @@ export default function FeeWaiverForm() {
                       res?.permanent_download_url + '|' + urlDocspring;
                     const guids = faxResponse.Result + '|' + guid;
 
-                    var formData = await transformFormValues(values);
-                    formData = {
+                    const completeForm = {
                       ...formData,
-                      guid: guid,
+                      guid: guids,
                       pdf: false,
                       timestamp: `${moment().format(
                         'MM/DD/YYYY'
@@ -353,16 +329,16 @@ export default function FeeWaiverForm() {
                     };
 
                     await postFormData({
-                      docName: 'fillform',
+                      docName: 'financial_hardship',
                       uid: uid,
-                      formId: 'Submit\nIntent',
+                      formId: 'Fee Waiver',
                       recordExists: recordExists,
-                      formData: formData,
+                      formData: completeForm,
                     });
 
                     setToastConfig({
                       title: 'VetEZ Claim',
-                      message: `Your submission has been successfully uploaded to VA. Do you want to submit another?`,
+                      message: `Your submission has been successfully uploaded to court. Do you want to submit another?`,
                       primaryButtonText: 'Yes',
                       primaryButtonAction: async () => {
                         setToastOpen(false);
@@ -390,6 +366,7 @@ export default function FeeWaiverForm() {
                 });
             }
           };
+
           return (
             <FormContent
               title="Declaration of Financial Hardship (Fee Waiver)"

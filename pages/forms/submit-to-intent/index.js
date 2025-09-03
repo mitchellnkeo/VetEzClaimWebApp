@@ -82,7 +82,7 @@ export default function SubmitToIntentForm() {
   const router = useRouter();
   const { ['in-progress']: inProgress } = router.query;
 
-  console.log('>> Reloaded :: ', router.query, inProgress);
+  // console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
     firstName: '',
@@ -414,10 +414,9 @@ export default function SubmitToIntentForm() {
                       res?.permanent_download_url + '|' + urlDocspring;
                     const guids = faxResponse.Result + '|' + guid;
 
-                    var formData = await transformFormValues(values);
-                    formData = {
+                    const completeForm = {
                       ...formData,
-                      guid: guid,
+                      guid: guids,
                       pdf: false,
                       timestamp: `${moment().format(
                         'MM/DD/YYYY'
@@ -432,7 +431,7 @@ export default function SubmitToIntentForm() {
                       uid: uid,
                       formId: 'Submit\nIntent',
                       recordExists: recordExists,
-                      formData: formData,
+                      formData: completeForm,
                     });
 
                     setToastConfig({

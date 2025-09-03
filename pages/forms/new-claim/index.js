@@ -742,10 +742,9 @@ export default function NewClaimForm() {
                       res?.permanent_download_url + '|' + urlDocspring;
                     const guids = faxResponse.Result + '|' + guid;
 
-                    var formData = await transformFormValues(values);
-                    formData = {
+                    const completeForm = {
                       ...formData,
-                      guid: guid,
+                      guid: guids,
                       pdf: false,
                       timestamp: `${moment().format(
                         'MM/DD/YYYY'
@@ -760,7 +759,7 @@ export default function NewClaimForm() {
                       uid: uid,
                       formId: '21-526EZ',
                       recordExists: recordExists,
-                      formData: formData,
+                      formData: completeForm,
                     });
 
                     setToastConfig({
