@@ -13,10 +13,6 @@ const FormsMenu = () => {
     {
       name: 'Submit Intent to File',
       onPress: () => router.push('/forms/submit-to-intent'),
-      //  router.push({
-      //     pathname: '/forms/submit-to-intent',
-      //     query: { 'in-progress': true },
-      //   })
       disabled: false,
     },
     {

@@ -1854,3 +1854,65 @@ export const generateNewClaimPdfObject = async (form) => {
   };
   return infoToPDF;
 };
+
+export const generateNoaPdfObject = async (data, isCombined = false) => {
+  const infoToPDF = {
+    content: {
+      documentKey: isCombined
+        ? 'tpl_ehJXextj2zFG6TDCyj'
+        : 'tpl_zzh2s3f5T6mHMpEAHt',
+      f: {
+        page_1: {
+          boardDecisionDate: data?.boardDecisionDate || '',
+          appeallantName: data?.appeallantName || '',
+          appeallantSsn: data?.appeallantSsn || '',
+          appeallantAddress1: data?.appeallantAddress?.substring(0, 25) || '',
+          appeallantAddress2: data?.appeallantAddress?.substring(25, 50) || '',
+          appeallantAddress3: data?.appeallantAddress?.substring(50) || '',
+          phone: data?.phone || '',
+          email: data?.email || '',
+          relationshipToAppeallant: data?.relationshipToAppeallant || '',
+          receiveEmail: data?.receiveEmail || false,
+          signature: {
+            base64: data?.signature || '',
+          },
+          ...(isCombined
+            ? {
+                fh_docketNo: data?.hardshipDocketNo || '',
+                fh_appeallant: data?.hardshipAppeallant || '',
+                fh_dateSignedAppeallant:
+                  data?.hardshipDateSignedAppeallant || '',
+                fh_phone: data?.hardshipPhone || '',
+                fh_email: data?.hardshipEmail || '',
+                fh_signature: {
+                  base64: data?.signature || '',
+                },
+              }
+            : {}),
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};
+
+export const generateFinancialHardshipPdfObject = async (data) => {
+  const financialHardshipPdf = {
+    content: {
+      documentKey: 'tpl_Rj2bh2JKxHgh3SSSps',
+      f: {
+        page_1: {
+          docketNo: data?.docketNo || '',
+          appeallant: data?.appeallant || '',
+          dateSignedAppeallant: data?.dateSignedAppeallant || '',
+          phone: data?.phone || '',
+          email: data?.email || '',
+          signature: {
+            base64: data?.signature || '',
+          },
+        },
+      },
+    },
+  };
+  return financialHardshipPdf;
+};
