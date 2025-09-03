@@ -11,6 +11,7 @@ export default function OptionSelector({
   hasCounter = false,
   hintsMessage,
   onSelectionChange,
+  lockOption = false,
 }) {
   const [field, meta, helpers] = useField(name);
   const [localOptions, setLocalOptions] = useState([]);
@@ -34,6 +35,7 @@ export default function OptionSelector({
   };
 
   const handleSelect = async (selectedOption) => {
+    if (lockOption) return;
     let updatedOptions;
     if (multiSelect) {
       updatedOptions = localOptions.map((o, i) =>
@@ -53,6 +55,7 @@ export default function OptionSelector({
   };
 
   const handleOtherCheck = async () => {
+    if (lockOption) return;
     let updatedOptions = [...localOptions];
     const otherIndex = updatedOptions.findIndex((o) => o.option === 'Other');
     if (otherIndex === -1) {
@@ -73,6 +76,7 @@ export default function OptionSelector({
   };
 
   const handleOtherText = async (text) => {
+    if (localOptions) return;
     setOtherText(text);
     const updatedOptions = localOptions.map((o, i) =>
       o.option === 'Other' ? { ...o, value: text, isSelected: true } : o
