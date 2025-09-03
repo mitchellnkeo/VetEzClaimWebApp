@@ -424,6 +424,135 @@ export const SubmitIntentFileValidation = yup.object().shape({
   signature: yup.string().required('Add signature to Profile'),
 });
 
+export const CourtFormsValidationSchema = yup.object().shape({
+  boardDecisionDate: yup.string().required('This field is required to save'),
+  appeallantName: yup
+    .string()
+    .matches(
+      nameRegex,
+      'Only letters, single spaces, and single periods allowed'
+    )
+    .required('This field is required to save PDF'),
+  appeallantSsn: yup
+    .string()
+    .matches(/^\d{8,9}[A-Z]?$/, 'Invalid SSN/VA file number format')
+    .required('This field is required to save PDF'),
+  phone: yup
+    .string()
+    .matches(
+      /^\d{3}-\d{3}-\d{4}$/,
+      'Phone number must be in the format xxx-xxx-xxxx'
+    )
+    .required('This field is required to save PDF'),
+  email: emailValidation,
+  appeallantAddress: yup
+    .string()
+    .matches(
+      addressRegex,
+      'Enter address in the following format: Street, City, Province'
+    )
+    .required('This field is required to save PDF'),
+  relationshipToAppeallant: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true,
+  }),
+  personFillingSignatureDateSigned: yup
+    .string()
+    .required('This field is required to save PDF'),
+
+  hardshipDocketNo: yup.string().when('financialHardship', {
+    is: 'Yes',
+    then: () =>
+      yup
+        .string()
+        .matches(
+          /^(\d{2}-?\d{5})$/,
+          'Docket number must be in the format YY-NNNNN or YYNNNNN with digits only.'
+        ),
+    otherwise: () => yup.string(),
+  }),
+  hardshipAppeallant: yup.string().when('financialHardship', {
+    is: 'Yes',
+    then: () =>
+      yup
+        .string()
+        .matches(
+          nameRegex,
+          'Only letters, single spaces, and single periods allowed'
+        )
+        .required('This field is required to save PDF'),
+    otherwise: () => yup.string(),
+  }),
+  hardshipDateSignedAppeallant: yup.string().when('financialHardship', {
+    is: 'Yes',
+    then: () => yup.string().required('This field is required to save PDF'),
+    otherwise: () => yup.string(),
+  }),
+  hardshipPhone: yup.string().when('financialHardship', {
+    is: 'Yes',
+    then: () =>
+      yup
+        .string()
+        .matches(
+          /^\d{3}-\d{3}-\d{4}$/,
+          'Phone number must be in the format xxx-xxx-xxxx'
+        )
+        .required('This field is required to save PDF'),
+    otherwise: () => yup.string(),
+  }),
+  hardshipEmail: yup.string().when('financialHardship', {
+    is: 'Yes',
+    then: () =>
+      yup
+        .string()
+        .email('Invalid email format')
+        .max(100, 'Email cannot exceed 100 characters')
+        .matches(
+          /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
+          'Please enter a valid email address'
+        )
+        .required('This field is required to save PDF'),
+    otherwise: () => yup.string(),
+  }),
+  signature: yup.string().required('This field is required to save PDF'),
+});
+
+export const FinancialHardshipValidationSchema = yup.object().shape({
+  docketNo: yup
+    .string()
+    .matches(
+      /^(\d{2}-?\d{5})$/,
+      'Docket number must be in the format YY-NNNNN or YYNNNNN with digits only.'
+    ),
+  appeallant: yup
+    .string()
+    .matches(
+      nameRegex,
+      'Only letters, single spaces, and single periods allowed'
+    )
+    .required('This field is required to save PDF'),
+  dateSignedAppeallant: yup
+    .string()
+    .required('This field is required to save PDF'),
+  phone: yup
+    .string()
+    .matches(
+      /^\d{3}-\d{3}-\d{4}$/,
+      'Phone number must be in the format xxx-xxx-xxxx'
+    )
+    .required('This field is required to save PDF'),
+  email: yup
+    .string()
+    .email('Invalid email format')
+    .max(100, 'Email cannot exceed 100 characters')
+    .matches(
+      /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
+      'Please enter a valid email address'
+    )
+    .required('This field is required to save PDF'),
+  signature: yup.string().required('This field is required to save PDF'),
+});
+
 export const NewClaimFileValidation = yup.object().shape({
   program: yup.string().required('This field is required to save PDF'),
   firstName: firstNameValidation,

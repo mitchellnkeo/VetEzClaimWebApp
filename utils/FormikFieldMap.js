@@ -129,3 +129,34 @@ export const NewClaimFileMap = {
   veteranDateSigned: 'Date Signed',
   signature: 'Add Signature on your Profile',
 };
+
+export const CourtFormFileMap = {
+  boardDecisionDate: 'Board Decision Date',
+  appeallantName: 'Appeallant Name',
+  appeallantSsn: 'Appeallant SSN',
+  appeallantAddress: 'Appeaellant Address',
+  phone: 'Phone',
+  email: 'Email',
+  relationshipToAppeallant: 'Relationship To Appeallant',
+  receiveEmail: 'Receive Email?',
+  selectedAppearance: 'Selected Appearance',
+  personFillingSignatureDateSigned: 'Person Filling Signature Date Signed',
+  financialHardship: 'Financial Hardship',
+  hardshipDocketNo: 'Hardship Docket No.',
+  hardshipAppeallant: 'Hardship Appeallant',
+  hardshipSignatureOfAppeallant: 'Hardship Signature Of Appeallant',
+  hardshipDateSignedAppeallant: 'Hardship Date Signed Appeallant',
+  hardshipPhone: 'Hardship Phone',
+  hardshipEmail: 'Hardship Email',
+  signature: 'Add Signature on your Profile',
+};
+
+export const FinancialHardshipFileMap = {
+  docketNo: 'Docket No.',
+  appeallant: 'Appeallant',
+  signatureOfAppeallant: 'Signature Of Appeallant',
+  dateSignedAppeallant: 'Date Signed',
+  phone: 'Phone',
+  email: 'Email',
+  signature: 'Add Signature on your Profile',
+};

@@ -1193,3 +1193,76 @@ export const disabilityData = [
   '5277: Weak foot.',
   '6335: West Nile virus infection.',
 ];
+
+export const formsIdList = [
+  {
+    formId: 'fillform',
+    formTitle: 'Submit Intent to File',
+    formUrl: '/forms/submit-to-intent',
+  },
+
+  {
+    formId: 'requestcfile',
+    formTitle: 'Request C-File/DD 214 (Form 20-10206)',
+    formUrl: '/forms/request-c-file',
+  },
+
+  {
+    formId: 'ptsdform',
+    formTitle: 'PTSD Stressor Statement (Form 21-0781)',
+    formUrl: '/forms/ptsd-stressor',
+  },
+  {
+    formId: 'supportofclaim',
+    formTitle: 'Statement in Support of Claim (Form 21-4138)',
+    formUrl: '/forms/ptsd-stressor',
+  },
+  {
+    formId: 'medicalrecords',
+    formTitle: 'Medical Records Release (Form 21-4142)',
+    formUrl: '/forms/medical-records',
+  },
+  {
+    formId: 'tdiuform',
+    formTitle: 'Increased Rating due to TDIU (Unemployability) (Form 21-8940)',
+    formUrl: '/forms/tdiu',
+  },
+
+  {
+    formId: 'higherlevelreview',
+    formTitle: 'Higher Level Review (Form 20-0995)',
+    formUrl: '/forms/higher-level-review',
+  },
+  {
+    formId: 'boardappeal',
+    formTitle: 'Board Appeal (Form 20-0995)',
+    formUrl: '/forms/board-appeal',
+  },
+  {
+    formId: 'supplementalclaimAppeal',
+    formTitle: 'Supplemental Claim Appeal',
+    formUrl: '/forms/supplemental-claim',
+  },
+
+  {
+    formId: 'courtform',
+    formTitle: 'Notice of Appeal (NOA) & Optional Fee Waiver',
+    formUrl: '/forms/noa',
+  },
+  {
+    formId: 'financial_hardship',
+    formTitle: 'Declaration of Financial Hardship (Fee Waiver)',
+    formUrl: '/forms/fee-waiver',
+  },
+
+  {
+    formId: 'newclaim',
+    formTitle: 'New Claim or Increase (Form 21-526EZ)',
+    formUrl: '/forms/new-claim',
+  },
+  {
+    formId: 'supplementalclaim',
+    formTitle: 'Supplemental Claim & Reopening (Form 20-0995)',
+    formUrl: '/forms/supplemnetal-claim-reopening',
+  },
+];
