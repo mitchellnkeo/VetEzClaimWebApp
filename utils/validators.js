@@ -923,3 +923,153 @@ export const NewClaimFileValidation = yup.object().shape({
   alternateSignatureDate: yup.string(),
   poaSignatureDate: yup.string(),
 });
+
+
+export const RequestCFileValidation = yup
+  .object()
+  .shape({
+
+
+    firstName: firstNameValidation,
+  lastName: lastNameValidation,
+  ssn: ssnValidation,
+  currentVa: vaFileNumberValidation,
+  signature: yup.string().required('This field is required to save PDF'),
+  alien: yup.string().matches(/^A?\d{1,10}$/, {
+    message: 'Invalid Alien number format',
+    excludeEmptyString: true
+  }),
+  birthday: yup.string().required('This field is required to save PDF'),
+  placeBirth: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  street: validStreetCharacters,
+  unitNumber: unitNumberValidation,
+  insuranceNumber: yup.string().matches(/^\d+$/, 'Only numbers are allowed'),
+  city: yup.string().required('This field is required to save PDF').matches(cityRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  province: yup.string().required('This field is required to save PDF').matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  country: yup.string().required('This field is required to save PDF'),
+  zipCode: zipCodeValidation,
+  phone: phoneValidation.required('This field is required to save PDF'),
+  phoneTwo: phoneValidation,
+  phoneITwo: internationalPhoneValidation,
+  phoneI: internationalPhoneValidation,
+  faxTwo: yup.string().matches(/^\d{10}$/, 'Fax number must be in 10 digits'),
+  faxITwo: yup.string().matches(/^\d+$/, 'Fax number must contain only digits'),
+  fax: yup.string().matches(/^\d{10}$/, 'Fax number must be in 10 digits'),
+  faxI: yup.string().matches(/^\d+$/, 'Fax number must contain only digits'),
+  email: emailValidation,
+ 
+  firstNameTwo: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed'),
+  lastNameTwo: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed'),
+  organization: containValidCharacters,
+  streetTwo: validStreetCharacters,
+  unitNumberTwo: unitNumberValidation,
+  cityTwo: yup.string().matches(cityRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  provinceTwo: containValidCharacters,
+  countryTwo: containValidCharacters,
+  zipCodeTwo: yup.string().matches(/^\d{5}(-\d{4})?$/, 'Zip Code must be in the format XXXXX or XXXXX-XXXX'),
+  firstNameThree: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed'),
+  lastNameThree: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed'),
+  ssnThree: yup.string().matches(/^\d{9}$/, 'Social Security Number must be exactly 9 digits'),
+  alienThree: yup.string().matches(/^A?\d{1,10}$/, {
+    message: 'Invalid Alien number format',
+    excludeEmptyString: true
+  }),
+  currentVaThree: yup.string().matches(/^\d{8,9}[A-Z]?$/, 'Invalid VA File Number format'),
+  typeOfRecords: yup
+    .object()
+    .shape({
+      claimsFile: yup.bool(),
+      serviceTreatment: yup.bool(),
+      ddForm214: yup.bool(),
+      disabilityExaminations: yup.bool(),
+      pensionBenefit: yup.bool(),
+      humanResourceRecords: yup.bool(),
+      lifeInsuranceBenefitRecords: yup.bool(),
+      lifeInsuranceRecords: yup.bool(),
+      homeLoanBenefitRecords: yup.bool(),
+      vocationalRehabilitationRecords: yup.bool(),
+      fiduciaryServicesRecords: yup.bool(),
+      militaryToCivilianTransition: yup.bool(),
+      educationBenefitRecords: yup.bool(),
+      financialRecords: yup.bool(),
+      other: yup.object().shape({
+        value: yup.bool(),
+        specify: containValidCharacters,
+      }),
+    })
+    .test('is-valid', 'Select at least one option.', value => {
+      const {
+        claimsFile,
+        serviceTreatment,
+        ddForm214,
+        disabilityExaminations,
+        pensionBenefit,
+        humanResourceRecords,
+        lifeInsuranceBenefitRecords,
+        lifeInsuranceRecords,
+        homeLoanBenefitRecords,
+        vocationalRehabilitationRecords,
+        fiduciaryServicesRecords,
+        militaryToCivilianTransition,
+        educationBenefitRecords,
+        financialRecords,
+        other,
+      } = value;
+      return (
+        claimsFile ||
+        serviceTreatment ||
+        ddForm214 ||
+        disabilityExaminations ||
+        pensionBenefit ||
+        humanResourceRecords ||
+        lifeInsuranceBenefitRecords ||
+        lifeInsuranceRecords ||
+        homeLoanBenefitRecords ||
+        vocationalRehabilitationRecords ||
+        fiduciaryServicesRecords ||
+        militaryToCivilianTransition ||
+        educationBenefitRecords ||
+        financialRecords ||
+        other?.value
+      );
+    }),
+  ssnWillingnessToPay: yup.string().matches(/^\d{9}$/, 'Social Security Number must be exactly 9 digits'),
+  remarks: remarkValidation,
+  amount: yup.string().when('checkApplicableFees', {
+    is: (arr) => arr?.[0]?.isSelected === true, 
+    then: () =>
+      yup
+        .string()
+        .matches(/^\d{1,4}$/, 'Digit only')
+        .required('This field is required to save PDF'),
+    otherwise: () => yup.string(),
+  }),
+  feeWaiver: yup.string().when('checkFeeWaiver', {
+    is: (arr) => arr?.[0]?.isSelected === true, 
+    then: () =>
+      yup
+        .string()
+        .matches(validCharactersRegex, {
+          message: 'Must contain valid characters',
+          excludeEmptyString: true,
+        })
+        .required('This field is required to save PDF'),
+    otherwise: () => yup.string(),
+  }),
+  dateSignedOne: yup.string().required('This field is required to save PDF'),
+ 
+
+
+  })
