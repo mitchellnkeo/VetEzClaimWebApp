@@ -25,3 +25,14 @@ export const sendViaSRFax = async (faxData) => {
     return response.data;
   });
 };
+
+export const getFaxStatus = async (pdfGuid) => {
+  const faxData = {
+    faxId: pdfGuid,
+  };
+  return ApiService.post(`/srfax/getFax`, faxData, {
+    noAuth: true,
+  }).then((response) => {
+    return response.data;
+  });
+};

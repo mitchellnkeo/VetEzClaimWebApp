@@ -70,6 +70,7 @@ export const getBuddyStatementData = async ({ uid }) => {
     const fetchedStatements = querySnapshot.docs.map((doc) => {
       const docs = doc.data();
       return {
+        formTitle: 'Buddy Statement',
         formId: docs?.formId || '',
         guid: docs?.guid || '',
         urlDocsSPring: docs?.urlDocsSPring || '',
@@ -132,3 +133,111 @@ export const getInprogressFormData = async (uid) => {
     return [];
   }
 };
+
+export const getFormHistory = async (uid) => {
+  try {
+   
+    const formDataItems = [];
+    
+    for (const form of formsIdList) {
+      const formData = await getFormData({ uid: uid, formName: form.formId });
+      if (formData) {
+        formDataItems.push({
+          formTitle: form.formTitle,
+            ...formData,
+          });
+        }
+    }
+
+    const buddyStatementData = await getBuddyStatementData({uid});
+    formDataItems.push(...buddyStatementData);
+
+    const newArr = formDataItems
+      .filter(item => item !== null && item !== undefined)
+      .map(item => ({
+        formTitle: item?.formTitle === undefined ? '' : item.formTitle,
+        urlDocspring: item?.urlDocspring === undefined ? '' : item.urlDocspring,
+        timestamp: item?.timestamp === undefined ? '' : item.timestamp,
+        count: item?.count === undefined ? 0 : item.count,
+        guid: item?.guid === undefined ? '' : item.guid,
+        pdf: item?.pdf === undefined ? false : item.pdf,
+        isUploadedAlready: item?.isUploadedAlready === undefined ? false : item.isUploadedAlready,
+        formId: item?.formId === undefined ? '' : item.formId
+      }));
+
+    const processedArray = newArr.reduce((acc, item) => {
+      console.log('item => ', item);
+    
+      const guidValue = String(item?.guid || '');
+      const guids = guidValue === '' ? [] : guidValue.includes('|') 
+        ? guidValue.split('|').filter(g => g && g !== undefined)
+        : [guidValue];
+
+      
+      const timestampValue = String(item?.timestamp || '');
+      const timestamps = timestampValue === '' ? [] : timestampValue.includes('|')
+        ? timestampValue.split('|').filter(t => t && t !== undefined)
+        : [timestampValue];
+        
+      const urlValue = String(item?.urlDocspring || '');
+      const urls = urlValue === '' ? [] : urlValue.includes('|')
+        ? urlValue.split('|').filter(u => u && u !== undefined)
+        : [urlValue];
+
+   
+      const entries = guids.map((guid, index) => ({
+        formTitle: item?.formTitle === undefined ? '' : item.formTitle,
+        formId: item?.formId === undefined ? '' : item.formId,
+        guid: guid === undefined ? '' : guid,
+        pdf: item?.pdf === undefined ? false : item.pdf,
+        timestamp: timestamps[index] === undefined ? '' : timestamps[index],
+        urlDocspring: urls[index] === undefined ? '' : urls[index],
+        isUploadedAlready: item?.isUploadedAlready === undefined ? false : item.isUploadedAlready,
+        count: item?.count === undefined ? 0 : item.count
+      }));
+
+      // add a new entry only if isUploadedAlready found false and it need to have value false explicitly 
+      if (item?.isUploadedAlready === false) {
+        entries.push({
+          formTitle: item?.formTitle === undefined ? '' : item.formTitle,
+          formId: item?.formId === undefined ? '' : item.formId,
+          guid: '',
+          pdf: item?.pdf === undefined ? false : item.pdf,
+          timestamp: '-',
+          urlDocspring: '',
+          isUploadedAlready: false,
+          count: item?.count === undefined ? 0 : item.count
+        });
+      }
+
+      return [...acc, ...entries];
+    }, []);
+
+    console.log('processedArray => ', processedArray);
+    
+    // Sort the array based on timestamp
+    const sortedArray = processedArray.sort((a, b) => {
+      // If either timestamp is '-', it should come first
+      if (a.timestamp === '-' && b.timestamp === '-') return 0;
+      if (a.timestamp === '-') return -1;
+      if (b.timestamp === '-') return 1;
+      
+      // Convert MM/DD/YYYY to Date objects
+      const [monthA, dayA, yearA] = a.timestamp.split('/');
+      const [monthB, dayB, yearB] = b.timestamp.split('/');
+      
+      const dateA = new Date(parseInt(yearA), parseInt(monthA) - 1, parseInt(dayA));
+      const dateB = new Date(parseInt(yearB), parseInt(monthB) - 1, parseInt(dayB));
+      
+      // Sort in descending order (most recent first)
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    return sortedArray;
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    // throw error;
+    return [];
+  }
+};
+
