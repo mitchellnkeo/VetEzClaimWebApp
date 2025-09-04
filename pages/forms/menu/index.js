@@ -3,6 +3,7 @@ import { menuData } from '@/utils/staticData';
 import FrontLayout from '@/components/layouts/FrontLayout';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import Breadcrumb from '@/components/Common/Breadcrumb';
 
 export default function MenuPage() {
   const selectedForm = useSelector((state) => state.form.selectedForm);
@@ -19,6 +20,11 @@ export default function MenuPage() {
 
   return (
     <FrontLayout title="Form Menu">
+      <Breadcrumb
+        preUrl="/forms"
+        preTitle="Forms"
+        currentTitle={`${menuItem ? menuItem.title : ''} Menu`}
+      />
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">

@@ -23,6 +23,7 @@ import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import Breadcrumb from '@/components/Common/Breadcrumb';
 
 const yesNoData = ['Yes', 'No'];
 const relationshipToVeteranData = [
@@ -130,6 +131,11 @@ export default function SubmitToIntentForm() {
 
   return (
     <FrontLayout title="Submit To Intent">
+      <Breadcrumb
+        preUrl="/forms"
+        preTitle="Forms"
+        currentTitle="Submit To Intent"
+      />
       <Formik
         initialValues={initialValues}
         validationSchema={SubmitIntentFileValidation}
@@ -364,7 +370,7 @@ export default function SubmitToIntentForm() {
               });
               setToastOpen(true);
             } else {
-              await generatePdf(values, false);
+              await generatePdf(values, true);
             }
           };
           const onSubmit = async () => {
@@ -605,6 +611,7 @@ export default function SubmitToIntentForm() {
                   options={values.emailE}
                   multiSelect={true}
                   isOtherAllowed={false}
+                 
                 />
                 <SectionTitle
                   title="Section II: Claimant's Identification Information"
@@ -753,6 +760,7 @@ export default function SubmitToIntentForm() {
                       options={values.claimantsEmailE}
                       multiSelect={true}
                       isOtherAllowed={false}
+                  
                     />
                   </>
                 )}
@@ -806,6 +814,7 @@ export default function SubmitToIntentForm() {
                   options={signatureOption}
                   multiSelect={false}
                   isOtherAllowed={false}
+                  lockOption={true}
                 />
 
                 <DateSelectorExtended

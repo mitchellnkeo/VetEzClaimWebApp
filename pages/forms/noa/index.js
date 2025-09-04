@@ -20,6 +20,7 @@ import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import Breadcrumb from '@/components/Common/Breadcrumb';
 
 const yesNoData = ['Yes', 'No'];
 
@@ -84,6 +85,11 @@ export default function NoaForm() {
 
   return (
     <FrontLayout title="Notice of Appeal (NOA) & Optional Fee Waiver">
+            <Breadcrumb
+        preUrl="/forms/menu"
+        preTitle="Form Menu"
+        currentTitle="Notice of Appeal (NOA) & Optional Fee Waiver"
+      />
       <Formik
         initialValues={initialValues}
         validationSchema={CourtFormsValidationSchema}
@@ -346,7 +352,7 @@ export default function NoaForm() {
               await generatePdf(
                 values,
                 values.financialHardship === 'Yes',
-                false
+                true
               );
             }
           };

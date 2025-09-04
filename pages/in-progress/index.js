@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Loader from '@/components/Common/Loader';
 import { postFormData } from '@/firebase/firebaseOperations';
+import Breadcrumb from '@/components/Common/Breadcrumb';
 
 export default function InProgressForms() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function InProgressForms() {
   const [isloading, setIsLoading] = useState(false);
 
   const fetchForms = async () => {
+    setIsLoading(true);
     try {
       const forms = await getInprogressFormData(uid);
       console.log('forms:', forms);
@@ -26,7 +28,6 @@ export default function InProgressForms() {
 
   useEffect(() => {
     if (!uid) return;
-    setIsLoading(true);
     fetchForms();
   }, [uid]);
 
@@ -53,6 +54,11 @@ export default function InProgressForms() {
   return (
     <FrontLayout title="In-Progress Forms">
       <Loader show={isloading} />
+      <Breadcrumb
+        preUrl="/"
+        preTitle="Home"
+        currentTitle="In-Progress"
+      />
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">

@@ -19,6 +19,7 @@ import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import Breadcrumb from '@/components/Common/Breadcrumb';
 
 const hardshipSignatureOption = [
   {
@@ -54,6 +55,11 @@ export default function FeeWaiverForm() {
 
   return (
     <FrontLayout title="Declaration of Financial Hardship (Fee Waiver)">
+      <Breadcrumb
+        preUrl="/forms/menu"
+        preTitle="Form Menu"
+        currentTitle="Declaration of Financial Hardship (Fee Waiver)"
+      />
       <Formik
         initialValues={initialValues}
         validationSchema={FinancialHardshipValidationSchema}
@@ -260,7 +266,7 @@ export default function FeeWaiverForm() {
               });
               setToastOpen(true);
             } else {
-              await generatePdf(values, false);
+              await generatePdf(values, true);
             }
           };
 

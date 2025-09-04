@@ -24,6 +24,7 @@ import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { ErrorMessage } from 'formik';
+import Breadcrumb from '@/components/Common/Breadcrumb';
 
 const programData = [
   'FDC Program',
@@ -336,6 +337,11 @@ export default function NewClaimForm() {
 
   return (
     <FrontLayout title="New Claim or Increas (Form 21-526EZ)">
+        <Breadcrumb
+        preUrl="/forms/menu"
+        preTitle="Form Menu"
+        currentTitle="New Claim or Increase (Form 21-526EZ)"
+      />
       <Formik
         initialValues={initialValues}
         validationSchema={NewClaimFileValidation}
@@ -694,7 +700,7 @@ export default function NewClaimForm() {
               });
               setToastOpen(true);
             } else {
-              await generatePdf(values, false);
+              await generatePdf(values, true);
             }
           };
 

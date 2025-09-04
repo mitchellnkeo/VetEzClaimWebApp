@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import FrontLayout from '@/components/layouts/FrontLayout';
 import { useDispatch } from 'react-redux';
 import { setSelectedForm } from '@/store/slices/formSlice';
+import Breadcrumb from '@/components/Common/Breadcrumb';
 
 const FormsMenu = () => {
   const dispatch = useDispatch();
@@ -67,6 +68,12 @@ const FormsMenu = () => {
 
   return (
     <FrontLayout title="Forms">
+      <Breadcrumb
+        preUrl="/"
+        preTitle="Home"
+        currentTitle="Forms"
+      />
+      
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
