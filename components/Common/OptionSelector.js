@@ -18,15 +18,22 @@ export default function OptionSelector({
   const [otherText, setOtherText] = useState('');
 
   useEffect(() => {
-    // Initialize localOptions from Formik or props
     if (field.value && field.value.length) {
-      setLocalOptions(field.value);
-      const other = field.value.find((o) => o.option === 'Other');
-      if (other && other.value) setOtherText(other.value);
+      if (JSON.stringify(localOptions) !== JSON.stringify(field.value)) {
+        setLocalOptions(field.value);
+      }
+  
+      const other = field.value.find((o) => (o.option === 'Other' || o.option === 'OTHER'));
+      if (other && other.value && other.value !== otherText) {
+        setOtherText(other.value);
+      }
     } else {
-      setLocalOptions(options);
+      if (JSON.stringify(localOptions) !== JSON.stringify(options)) {
+        setLocalOptions(options);
+      }
     }
   }, [field.value, options]);
+  
 
   const triggerCallback = (updatedOptions) => {
     if (onSelectionChange) {
@@ -38,17 +45,16 @@ export default function OptionSelector({
     if (lockOption) return;
     let updatedOptions;
     if (multiSelect) {
-      updatedOptions = localOptions.map((o, i) =>
+      updatedOptions = localOptions.map((o) =>
         o.option === selectedOption ? { ...o, isSelected: !o.isSelected } : o
       );
     } else {
-      updatedOptions = localOptions.map((o, i) => ({
+      updatedOptions = localOptions.map((o) => ({
         ...o,
         isSelected: o.option === selectedOption && !o.isSelected,
       }));
     }
 
-    console.log('handleSelect >> ', updatedOptions);
     setLocalOptions(updatedOptions);
     await helpers.setValue(updatedOptions);
     triggerCallback(updatedOptions);
@@ -57,7 +63,7 @@ export default function OptionSelector({
   const handleOtherCheck = async () => {
     if (lockOption) return;
     let updatedOptions = [...localOptions];
-    const otherIndex = updatedOptions.findIndex((o) => o.option === 'Other');
+    const otherIndex = updatedOptions.findIndex((o) => (o.option === 'Other' || o.option === 'OTHER'));
     if (otherIndex === -1) {
       updatedOptions.push({
         option: 'Other',
@@ -65,10 +71,10 @@ export default function OptionSelector({
         value: otherText,
       });
     } else {
-      updatedOptions[otherIndex].isSelected =
-        !updatedOptions[otherIndex].isSelected;
-      if (!updatedOptions[otherIndex].isSelected)
+      updatedOptions[otherIndex].isSelected = !updatedOptions[otherIndex].isSelected;
+      if (!updatedOptions[otherIndex].isSelected) {
         updatedOptions[otherIndex].value = '';
+      }
     }
     setLocalOptions(updatedOptions);
     await helpers.setValue(updatedOptions);
@@ -76,10 +82,11 @@ export default function OptionSelector({
   };
 
   const handleOtherText = async (text) => {
-    if (localOptions) return;
     setOtherText(text);
-    const updatedOptions = localOptions.map((o, i) =>
-      o.option === 'Other' ? { ...o, value: text, isSelected: true } : o
+    const updatedOptions = localOptions.map((o) =>
+      (o.option === 'Other' || o.option === 'OTHER')
+        ? { ...o, value: text, isSelected: true }
+        : o
     );
     setLocalOptions(updatedOptions);
     await helpers.setValue(updatedOptions);
@@ -124,7 +131,7 @@ export default function OptionSelector({
               className="form-checkbox"
             />
             <label>{o.option}</label>
-            {o.option === 'Other' && o.isSelected && (
+            {((o.option === 'Other' || o.option === 'OTHER') && o.isSelected) && (
               <input
                 type="text"
                 value={otherText}
@@ -137,7 +144,7 @@ export default function OptionSelector({
         ))}
 
         {/* If Other is allowed but not already in options */}
-        {isOtherAllowed && !localOptions.find((o) => o.option === 'Other') && (
+        {isOtherAllowed && !localOptions.find((o) => (o.option === 'Other' || o.option === 'OTHER')) && (
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
