@@ -925,12 +925,8 @@ export const NewClaimFileValidation = yup.object().shape({
 });
 
 
-export const RequestCFileValidation = yup
-  .object()
-  .shape({
-
-
-    firstName: firstNameValidation,
+export const RequestCFileValidation = yup.object().shape({
+  firstName: firstNameValidation,
   lastName: lastNameValidation,
   ssn: ssnValidation,
   currentVa: vaFileNumberValidation,
@@ -1072,4 +1068,83 @@ export const RequestCFileValidation = yup
  
 
 
-  })
+})
+
+export const SupplementalClaimValidationSchema = yup.object().shape({
+  firstName: firstNameValidation,
+  lastName: lastNameValidation,
+  ssn: ssnValidation,
+  currentVa: vaFileNumberValidation,
+  birthday:  yup.string().required('This field is required to save PDF'),
+  serviceNumber: serviceNumberValidationAlt,
+  insuranceNumber: yup.string().matches(/^\d+$/, 'Only numbers are allowed'),
+  claimantsName: yup
+    .string()
+    .required('Claimant\'s first name is required')
+    .matches(nameRegex, 'Only letters, single spaces, and single periods allowed')
+    .min(2, 'Claimant\'s name must be at least 2 characters'),
+  claimantsLastName: yup
+    .string()
+    .required('Claimant\'s last first name is required')
+    .matches(nameRegex, 'Only letters, single spaces, and single periods allowed')
+    .min(2, 'Claimant\'s last name must be at least 2 characters'),
+  claimantsRelationship: yup.string().required('This field is required to save PDF'),
+  claimantsRelationshipOther: yup.string().when('claimantsRelationship', {
+    is: 'Other',
+    then: schema => schema.required('This field is required to save PDF').matches(validCharactersRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true
+    }),
+    otherwise: schema => schema.notRequired(),
+  }),
+  street: validStreetCharacters,
+  unitNumber: unitNumberValidation,
+  city: yup.string().required('This field is required to save PDF').matches(cityRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  province: yup.string().required('This field is required to save PDF').matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  country: yup.string(),
+  zipCode: zipCodeValidation,
+  phone: phoneValidation,
+  phoneI: internationalPhoneValidation,
+  email: emailValidation,
+  benefitType: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }).required('This field is required to save PDF'),
+  issues: yup.array().of(
+    yup.object().shape({
+      specificIssue: yup.string().matches(validCharactersRegex, {
+        message: 'Must contain valid characters',
+        excludeEmptyString: true
+      }).required('This field is required to save PDF'),
+      date: yup.string(),
+    }),
+  ),
+  federalRecords: yup.array().of(
+    yup.object().shape({
+      facilityName: yup.string().matches(validCharactersRegex, {
+        message: 'Must contain valid characters',
+        excludeEmptyString: true
+      }).required('This field is required to save PDF'),
+      dateOfRecords: yup.string(),
+    }),
+  ),
+  noticeAcknowledgement: yup.string(),
+  dic: yup.bool(),
+  veteranDateSigned: yup.string().required('This field is required to save PDF'),
+  vaAuthorizedRepresentative: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  veteranDateSignedAS: yup.string(),
+  alternateSignerName: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  signature: yup.string().required('Add your signature on profile section'),
+});
