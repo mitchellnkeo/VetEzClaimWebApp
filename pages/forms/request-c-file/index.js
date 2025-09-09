@@ -17,7 +17,7 @@ import { postFormData, getFormData } from '@/firebase/firebaseOperations';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Loader from '@/components/Common/Loader';
-import { generateSubmitToIntentPdf } from '@/utils/pdfObjectMaker';
+import { generateRequestCFilePdfObject } from '@/utils/pdfObjectMaker';
 import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
@@ -388,7 +388,7 @@ export default function SubmitToIntentForm() {
               emailE: formData.emailE?.[0]?.isSelected || false,
               checkApplicableFees:
                 formData.checkApplicableFees?.[0]?.isSelected || false,
-                checkFeeWaiver: formData.checkFeeWaiver?.[0]?.isSelected || false,
+              checkFeeWaiver: formData.checkFeeWaiver?.[0]?.isSelected || false,
             };
           };
 
@@ -425,8 +425,8 @@ export default function SubmitToIntentForm() {
           const generatePdf = async (formValues, isFromGeneratePdf = false) => {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
-            const pdfObject = await generateSubmitToIntentPdf(formData);
-            await generatePdfService(pdfObject, 'generate')
+            const pdfObject = await  generateRequestCFilePdfObject(formData);
+            await generatePdfService(pdfObject, 'generatepdf15')
               .then(async (res) => {
                 if (isFromGeneratePdf) {
                   await saveData({ pdf: true }, false);
@@ -528,14 +528,14 @@ export default function SubmitToIntentForm() {
               setIsLoading(true);
               const formData = await transformFormValues(values);
               console.log('1  faxData >> ', formData);
-              const pdfObject = await generateSubmitToIntentPdf(formData);
+              const pdfObject = await generateRequestCFilePdfObject(formData);
               console.log('2  faxData >> ', pdfObject);
 
-              await generatePdfService(pdfObject, 'generate')
+              await generatePdfService(pdfObject, 'generatepdf15')
                 .then(async (res) => {
                   console.log(res.download_url);
                   const faxBody = await getFaxBodyData(
-                    'fillsubmitform.pdf',
+                    'requestcfile.pdf',
                     false
                   );
                   const faxData = {
@@ -566,9 +566,9 @@ export default function SubmitToIntentForm() {
                     };
 
                     await postFormData({
-                      docName: 'fillform',
+                      docName: 'requestcfile',
                       uid: uid,
-                      formId: 'Submit\nIntent',
+                      formId: '20-10206',
                       recordExists: recordExists,
                       formData: completeForm,
                     });

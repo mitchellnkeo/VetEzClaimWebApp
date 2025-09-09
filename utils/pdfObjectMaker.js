@@ -1916,3 +1916,123 @@ export const generateFinancialHardshipPdfObject = async (data) => {
   };
   return financialHardshipPdf;
 };
+
+export const generateRequestCFilePdfObject = async (form) => {
+  const infoToPDF = {
+    content: {
+      documentKey: 'tpl_HxtgEQ7pnMTHLbPcRk',
+      f: {
+        page_1: {
+          first_name: form.firstName ? form.firstName.slice(0, 12) : '',
+          middle_initial: '',
+          last_name: form.lastName ? form.lastName.slice(0, 18) : '',
+          ssn1: form.ssn ? form.ssn.slice(0, 3) : '',
+          ssn2: form.ssn ? form.ssn.slice(3, 5) : '',
+          ssn3: form.ssn ? form.ssn.slice(5, 9) : '',
+          alien_registration: form.alien ? form.alien.slice(0, 10) : '',
+          va_file_number: form.currentVa ? form.currentVa.slice(0, 9) : '',
+
+          dobmonth: form.birthday ? form.birthday.slice(0, 2) : '',
+          dobday: form.birthday ? form.birthday.slice(3, 5) : '',
+          dobyear: form.birthday ? form.birthday.slice(6, 10) : '',
+
+          place_of_birth: form.placeBirth ? form.placeBirth.slice(0, 20) : '',
+
+          street: form.street ? form.street.slice(0, 30) : '',
+          apartmentorunitnumber: form.unitNumber ? form.unitNumber.slice(0, 5) : '',
+          city: form.city ? form.city.slice(0, 18) : '',
+          stateorprovince: form.province ? form.province.slice(0, 2) : '',
+          country: form.country ? form.country.slice(0, 2) : '',
+          ziporpostalcode1: form.zipCode ? form.zipCode.slice(0, 5) : '',
+          ziporpostalcode2: form.zipCode ? form.zipCode.slice(6, 10) : '',
+
+          telephonenumber_first: form.phone ? form.phone.slice(0, 3) : '',
+          telephonenumber_second: form.phone ? form.phone.slice(4, 7) : '',
+          telephonenumber_last: form.phone ? form.phone.slice(8, 12) : '',
+          international_phone_number: form.phoneI ? form.phoneI : '',
+          fax_number_first: form.fax ? form.fax.slice(0, 3) : '',
+          fax_number_second: form.fax ? form.fax.slice(3, 6) : '',
+          fax_number_last: form.fax ? form.fax.slice(6, 10) : '',
+          international_fax_number: form.faxI ? form.faxI : '',
+          i_agree_to_receive_electronic: form.emailE ? form.emailE : false,
+          email_address: form.email ? form.email.slice(0, 32) : '',
+          name: form.firstNameTwo ? form.firstNameTwo.slice(0, 12) : '',
+          middle_initial1: '',
+          last_name2: form.lastNameTwo ? form.lastNameTwo.slice(0, 18) : '',
+          organization_s_name: form.organization ? form.organization.slice(0, 32) : '',
+          street2: form.streetTwo ? form.streetTwo.slice(0, 30) : '',
+          apartmentorunitnumber2: form.unitNumberTwo ? form.unitNumberTwo.slice(0, 5) : '',
+          city2: form.cityTwo ? form.cityTwo.slice(0, 18) : '',
+          stateorprovince2: form.provinceTwo ? form.provinceTwo.slice(0, 2) : '',
+          country2: form.countryTwo ? form.countryTwo.slice(0, 2) : '',
+          ziporpostalcode3: form.zipCodeTwo ? form.zipCodeTwo.slice(0, 5) : '',
+          ziporpostalcode4: form.zipCodeTwo ? form.zipCodeTwo.slice(6, 10) : '',
+
+
+          telephonenumber_firstthreenumbers: form.phoneTwo ? form.phoneTwo.slice(0, 3) : '',
+          telephonenumber_secondthreenumbers: form.phoneTwo ? form.phoneTwo.slice(4, 7) : '',
+          telephonenumber_lastfournumbers: form.phoneTwo ? form.phoneTwo.slice(8, 12) : '',
+          international_phone_number2: form.phoneITwo ? form.phoneITwo : '',
+          fax_number_firstthreenumbers: form.faxTwo ? form.faxTwo.slice(0, 3) : '',
+          fax_number_secondthreenumbers: form.faxTwo ? form.faxTwo.slice(3, 6) : '',
+          fax_number_lastfournumbers: form.faxTwo ? form.faxTwo.slice(6, 10) : '',
+          international_fax_number2: form.faxITwo ? form.faxITwo : '',
+
+          name3: form.firstNameThree ? form.firstNameThree.slice(0, 12) : '',
+          middle_initial2: '',
+          last_name3: form.lastNameThree ? form.lastNameThree.slice(0, 18) : '',
+          ssn4: form.ssnThree ? form.ssnThree.slice(0, 3) : '',
+          ssn5: form.ssnThree ? form.ssnThree.slice(3, 5) : '',
+          ssn6: form.ssnThree ? form.ssnThree.slice(5, 9) : '',
+          alien2: form.alienThree ? form.alienThree.slice(0, 10) : '',
+          va_file_2: form.currentVaThree ? form.currentVaThree.slice(0, 9) : '',
+          
+          claims_file_c_file: form.typeOfRecords?.claimsFile ? form.typeOfRecords?.claimsFile : false,
+          dd_form_214: form.typeOfRecords?.ddForm214 ? form.typeOfRecords?.ddForm214 : false,
+          human_resource_records: form.typeOfRecords?.humanResourceRecords ? form.typeOfRecords?.humanResourceRecords : false,
+          life_insurance_benefit_records: form.typeOfRecords?.lifeInsuranceBenefitRecords ? form.typeOfRecords?.lifeInsuranceBenefitRecords : false,
+          service_treatment_records: form.typeOfRecords?.serviceTreatment ? form.typeOfRecords?.serviceTreatment : false,
+          life_insurance_records: form.typeOfRecords?.lifeInsuranceRecords ? form.typeOfRecords?.lifeInsuranceRecords : false,
+          home_loan_benefit_records: form.typeOfRecords?.homeLoanBenefitRecords ? form.typeOfRecords?.homeLoanBenefitRecords : false,
+          disability_examinations: form.typeOfRecords?.disabilityExaminations ? form.typeOfRecords?.disabilityExaminations : false,
+          vocational_rehabilitation: form.typeOfRecords?.vocationalRehabilitationRecords ? form.typeOfRecords?.vocationalRehabilitationRecords : false,
+          fiduciary_services_records: form.typeOfRecords?.fiduciaryServicesRecords ? form.typeOfRecords?.fiduciaryServicesRecords : false,  
+          military_to_civilian_transition_tap_documents: form.typeOfRecords?.militaryToCivilianTransition ? form.typeOfRecords?.militaryToCivilianTransition : false,
+          pension_benefit_documents: form.typeOfRecords?.pensionBenefit ? form.typeOfRecords?.pensionBenefit : false,
+          education_benefit_records: form.typeOfRecords?.educationBenefitRecords ? form.typeOfRecords?.educationBenefitRecords : false,
+          financial_records: form.typeOfRecords?.financialRecords ? form.typeOfRecords?.financialRecords : false,
+          other_specify: form.typeOfRecords?.other ? true : false,
+
+          other_specify1: form.typeOfRecords?.other?.specify ? form.typeOfRecords?.other?.specify?.slice(0, 30) : '',
+          other_specify2: form.typeOfRecords?.other?.specify ? form.typeOfRecords?.other?.specify?.slice(30, 65) : '',
+          other_specify3: form.typeOfRecords?.other?.specify ? form.typeOfRecords?.other?.specify?.slice(65, 100) : '',
+         
+
+          remarks1: form.remarks ? form.remarks.slice(0, 35) : '',
+          remarks2: form.remarks ? form.remarks.slice(35, 70) : '',
+          remarks3: form.remarks ? form.remarks.slice(70, 105) : '',
+          remarks4: form.remarks ? form.remarks.slice(105, 140) : '',
+          remarks5: form.remarks ? form.remarks.slice(140, 175) : '',
+
+          i_am_willing_to_pay: form.checkApplicableFees ? form.checkApplicableFees : false,
+          amount: form.checkApplicableFees && form.amount ? form.amount.slice(0, 4) : '',
+          if_you_believe_you_are_entitled: form.checkFeeWaiver ? form.checkFeeWaiver : false,
+          indicate_reason: form.checkFeeWaiver && form.feeWaiver ? form.feeWaiver : '',
+
+          field98: form.signature ? form.signature : '',
+          date_signed_month: form.dateSignedOne ? form.dateSignedOne.slice(0, 2) : '',
+          date_signed_day: form.dateSignedOne ? form.dateSignedOne.slice(3, 5) : '',
+          date_signed_year: form.dateSignedOne ? form.dateSignedOne.slice(6, 10) : '',
+          date_signed_month2:  '',
+          date_signed_day2: '',
+          date_signed_year2: '',
+          date_signed_month3: '',
+          date_signed_day3: '',
+          date_signed_year3: '',
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};
+
