@@ -2036,3 +2036,92 @@ export const generateRequestCFilePdfObject = async (form) => {
   return infoToPDF;
 };
 
+
+export const generateSupplementalClaimPdfObject = async (form) => { 
+  const infoToPDF = {
+    content: {
+      documentKey: 'tpl_afR42J2pGMbtzDK66H',
+      f: {
+        page_1: {
+          s1_str_1: form.firstName.slice(0, 12),
+          s1_str_2: '',
+          s1_str_3: form.lastName.slice(0, 18),
+          s2_str_1: form.ssn ? form.ssn.slice(0, 3) : '',
+          s2_str_2: form.ssn ? form.ssn.slice(3, 5) : '',
+          s2_str_3: form.ssn ? form.ssn.slice(5, 9) : '',
+          s3_str_1: form.currentVa ? form.currentVa.slice(0, 9) : '',
+          s4_str_1: form.birthday.slice(0, 2),
+          s4_str_2: form.birthday.slice(3, 5),
+          s4_str_3: form.birthday.slice(6, 10),
+          s5_str_1: form.serviceNumber ? form.serviceNumber.slice(0, 9) : '',
+          s6_str_1: form.insuranceNumber ? form.insuranceNumber.slice(0, 18) : '',
+          s7_str_1: form.claimantsName ? form.claimantsName.slice(0, 12) : '',
+          s7_str_2: '',
+          s7_str_3: form.claimantsLastName ? form.claimantsLastName.slice(0, 18) : '',
+          s8_opt_1: form.claimantsRelationship ? form.claimantsRelationship == 'Veteran' ? true : false : false,
+          s8_opt_2: form.claimantsRelationship ? form.claimantsRelationship == 'Veteran\'s spouse' ? true : false : false,
+          s8_opt_3: form.claimantsRelationship ? form.claimantsRelationship == 'Veteran\'s child' ? true : false : false,
+          s8_opt_4: form.claimantsRelationship ? form.claimantsRelationship == 'Veteran\'s parent' ? true : false : false,
+          s8_opt_5: form.claimantsRelationship ? form.claimantsRelationship == 'Other' ? true : false : false,
+          s8_str_6: form.claimantsRelationshipOther ? form.claimantsRelationshipOther : '',
+          s9_str_1: form.street ? form.street.slice(0, 30) : '',
+          s9_str_2: form.unitNumber ? form.unitNumber.slice(0, 5) : '',
+          s9_str_3: form.city ? form.city.slice(0, 18) : '',
+          s9_str_4: form.province ? form.province.slice(0, 2) : '',
+          s9_str_5: form.country ? form.country.slice(0, 2) : '',
+          s9_str_6: form.zipCode ? form.zipCode.slice(0, 5) : '',
+          s9_str_7: form.zipCode ? form.zipCode.slice(6, 10) : '',
+          s10_str_1: form.phone ? form.phone : '', 
+          s11_str_1: form.email ? form.email : '',
+
+          s12_opt_1: form.benefitType ? form.benefitType == 'Compensation' ? true : false : false,    
+          s12_opt_2: form.benefitType ? form.benefitType == 'Pensions/Survivors Benefits' ? true : false : false,
+          s12_opt_3: form.benefitType ? form.benefitType == 'Fiduciary' ? true : false : false,
+          s12_opt_4: form.benefitType ? form.benefitType == 'Life Insurance' ? true : false : false,
+          s12_opt_5: form.benefitType ? form.benefitType == 'Veterans Health Administration' ? true : false : false,
+          s12_opt_6: form.benefitType ? form.benefitType == 'Veteran Readiness and Employment' ? true : false : false,
+          s12_opt_7: form.benefitType ? form.benefitType == 'Loan Guaranty' ? true : false : false,
+          s12_opt_8: form.benefitType ? form.benefitType == 'Education' ? true : false : false,
+          s12_opt_9: form.benefitType ? form.benefitType == 'National Cemetery Administration' ? true : false : false,
+      
+
+          s13_opt_1:  form.optIn ? form.optIn : false,
+
+
+          s13_str_1: form.issues && form.issues.length > 0 ? form.issues?.[0]?.['specificIssue'] : '',
+          s13b_date_1: form.issues && form.issues.length > 0 ? form.issues?.[0]?.['date'] : '',
+          s13_str_2: form.issues && form.issues.length > 1 ? form.issues?.[1]?.['specificIssue'] : '',
+          s13b_date_2: form.issues && form.issues.length > 1 ? form.issues?.[1]?.['date'] : '',
+          s13_str_3: form.issues && form.issues.length > 2 ? form.issues?.[2]?.['specificIssue'] : '',
+          s13b_date_3: form.issues && form.issues.length > 2 ? form.issues?.[2]?.['date'] : '',
+          s13_str_4: form.issues && form.issues.length > 3 ? form.issues?.[3]?.['specificIssue'] : '',
+          s13b_date_4: form.issues && form.issues.length > 3 ? form.issues?.[3]?.['date'] : '',
+          s13_str_5: form.issues && form.issues.length > 4  ? form.issues?.[4]?.['specificIssue'] : '',
+          s13b_date_5: form.issues && form.issues.length > 4  ? form.issues?.[4]?.['date'] : '',
+          s13_str_6: form.issues && form.issues.length > 5  ? form.issues?.[5]?.['specificIssue'] : '',
+          s13b_date_6: form.issues && form.issues.length > 5  ? form.issues?.[5]?.['date'] : '',
+          s13_str_7: form.issues && form.issues.length > 6    ? form.issues?.[6]?.['specificIssue'] : '',
+          s13b_date_7: form.issues && form.issues.length > 6    ? form.issues?.[6]?.['date'] : '',
+
+          s15a_str_1: form.federalRecords && form.federalRecords.length > 0 ? form.federalRecords?.[0]?.['facilityName'] : '',
+          s15b_date_1: form.federalRecords && form.federalRecords.length > 0 ? form.federalRecords?.[0]?.['dateOfRecords'] : '',
+          s15a_str_2: form.federalRecords && form.federalRecords.length > 1 ? form.federalRecords?.[1]?.['facilityName'] : '',
+          s15b_date_2: form.federalRecords && form.federalRecords.length > 1 ? form.federalRecords?.[1]?.['dateOfRecords'] : '',
+          s15a_str_3: form.federalRecords && form.federalRecords.length > 2 ? form.federalRecords?.[2]?.['facilityName'] : '',
+          s15b_date_3: form.federalRecords && form.federalRecords.length > 2 ? form.federalRecords?.[2]?.['dateOfRecords'] : '',
+         
+         
+          s16_opt_1: form.noticeAcknowledgement == 'Yes' ? true : false,
+          s16_opt_2: form.noticeAcknowledgement == 'No' ? true : false,
+
+          s17b_date_1: form.veteranDateSigned ? form.veteranDateSigned : '',
+          s17c_str_1: form.vaAuthorizedRepresentative ? form.vaAuthorizedRepresentative : '',
+          s18b_date_1: form.veteranDateSigned ? form.veteranDateSigned : '',
+          s18c_str_1: form.alternateSignerName ? form.alternateSignerName : '',
+          field66: form.signature ? form.signature : '',
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};

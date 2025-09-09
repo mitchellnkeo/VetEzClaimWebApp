@@ -337,7 +337,7 @@ export const menuData = [
       {
         id: 'misc_2',
         title: 'Statement in Support of Claim (Form 21-4138)',
-        path: '/forms/ptsd-stressor',
+        path: '/forms/support-claim',
         disabled: false,
         onPress: () => {},
       },
