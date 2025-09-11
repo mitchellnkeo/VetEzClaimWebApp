@@ -2036,7 +2036,6 @@ export const generateRequestCFilePdfObject = async (form) => {
   return infoToPDF;
 };
 
-
 export const generateSupplementalClaimPdfObject = async (form) => { 
   const infoToPDF = {
     content: {
@@ -2119,6 +2118,181 @@ export const generateSupplementalClaimPdfObject = async (form) => {
           s18b_date_1: form.veteranDateSigned ? form.veteranDateSigned : '',
           s18c_str_1: form.alternateSignerName ? form.alternateSignerName : '',
           field66: form.signature ? form.signature : '',
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};
+
+export const generateHigherLevelReviewPdfObject = async (form) => {
+  const infoToPDF = {
+    content: {
+      documentKey: 'tpl_5JYHXZrKMAS42Q6tZT',
+      f: {
+        page_1: {
+          s1_str_1: form.firstName.slice(0, 12),
+          s1_str_2: '',
+          s1_str_3: form.lastName.slice(0, 18),
+          s2_str_1: form.ssn ? form.ssn.slice(0, 3) : '',
+          s2_str_2: form.ssn ? form.ssn.slice(3, 5) : '',
+          s2_str_3: form.ssn ? form.ssn.slice(5, 9) : '',
+          s3_str_1: form.currentVa ? form.currentVa.slice(0, 9) : '',
+          s4_str_1: form.birthday ? form.birthday.slice(0, 2) : '',
+          s4_str_2: form.birthday ? form.birthday.slice(3, 5) : '',
+          s4_str_3: form.birthday ? form.birthday.slice(6, 10) : '',
+          s5_str_1: form.insuranceNumber ? form.insuranceNumber.slice(0, 18) : '',
+          s6_str_1: form.street ? form.street.slice(0, 30) : '',
+          s6_str_2: form.unitNumber ? form.unitNumber.slice(0, 5) : '',
+          s6_str_3: form.city ? form.city.slice(0, 18) : '',
+          s6_str_4: form.province ? form.province.slice(0, 2) : '',
+          s6_str_5: form.country ? form.country.slice(0, 2) : '',
+          s6_str_6: form.zipCode ? form.zipCode.slice(0, 5) : '',
+          s6_str_7: form.zipCode ? form.zipCode.slice(6, 10) : '',
+          s6_opt_8: form.homeless ? form.homeless : false,
+          s7_str_1: form.phone ? form.phone.slice(0, 3) : '',
+          s7_str_2: form.phone ? form.phone.slice(4, 7) : '',
+          s7_str_3: form.phone ? form.phone.slice(8, 12) : '',
+          s7_str_4: form.phoneI ? form.phoneI : '',
+          s8_str_1: form.email ? form.email.slice(0, 30) : '',
+          s9_str_1: form.vet && form.claimantsName ? form.claimantsName.slice(0, 12) : '',
+          s9_str_2: '',
+          s9_str_3: form.vet && form.claimantsLastName ? form.claimantsLastName.slice(0, 18) : '',
+          s10_str_1: form.vet && form.claimantsSsn ? form.claimantsSsn.slice(0, 3) : '',
+          s10_str_2: form.vet && form.claimantsSsn ? form.claimantsSsn.slice(3, 5) : '',
+          s10_str_3: form.vet && form.claimantsSsn ? form.claimantsSsn.slice(5, 9) : '',
+
+
+          s11_str_1: form.vet && form.claimantsBirthday ? form.claimantsBirthday.slice(0, 2) : '',
+          s11_str_2: form.vet && form.claimantsBirthday ? form.claimantsBirthday.slice(3, 5) : '',
+          s11_str_3: form.vet && form.claimantsBirthday ? form.claimantsBirthday.slice(6, 10) : '',
+
+
+          s12_str_1: form.vet && form.claimantsStreet ? form.claimantsStreet.slice(0, 30) : '',
+          s12_str_2: form.vet && form.claimantsUnitNumber ? form.claimantsUnitNumber.slice(0, 5) : '',
+          s12_str_3: form.vet && form.claimantsCity ? form.claimantsCity.slice(0, 18) : '',
+          s12_str_4: form.vet && form.claimantsProvince ? form.claimantsProvince.slice(0, 2) : '',
+          s12_str_5: form.vet && form.claimantsCountry ? form.claimantsCountry.slice(0, 2) : '',
+
+
+          s12_str_6: form.vet && form.claimantsZipCode ? form.claimantsZipCode.slice(0, 5) : '',
+          s12_str_7: form.vet && form.claimantsZipCode ? form.claimantsZipCode.slice(6, 10) : '',
+
+          s13_str_1: form.vet && form.claimantsPhone ? form.claimantsPhone.slice(0, 3) : '',
+          s13_str_2: form.vet && form.claimantsPhone ? form.claimantsPhone.slice(4, 7) : '',
+          s13_str_3: form.vet && form.claimantsPhone ? form.claimantsPhone.slice(8, 12) : '',
+          s13_str_4: form.vet && form.claimantsPhoneI ? form.claimantsPhoneI : '',
+          s14_str_1: form.vet && form.claimantsEmail ? form.claimantsEmail.slice(0, 30) : '',
+
+
+
+          s15_opt_1: form.benefitType == 'Compensation' ? true : false,
+          s15_opt_3: form.benefitType == 'Pensions/Survivors Benefits' ? true : false,
+          s15_opt_4: form.benefitType == 'Fiduciary' ? true : false,
+          s15_opt_6: form.benefitType == 'Education' ? true : false,
+          s15_opt_8: form.benefitType == 'Veterans Health Administration' ? true : false,
+          s15_opt_2: form.benefitType == 'Veteran Readiness and Employment' ? true : false,
+          s15_opt_5: form.benefitType == 'Loan Guaranty' ? true : false,
+          s15_opt_7: form.benefitType == 'Life Insurance' ? true : false,
+          s15_opt_9: form.benefitType == 'National Cemetery Administration' ? true : false,
+
+
+          s16a_opt_1: form.isInformalConference ? form.isInformalConference : false,
+
+          s16b_opt_1: form.isInformalConference && form.informalConferenceContact == 'b8:12' ? true : false,
+          s16b_opt_3: form.isInformalConference && form.informalConferenceContact == 'b12:4.30' ? true : false,
+          s16b_opt_2: form.isInformalConference && form.informalConferenceContact == 'rb8:12' ? true : false,
+          s16b_opt_4: form.isInformalConference && form.informalConferenceContact == 'rb12:4.30' ? true : false,
+
+
+
+          s17a_str_1: form.rName ? form.rName.slice(0, 12) : '',
+          s17a_str_2: form.rLastName ? form.rLastName.slice(0, 18) : '',
+          s17b_str_1: form.rPhone ? form.rPhone.slice(0, 3) : '',
+          s17b_str_2: form.rPhone ? form.rPhone.slice(4, 7) : '',
+          s17b_str_3: form.rPhone ? form.rPhone.slice(8, 12) : '',
+          s17c_str_1: form.rEmail ? form.rEmail.slice(0, 30) : '',
+
+
+          s18a_str_1: form.issues && form.issues.length > 0 ? form.issues?.[0]?.['specificIssue'] : '',
+          s18b_month_1: form.issues && form.issues.length > 0 ? form.issues[0]?.['date'] ? form.issues[0]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_1: form.issues && form.issues.length > 0 ? form.issues[0]?.['date'] ? form.issues[0]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_1: form.issues && form.issues.length > 0 ? form.issues[0]?.['date'] ? form.issues[0]?.['date']?.slice(6, 10) : '' : '',   
+
+          s18a_str_2: form.issues && form.issues.length > 1 ? form.issues?.[1]?.['specificIssue'] : '',
+          s18b_month_2: form.issues && form.issues.length > 1 ? form.issues[1]?.['date'] ? form.issues[1]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_2: form.issues && form.issues.length > 1 ? form.issues[1]?.['date'] ? form.issues[1]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_2: form.issues && form.issues.length > 1 ? form.issues[1]?.['date'] ? form.issues[1]?.['date']?.slice(6, 10) : '' : '',
+
+          s18a_str_3: form.issues && form.issues.length > 2 ? form.issues?.[2]?.['specificIssue'] : '',
+          s18b_month_3: form.issues && form.issues.length > 2 ? form.issues[2]?.['date'] ? form.issues[2]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_3: form.issues && form.issues.length > 2 ? form.issues[2]?.['date'] ? form.issues[2]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_3: form.issues && form.issues.length > 2 ? form.issues[2]?.['date'] ? form.issues[2]?.['date']?.slice(6, 10) : '' : '',
+
+          s18a_str_4: form.issues && form.issues.length > 3 ? form.issues?.[3]?.['specificIssue'] : '',
+          s18b_month_4: form.issues && form.issues.length > 3 ? form.issues[3]?.['date'] ? form.issues[3]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_4: form.issues && form.issues.length > 3 ? form.issues[3]?.['date'] ? form.issues[3]?.['date']?.slice(3, 5) : '' : '', 
+          s18b_year_4: form.issues && form.issues.length > 3 ? form.issues[3]?.['date'] ? form.issues[3]?.['date']?.slice(6, 10) : '' : '', 
+
+          s18a_str_5: form.issues && form.issues.length > 4 ? form.issues?.[4]?.['specificIssue'] : '',
+          s18b_month_5: form.issues && form.issues.length > 4 ? form.issues[4]?.['date'] ? form.issues[4]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_5: form.issues && form.issues.length > 4 ? form.issues[4]?.['date'] ? form.issues[4]?.['date']?.slice(3, 5) : '' : '', 
+          s18b_year_5: form.issues && form.issues.length > 4 ? form.issues[4]?.['date'] ? form.issues[4]?.['date']?.slice(6, 10) : '' : '',
+
+          s18a_str_6: form.issues && form.issues.length > 5 ? form.issues?.[5]?.['specificIssue'] : '',
+          s18b_month_6: form.issues && form.issues.length > 5 ? form.issues[5]?.['date'] ? form.issues[5]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_6: form.issues && form.issues.length > 5 ? form.issues[5]?.['date'] ? form.issues[5]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_6: form.issues && form.issues.length > 5 ? form.issues[5]?.['date'] ? form.issues[5]?.['date']?.slice(6, 10) : '' : '', 
+
+          s18a_str_7: form.issues && form.issues.length > 6 ? form.issues?.[6]?.['specificIssue'] : '',
+          s18b_month_7: form.issues && form.issues.length > 6 ? form.issues[6]?.['date'] ? form.issues[6]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_7: form.issues && form.issues.length > 6 ? form.issues[6]?.['date'] ? form.issues[6]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_7: form.issues && form.issues.length > 6 ? form.issues[6]?.['date'] ? form.issues[6]?.['date']?.slice(6, 10) : '' : '',
+
+
+          s18a_str_8: form.issues && form.issues.length > 7 ? form.issues?.[7]?.['specificIssue'] : '',
+          s18b_month_8: form.issues && form.issues.length > 7 ? form.issues[7]?.['date'] ? form.issues[7]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_8: form.issues && form.issues.length > 7 ? form.issues[7]?.['date'] ? form.issues[7]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_8: form.issues && form.issues.length > 7 ? form.issues[7]?.['date'] ? form.issues[7]?.['date']?.slice(6, 10) : '' : '',
+
+          s18a_str_9: form.issues && form.issues.length > 8 ? form.issues?.[8]?.['specificIssue'] : '',
+          s18b_month_9: form.issues && form.issues.length > 8 ? form.issues[8]?.['date'] ? form.issues[8]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_9: form.issues && form.issues.length > 8 ? form.issues[8]?.['date'] ? form.issues[8]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_9: form.issues && form.issues.length > 8 ? form.issues[8]?.['date'] ? form.issues[8]?.['date']?.slice(6, 10) : '' : '',
+
+          s18a_str_10: form.issues && form.issues.length > 9 ? form.issues?.[9]?.['specificIssue'] : '',
+          s18b_month_10: form.issues && form.issues.length > 9 ? form.issues[9]?.['date'] ? form.issues[9]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_10: form.issues && form.issues.length > 9 ? form.issues[9]?.['date'] ? form.issues[9]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_10: form.issues && form.issues.length > 9 ? form.issues[9]?.['date'] ? form.issues[9]?.['date']?.slice(6, 10) : '' : '',
+
+          s18a_str_11: form.issues && form.issues.length > 10 ? form.issues?.[10]?.['specificIssue'] : '',
+          s18b_month_11: form.issues && form.issues.length > 10 ? form.issues[10]?.['date'] ? form.issues[10]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_11: form.issues && form.issues.length > 10 ? form.issues[10]?.['date'] ? form.issues[10]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_11: form.issues && form.issues.length > 10 ? form.issues[10]?.['date'] ? form.issues[10]?.['date']?.slice(6, 10) : '' : '', 
+
+          s18a_str_12: form.issues && form.issues.length > 11 ? form.issues?.[11]?.['specificIssue'] : '',
+          s18b_month_12: form.issues && form.issues.length > 11 ? form.issues[11]?.['date'] ? form.issues[11]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_12: form.issues && form.issues.length > 11 ? form.issues[11]?.['date'] ? form.issues[11]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_12: form.issues && form.issues.length > 11 ? form.issues[11]?.['date'] ? form.issues[11]?.['date']?.slice(6, 10) : '' : '',
+
+          s18a_str_13: form.issues && form.issues.length > 12 ? form.issues?.[12]?.['specificIssue'] : '',
+          s18b_month_13: form.issues && form.issues.length > 12 ? form.issues[12]?.['date'] ? form.issues[12]?.['date']?.slice(0, 2) : '' : '',
+          s18b_day_13: form.issues && form.issues.length > 12 ? form.issues[12]?.['date'] ? form.issues[12]?.['date']?.slice(3, 5) : '' : '',
+          s18b_year_13: form.issues && form.issues.length > 12 ? form.issues[12]?.['date'] ? form.issues[12]?.['date']?.slice(6, 10) : '' : '',
+
+
+          s19b_str_1: form.dateSigned ? form.dateSigned.slice(0, 2) : '',
+          s19b_str_2: form.dateSigned ? form.dateSigned.slice(3, 5) : '',
+          s19b_str_3: form.dateSigned ? form.dateSigned.slice(6, 10) : '',
+
+
+          s20a_str_1: form.veteranFirstName ? form.veteranFirstName.slice(0, 12) : '',
+          s20a_str_2: form.veteranLastName ? form.veteranLastName.slice(0, 18) : '',
+          s20c_str_1: form.veteranDateSigned ? form.veteranDateSigned.slice(0, 2) : '',
+          s20c_str_2: form.veteranDateSigned ? form.veteranDateSigned.slice(3, 5) : '',
+          s20c_str_3: form.veteranDateSigned ? form.veteranDateSigned.slice(6, 10) : '',
+
+          field125: form.signature ? form.signature : '',
         },
       },
     },
