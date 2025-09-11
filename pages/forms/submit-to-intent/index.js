@@ -71,6 +71,7 @@ const signatureOption = [
 ];
 
 export default function SubmitToIntentForm() {
+  const formTitle = 'Submit To Intent';
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
   const [recordExists, setRecordsExists] = useState(false);
@@ -130,11 +131,11 @@ export default function SubmitToIntentForm() {
   });
 
   return (
-    <FrontLayout title="Submit To Intent">
+    <FrontLayout title={formTitle}>
       <Breadcrumb
         preUrl="/forms"
         preTitle="Forms"
-        currentTitle="Submit To Intent"
+        currentTitle={formTitle}
       />
       <Formik
         initialValues={initialValues}
@@ -472,7 +473,7 @@ export default function SubmitToIntentForm() {
           };
           return (
             <FormContent
-              title="Submit To Intent"
+              title={formTitle}
               onViewDetails={onViewDetails}
               onSave={onSave}
               onReview={onReview}
