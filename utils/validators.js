@@ -1148,3 +1148,176 @@ export const SupplementalClaimValidationSchema = yup.object().shape({
   }),
   signature: yup.string().required('Add your signature on profile section'),
 });
+
+export const HigherLevelReviewValidationSchema = yup.object().shape({
+  firstName: firstNameValidation,
+  lastName: lastNameValidation,
+  ssn: ssnValidation,
+  currentVa: vaFileNumberValidation,
+  serviceNumber: serviceNumberValidationAlt,
+  birthday: yup.string().required('This field is required to save PDF'),
+  street: validStreetCharacters.required('This field is required to save PDF'),
+  unitNumber: unitNumberValidation,
+  insuranceNumber: yup.string()
+    .matches(/^\d+$/, 'Only numbers are allowed'),
+  city: yup.string().matches(cityRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }).required('This field is required to save PDF'),
+  province: yup.string().required('This field is required to save PDF'),
+  country: yup.string().required('This field is required to save PDF'),
+  zipCode: zipCodeValidation,
+  phone: phoneValidation,
+  phoneI: internationalPhoneValidation,
+  email: emailValidation,
+  claimantsName: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(nameRegex, 'Only letters, single spaces, and single periods allowed')
+    .min(2, 'First name must be at least 2 characters'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsLastName: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(nameRegex, 'Only letters, single spaces, and single periods allowed')
+    .min(2, 'Last name must be at least 2 characters'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsSsn: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(/^\d{9}$/, 'Social Security Number must be exactly 9 digits').test('valid-ssn', 'Invalid Social Security Number', value => {
+      if (!value) return true; // Allow Yup to handle 'required' case
+  
+      const firstThree = value.substring(0, 3);
+      const middleTwo = value.substring(3, 5);
+      const lastFour = value.substring(5);
+  
+      // SSN cannot start with 000, 666, or be in the range 900-999
+      if (
+        firstThree === '000' ||
+        firstThree === '666' ||
+        parseInt(firstThree) >= 900
+      ) {
+        return false;
+      }
+  
+      // The middle two digits cannot be "00"
+      if (middleTwo === '00') {
+        return false;
+      }
+  
+      // The last four digits cannot be "0000"
+      if (lastFour === '0000') {
+        return false;
+      }
+  
+      return true;
+    }),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsBirthday: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsStreet: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(streetRegex, 'Must contain valid characters'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsUnitNumber: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.matches(unitNumberRegex, 'Please enter a valid Apt/Unit (e.g. A1, 2B)'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsCity: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(cityRegex, 'Must contain valid characters'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsProvince: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(validCharactersRegex, 'Must contain valid characters'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsCountry: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(validCharactersRegex, 'Must contain valid characters'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsZipCode: yup.string().when('vet', {
+    is: true,
+    then: schema =>
+      schema.matches(
+        /^\d{5}(-\d{4})?$/,
+        'Zip Code must be in the format XXXXX or XXXXX-XXXX',
+      ).required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsPhone: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(/^\d{3}-\d{3}-\d{4}$/, 'Phone number must be in the format xxx-xxx-xxxx'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsPhoneI: yup.string().when('vet', {
+    is: true,
+    then: schema => schema.matches(/^\d{1,15}$/, 'Use digit only format (e.g. 1234567890)'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsEmail: yup.string().when('vet', {
+    is: true,
+    then: schema =>
+      schema.email('Invalid email format').max(100, 'Email cannot exceed 100 characters').matches(
+       /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/, 'Please enter a valid email address').required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+
+  benefitType: yup.string().required('This field is required to save PDF'),
+  informalConferenceContact: yup.string().when('isInformalConference', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+
+  rName: yup
+    .string()
+    .matches(nameRegex, 'Only letters, single spaces, and single periods allowed')
+    .min(2, 'First name must be at least 2 characters'),
+  rLastName: yup
+    .string()
+    .matches(nameRegex, 'Only letters, single spaces, and single periods allowed')
+    .min(2, 'Last name must be at least 2 characters'),
+  rPhone: yup
+    .string()
+    .matches(
+    /^\d{3}-\d{3}-\d{4}$/,
+    'Phone number must be in the format xxx-xxx-xxxx',
+    ),
+  rEmail: yup
+    .string()
+    .email('Invalid email format')
+    .max(100, 'Email cannot exceed 100 characters')
+    .matches(
+      /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
+      'Please enter a valid email address'
+    ),
+  issues: yup.array().of(
+    yup.object().shape({
+      date: yup.string(),
+      specificIssue: yup
+        .string()
+        .matches(validCharactersRegex, {
+          message: 'Must contain valid characters',
+          excludeEmptyString: true
+        })
+        .required('This field is required to save PDF'),
+    }),
+  ),
+  dateSigned: yup.string().required('This field is required to save PDF'),
+  veteranDateSigned: yup
+    .string()
+    .required('This field is required to save PDF'),
+  veteranFirstName: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed').required('This field is required to save PDF'),
+  veteranLastName: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed').required('This field is required to save PDF'),
+  vet: yup.bool(),
+  signature: yup.string().required('Add your signature on profile section'),
+});

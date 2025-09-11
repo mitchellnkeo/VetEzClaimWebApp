@@ -364,7 +364,7 @@ export const menuData = [
     submenu: [
       {
         id: 'appeal_1',
-        title: 'Higher Level Review (Form 20-0995)',
+        title: 'Higher Level Review (Form 20-0996)',
         path: '/forms/higher-level-review',
         disabled: false,
         onPress: () => {},
@@ -1230,7 +1230,7 @@ export const formsIdList = [
 
   {
     formId: 'higherlevelreview',
-    formTitle: 'Higher Level Review (Form 20-0995)',
+    formTitle: 'Higher Level Review (Form 20-0996)',
     formUrl: '/forms/higher-level-review',
   },
   {
