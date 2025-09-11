@@ -217,7 +217,16 @@ const LoginForm = () => {
         enableReinitialize
       >
         {({ isSubmitting }) => (
-          <Form>
+          <Form  
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (isOtpSent) {
+                handleOtpSubmission();
+              } else {
+                handleLogin();
+              }
+            }}
+          >
             {!isOtpSent && (
               <>
                 <div className="mt-3">
@@ -326,9 +335,9 @@ const LoginForm = () => {
 
             <div className="mt-4">
               <Button
-                type="button"
+                type="submit"
                 loading={isSubmitting}
-                onClick={isOtpSent ? handleOtpSubmission : handleLogin}
+                // onClick={isOtpSent ? handleOtpSubmission : handleLogin}
               >
                 {isOtpSent ? 'Submit OTP' : 'Sign In'}
               </Button>
