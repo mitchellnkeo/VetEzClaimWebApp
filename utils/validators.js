@@ -1321,3 +1321,63 @@ export const HigherLevelReviewValidationSchema = yup.object().shape({
   vet: yup.bool(),
   signature: yup.string().required('Add your signature on profile section'),
 });
+
+export const BoardAppealValidationSchema = yup.object().shape({
+  name: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed').required('This field is required to save PDF'),
+  fileNumber: vaFileNumberValidation,
+  birthday: yup.string().required('This field is required to save PDF'),
+  notVetName: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed'),
+  notVetBirthday: yup.string(),
+  street: validStreetCharacters.required('This field is required to save PDF'),
+  phone: phoneValidation,
+  email: emailValidation,
+  rName: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed'),
+  
+
+
+  lawJudge: yup.string().required('This field is required to save PDF'),
+  hearingType: yup.string().when('lawJudge', {
+    is: '10C',
+    then: schema => schema.required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  issueDecided: yup.string().required('This field is required to save PDF'),
+  issues: yup.array().of(
+    yup.object().shape({
+      specificIssue: yup
+        .string()
+        .matches(validCharactersRegex, {
+          message: 'Must contain valid characters',
+          excludeEmptyString: true
+        })
+        .required('This field is required to save PDF'),
+      date: yup.string(),
+    }),
+  ),
+  dateSigned: yup.string().required('This field is required to save PDF'),
+  signature: yup.string().required('Add your signature on profile section'),
+});
+
+export const SupportOfClaimValidationSchema = yup.object().shape({
+  firstName: firstNameValidation,
+  lastName: lastNameValidation,
+  ssn: ssnValidation,
+  currentVa: vaFileNumberValidation,
+  serviceNumber: serviceNumberValidationAlt,
+  birthday: yup.string().required('This field is required to save PDF'),
+  phone: phoneValidation,
+  phoneI: internationalPhoneValidation,
+  email: emailValidation,
+  street: validStreetCharacters.required('This field is required to save PDF'),
+  unitNumber: unitNumberValidation,
+  city: yup.string().matches(cityRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }).required('This field is required to save PDF'),
+  province: containValidCharacters.required('This field is required to save PDF'),
+  country: containValidCharacters.required('This field is required to save PDF'),
+  zipCode: zipCodeValidation,
+  claimBenefits: containValidCharacters.required('This field is required to save PDF'),
+  veteranDateSigned: yup.string().required('This field is required to save PDF'),
+  signature: yup.string().required('Add Signature on your Profile'),
+});

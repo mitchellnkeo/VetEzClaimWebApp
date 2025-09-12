@@ -2299,3 +2299,94 @@ export const generateHigherLevelReviewPdfObject = async (form) => {
   };
   return infoToPDF;
 };
+
+export const generateBoardAppealPdfObject = async (form) => {
+  const infoToPDF = {
+    content: {
+      documentKey: 'tpl_LCyajLDcXRz92CcXZ5',
+      f: {
+        page_1: {
+          s1_str_1:  form.name ? form.name.slice(0, 41) : ''  ,
+          s2_str_1: form.fileNumber ? form.fileNumber : '',
+          s3_date_1: form.birthday ? form.birthday : '',
+          s4_str_1: form.notVetName ? form.notVetName : '',
+          s5_date_1: form.notVetBirthday ? form.notVetBirthday : '',
+          s6_str_1: form.street ? form.street : '',
+          s6_opt_2: form.homelessness ? form.homelessness : false,
+          s7_str_1: form.phone ? form.phone : '',
+          s8_str_1: form.email ? form.email : '',
+          s9_str_1: form.rName ? form.rName : '',
+          s10_opt_1:  form.lawJudge && form.lawJudge == '10A' ? true : false,
+          s10_opt_2: form.lawJudge && form.lawJudge == '10B' ? true : false,
+          s10_opt_3: form.lawJudge && form.lawJudge == '10C' ? true : false,
+          s10_opt_4: form.lawJudge && form.lawJudge == '10C' && form.hearingType && form.hearingType == 'centralOffice' ? true : false,
+          s10_opt_5: form.lawJudge && form.lawJudge == '10C' && form.hearingType && form.hearingType == 'videoconference' ? true : false,
+          s10_opt_6: form.lawJudge && form.lawJudge == '10C' && form.hearingType && form.hearingType == 'virtualTelehearing' ? true : false,
+          s11_opt_1: form.issueDecided && form.issueDecided == 'va10182' ? true : false,
+          s11_opt_2: form.issueDecided && form.issueDecided == 'vha' ? true : false,
+          s11_str_3: form.issues && form.issues.length > 0 ? form.issues[0]?.['specificIssue'] : '',
+          s11_str_8: form.issues && form.issues.length > 0 ? form.issues[0]?.['date'] : '',
+          s11_str_4: form.issues && form.issues.length > 1 ? form.issues[1]?.['specificIssue'] : '',
+          s11_str_9: form.issues && form.issues.length > 1 ? form.issues[1]?.['date'] : '',
+          s11_str_5: form.issues && form.issues.length > 2 ? form.issues[2]?.['specificIssue'] : '',
+          s11_str_10: form.issues && form.issues.length > 2 ? form.issues[2]?.['date'] : '',
+          s11_str_6: form.issues && form.issues.length > 3 ? form.issues[3]?.['specificIssue'] : '',
+          s11_str_11: form.issues && form.issues.length > 3 ? form.issues[3]?.['date'] : '',
+          s11_str_7: form.issues && form.issues.length > 4 ? form.issues[4]?.['specificIssue'] : '',
+          s11_str_12: form.issues && form.issues.length > 4 ? form.issues[4]?.['date'] : '',
+          s11_opt_13: form.additionalIssue ? form.additionalIssue : false,
+          s12_date_1: form.dateSigned ? form.dateSigned : '',
+          field30: form.signature ? form.signature : '',
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};
+
+export const generateSupportOfClaimPdfObject = async (form) => {
+  const infoToPDF = {
+    content: {
+      documentKey: 'tpl_AMxnaYQLAD9M9gPkyM',
+      f: {
+        page_1: {
+          first_name:  form.firstName ? form.firstName.slice(0, 12) : '',
+          middle_initial: '',
+          last_name: form.lastName ? form.lastName.slice(0, 18) : '',
+          ssn_first: form.ssn ? form.ssn.slice(0, 3) : '',
+          ssn_second: form.ssn ? form.ssn.slice(3, 5) : '',
+          ssn_three: form.ssn ? form.ssn.slice(5, 9) : '',
+          va_file_number: form.currentVa ? form.currentVa.slice(0, 9) : '',
+          dob_month: form.birthday ? form.birthday.slice(0, 2) : '',
+          dob_day: form.birthday ? form.birthday.slice(3, 5) : '',
+          dob_year: form.birthday ? form.birthday.slice(6, 10) : '',
+          service_number: form.serviceNumber ? form.serviceNumber.slice(0, 9) : '',
+          telephonenumber_first: form.phone ? form.phone.slice(0, 3) : '',
+          telephonenumber_second: form.phone ? form.phone.slice(4, 7) : '',
+          telephonenumber_last: form.phone ? form.phone.slice(8, 12) : '',
+          international_phone_number: form.phoneI ? form.phoneI : '',
+          email_address_1: form.email ? form.email.slice(0, 20) : '',
+          email_address_2: form.email ? form.email.slice(20, 40) : '',
+
+          street: form.street ? form.street.slice(0, 30) : '',
+          apartmentorunitnumber: form.unitNumber ? form.unitNumber.slice(0, 5) : '',
+
+          city: form.city ? form.city.slice(0, 18) : '',
+          stateorprovince: form.province ? form.province.slice(0, 2) : '',
+          country: form.country ? form.country.slice(0, 2) : '',
+          ziporpostalcode_1: form.zipCode ? form.zipCode.slice(0, 5) : '',
+          ziporpostalcode_2: form.zipCode ? form.zipCode.slice(6, 10) : '',
+
+          remarks_1: form.claimBenefits ? form.claimBenefits.slice(0, 2120) : '',
+          remarks_2: form.claimBenefits ? form.claimBenefits.slice(2121, 5500) : '',
+          field33: form.signature ? form.signature : '',
+
+          date_signed_month: form.veteranDateSigned ? form.veteranDateSigned.slice(0, 2) : '',
+          date_signed_day: form.veteranDateSigned ? form.veteranDateSigned.slice(3, 5) : '',
+          date_signed_year: form.veteranDateSigned ? form.veteranDateSigned.slice(6, 10) : '',
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};

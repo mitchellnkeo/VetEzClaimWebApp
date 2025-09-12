@@ -298,3 +298,45 @@ export const HigherLevelReviewFileMap = {
   veteranLastName: 'Last Name of VA Representative',
   signature: 'Add Signature on your Profile'
 };
+
+export const BoardAppealFileMap = {
+  name: 'Name',
+  fileNumber: 'File Number',
+  birthday: 'Birthday',
+  street: 'Street',
+  homelessness: 'Homelessness',
+  phone: 'Phone',
+  email: 'Email',
+  rName: 'Representatives Name',
+  lawJudge: 'Law Judge',
+  issueDecided: 'Issues Detected',
+  issues: 'Issues',
+  additionalIssue: 'Additional Issue',
+  dateSigned: 'Date Signed',
+  notVetName: 'Not Veteran Name',
+  notVetBirthday: 'Not Veteran Birthday',
+  hearingType: 'Hearing Type',
+  signature: 'Add Signature on your Profile',
+};
+
+export const SupportOfClaimFileMap = {
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  ssn: 'SSN (Social Security Number)',
+  currentVa: 'VA File Number',
+  birthday: 'Birthday',
+  serviceNumber: 'Service Number',
+  street: 'Street',
+  unitNumber: 'Unit Number',
+  city: 'City',
+  province: 'Province',
+  country: 'US',
+  zipCode: 'Zip Code',
+  phone: 'Phone',
+  phoneI: 'Int. Phone No.',
+  email: 'Email',
+  claimBenefits: 'Remarks',
+  veteranDateSigned: 'Veteran Date Signed',
+  hasSignature: 'Add Signature on your Profile',
+  signature: 'Add Signature on your Profile',
+};
