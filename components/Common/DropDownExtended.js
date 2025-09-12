@@ -88,7 +88,7 @@ const DropDownExtended = ({
               displayName = val = item;
             } else {
               displayName = item.option || item.name;
-              val = item.value || item.option || item.name;
+              val = item.abbreviation ||item.value || item.option || item.name ;
             }
             return (
               <option key={index} value={val}>
