@@ -371,7 +371,7 @@ export const menuData = [
       },
       {
         id: 'appeal_2',
-        title: 'Board Appeal (Form 20-0995)',
+        title: 'Board Appeal (Form 10182)',
         path: '/forms/board-appeal',
         disabled: false,
         onPress: () => {},
@@ -1215,7 +1215,7 @@ export const formsIdList = [
   {
     formId: 'supportofclaim',
     formTitle: 'Statement in Support of Claim (Form 21-4138)',
-    formUrl: '/forms/ptsd-stressor',
+    formUrl: '/forms/support-claim',
   },
   {
     formId: 'medicalrecords',
@@ -1235,7 +1235,7 @@ export const formsIdList = [
   },
   {
     formId: 'boardappeal',
-    formTitle: 'Board Appeal (Form 20-0995)',
+    formTitle: 'Board Appeal (Form 10182)',
     formUrl: '/forms/board-appeal',
   },
   {

@@ -566,7 +566,6 @@ export default function SubmitToIntentForm() {
                   label="State/Province"
                   name="province"
                   data={StateData}
-                  hasCounter={true}
                   fieldCounter="(7-4 of 21)"
                 />
                 <TextInput
@@ -715,7 +714,6 @@ export default function SubmitToIntentForm() {
                       label="State/Province"
                       name="claimantsProvince"
                       data={StateData}
-                      hasCounter={true}
                       fieldCounter="(16-4 of 21)"
                     />
                     <TextInput
