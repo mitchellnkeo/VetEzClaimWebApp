@@ -340,3 +340,74 @@ export const SupportOfClaimFileMap = {
   hasSignature: 'Add Signature on your Profile',
   signature: 'Add Signature on your Profile',
 };
+
+export const PTSDStressorFileMap = {
+  firstName: 'Veteran First Name',
+  lastName: 'Veteran Last Name',
+  ssn: 'Veteran SSN',
+  currentVa: 'Veteran VA File Number', // optional
+  birthday: 'Veteran Birthday',
+  serviceNumber: 'Veteran Service Number', // optional
+
+  phone: 'Veteran Phone Number',
+  phoneI: '',
+  email: '',
+
+  // section II
+  incidentDate1: 'Incident Date(1)',
+  dateOfAssignmentFrom1: 'Date of Assignment From(1)',
+  dateOfAssignmentTo1: 'Date of Assignment To(1)',
+  incidentLocation1: 'Incident Location(1)',
+  unitAssignmentDuringIncident0: 'Unit Assignment During Incident(0)',
+  descriptionOfIncident1: 'Description of Incident(1)',
+  medalReceived1: 'Medal Received(1)',
+
+  person1FirstName: 'Person (1) First Name',
+  person1LastName: 'Person (1) Last Name',
+  person1Rank: 'Person (1) Rank', // optional
+  injuryDate1: 'Injury Date(1)',
+  checkOptions1: 'Check Options(1)', 
+  checkOptionsOther1: 'Check Options Other(1)', 
+  unitAssignmentDuringIncident1: 'Unit Assignment During Incident(1)',
+
+  person2FirstName: 'Person (2) First Name  ',
+  person2LastName: 'Person (2) Last Name',
+  person2Rank: 'Person (2) Rank', // optional
+  injuryDate2: 'Injury Date(2)',
+  checkOptions2: 'Check Options(2)', 
+  checkOptionsOther2: 'Check Options Other(2)', 
+  unitAssignmentDuringIncident2: 'Unit Assignment During Incident(2)',
+
+
+
+  incidentDate2: 'Incident Date(2)', // optional
+  dateOfAssignmentFrom2: 'Date of Assignment From(2)', // optional
+  dateOfAssignmentTo2: 'Date of Assignment To(2)', // optional
+  incidentLocation2: 'Incident Location(2)', // optional
+  unitAssignmentDuringIncident3: 'Unit Assignment During Incident(3)', // optional
+  descriptionOfIncident2: 'Description of Incident(2)', // optional
+  medalReceived2: 'Medal Received(2)', // optional
+
+
+  person3FirstName: 'Person (3) First Name', // optional
+  person3LastName: 'Person (3) Last Name', // optional
+  person3Rank: 'Person (3) Rank', // optional
+  injuryDate3: 'Injury Date(3)', // optional
+  checkOptions3: 'Check Options(3)', // optional
+  checkOptionsOther3: 'Check Options Other(3)', // optional
+  unitAssignmentDuringIncident4: 'Unit Assignment During Incident(4)', // optional
+  
+
+  person4FirstName: 'Person (4) First Name', // optional
+  person4LastName: 'Person (4) Last Name',
+  person4Rank: 'Person (4) Rank', // optional
+  injuryDate4: 'Injury Date(4)',  
+  checkOptions4: 'Check Options(4)', 
+  checkOptionsOther4: 'Check Options Other(4)', 
+  unitAssignmentDuringIncident5: 'Unit Assignment During Incident(5)',
+
+  remarks: 'Remarks', // optional
+  hasSignature: 'Add Signature on your Profile',
+  signature: 'Add Signature on your Profile',
+  dateSigned: 'Date Signed',
+};

@@ -2390,3 +2390,143 @@ export const generateSupportOfClaimPdfObject = async (form) => {
   };
   return infoToPDF;
 };
+
+export const generatePTSDStressorPdfObject = async (form) => {
+  const infoToPDF = {
+    content: {
+      documentKey: 'tpl_hdNcprs24JDtk7PR9s',
+      f: {
+        page_1: {
+          claimantsfirstname: form.firstName ? form.firstName.slice(0, 12) : '',
+          claimantsmiddleinitial1: '',
+          claimantslastname: form.lastName ? form.lastName.slice(0, 18) : ''  ,
+          ssn_first: form.ssn ? form.ssn.slice(0, 3) : '',
+          ssn_second: form.ssn ? form.ssn.slice(3, 5) : '',
+          ssn_three: form.ssn ? form.ssn.slice(5, 9) : '',
+
+          vafilenumber: form.currentVa ? form.currentVa.slice(0, 9) : '',
+          dob_month: form.birthday ? form.birthday.slice(0, 2) : '',
+          dob_day: form.birthday ? form.birthday.slice(3, 5) : '',
+          dob_year: form.birthday ? form.birthday.slice(6, 10) : '',
+
+          veteransservicenumber: form.serviceNumber ? form.serviceNumber.slice(0, 9) : '',
+          telephone_number_area_code: form.phone ? form.phone.slice(0, 3) : '',
+          telephone_middle_three_numbers: form.phone ? form.phone.slice(4, 7) : '',
+          telephone_last_four_numbers: form.phone ? form.phone.slice(8, 12) : '',
+          international_telephone: form.phoneI ? form.phoneI : '',
+          isNewFormat: true,
+          preferredemail: form.email ? form.email.slice(0, 32) : '',
+          preferredemail1: form.email ? form.email.slice(0, 4) : '',
+          preferredemail2: form.email ? form.email.slice(4, 8) : '',
+          preferredemail3: form.email ? form.email.slice(8, 12) : '',
+          preferredemail4: form.email ? form.email.slice(12, 16) : '',
+          preferredemail5: form.email ? form.email.slice(16, 20) : '',
+          preferredemail6: form.email ? form.email.slice(20, 24) : '',
+          preferredemail7: form.email ? form.email.slice(24, 28) : '',
+          preferredemail8: form.email ? form.email.slice(28, 32) : '',
+
+          dobmonth: form.incidentDate1 ? form.incidentDate1.slice(0, 2) : '',
+          dobday: form.incidentDate1 ? form.incidentDate1.slice(3, 5) : '',
+          dobyear: form.incidentDate1 ? form.incidentDate1.slice(6, 10) : '',
+
+          month: form.dateOfAssignmentFrom1 ? form.dateOfAssignmentFrom1.slice(0, 2) : '',
+          day: form.dateOfAssignmentFrom1 ? form.dateOfAssignmentFrom1.slice(3, 5) : '',
+          year: form.dateOfAssignmentFrom1 ? form.dateOfAssignmentFrom1.slice(6, 10) : '',
+
+          month2: form.dateOfAssignmentTo1 ? form.dateOfAssignmentTo1.slice(0, 2) : '',
+          day2: form.dateOfAssignmentTo1 ? form.dateOfAssignmentTo1.slice(3, 5) : '',
+          year2: form.dateOfAssignmentTo1 ? form.dateOfAssignmentTo1.slice(6, 10) : '',
+
+          location_of_incident: form.incidentLocation1 ? form.incidentLocation1 : '',
+          unit_assignment_during_incident: form.unitAssignmentDuringIncident0 ? form.unitAssignmentDuringIncident0 : '',
+          description_of_incident: form.descriptionOfIncident1 ? form.descriptionOfIncident1 : '',
+          medals_citations: form.medalReceived1 ? form.medalReceived1 : '',
+
+          claimantsfirstname2: form.person1FirstName ? form.person1FirstName.slice(0, 12) : '',
+          claimantsmiddleinitial2: '',
+          claimantslastname2: form.person1LastName ? form.person1LastName.slice(0, 18) : '',
+          rank4b: form.person1Rank ? form.person1Rank.slice(0, 4) : '',
+
+          month3: form.injuryDate1 ? form.injuryDate1.slice(0, 2) : '',
+          day3: form.injuryDate1 ? form.injuryDate1.slice(3, 5) : '',
+          year3: form.injuryDate1 ? form.injuryDate1.slice(6, 10) : '',
+
+          radiobuttonlist1: form.checkOptions1 && form.checkOptions1 == 'Killed in action' ? true : false, // KILLED IN   ACTION
+          radiobuttonlist2: form.checkOptions1 && form.checkOptions1 == 'Wounded in action' ? true : false, // WOUNDED IN ACTION
+          radiobuttonlist3: form.checkOptions1 && form.checkOptions1 == 'Killed non-battle' ? true : false, // KILLED NON-BATTLE
+          radiobuttonlist4: form.checkOptions1 && form.checkOptions1 == 'Injured non-battle' ? true : false, // INJURED NON-BATTLE
+          radiobuttonlist5: form.checkOptions1 && form.checkOptions1 == 'Other' ? true : false, // OTHER
+          other: form.checkOptions1 && form.checkOptions1 == 'Other'  && form.checkOptionsOther1 ? form.checkOptionsOther1 : '',
+          unit_assignment_during_incident2: form.unitAssignmentDuringIncident1 ? form.unitAssignmentDuringIncident1 : '',
+
+          claimantsfirstname3: form.person2FirstName ? form.person2FirstName.slice(0, 12) : '',
+          claimantsmiddleinitial3: '',
+          claimantslastname3: form.person2LastName ? form.person2LastName.slice(0, 18) : '',
+          rank5b: form.person2Rank ? form.person2Rank.slice(0, 4) : '',
+          month4: form.injuryDate2 ? form.injuryDate2.slice(0, 2) : '',
+          day4: form.injuryDate2 ? form.injuryDate2.slice(3, 5) : '',
+          year4: form.injuryDate2 ? form.injuryDate2.slice(6, 10) : '',
+
+
+          radiobuttonlist6: form.checkOptions2 && form.checkOptions2 == 'Killed in action' ? true : false,
+          radiobuttonlist7: form.checkOptions2 && form.checkOptions2 == 'Wounded in action' ? true : false,
+          radiobuttonlist8: form.checkOptions2 && form.checkOptions2 == 'Killed non-battle' ? true : false,
+          radiobuttonlist9: form.checkOptions2 && form.checkOptions2 == 'Injured non-battle' ? true : false,
+          radiobuttonlist10: form.checkOptions2 && form.checkOptions2 == 'Other' ? true : false,
+          other2: form.checkOptions2 && form.checkOptions2 == 'Other'  && form.checkOptionsOther2 ? form.checkOptionsOther2 : '',
+
+
+          unit_assignment_during_incident3: form.unitAssignmentDuringIncident2 ? form.unitAssignmentDuringIncident2 : '',
+
+          month5: form.incidentDate2 ? form.incidentDate2.slice(0, 2) : '',
+          day5: form.incidentDate2 ? form.incidentDate2.slice(3, 5) : '',
+          year5: form.incidentDate2 ? form.incidentDate2.slice(6, 10) : '',
+
+
+          month6: form.dateOfAssignmentFrom2 ? form.dateOfAssignmentFrom2.slice(0, 2) : '',
+          day6: form.dateOfAssignmentFrom2 ? form.dateOfAssignmentFrom2.slice(3, 5) : '',
+          year6: form.dateOfAssignmentFrom2 ? form.dateOfAssignmentFrom2.slice(6, 10) : '',
+          month7: form.dateOfAssignmentTo2 ? form.dateOfAssignmentTo2.slice(0, 2) : '',
+          day7: form.dateOfAssignmentTo2 ? form.dateOfAssignmentTo2.slice(3, 5) : '',
+          year7: form.dateOfAssignmentTo2 ? form.dateOfAssignmentTo2.slice(6, 10) : '',
+          location_of_incident2: form.incidentLocation2 ? form.incidentLocation2 : '',
+          unit_assignment_during_incident4: form.unitAssignmentDuringIncident3 ? form.unitAssignmentDuringIncident3 : '',
+          description_of_incident2: form.descriptionOfIncident2 ? form.descriptionOfIncident2 : '',
+          medals_citations2: form.medalReceived2 ? form.medalReceived2 : '',
+          claimantsfirstname4: form.person3FirstName ? form.person3FirstName.slice(0, 12) : '',
+          claimantsmiddleinitial4: '',
+          claimantslastname4: form.person3LastName ? form.person3LastName.slice(0, 18) : '',
+          rank6b: form.person3Rank ? form.person3Rank.slice(0, 4) : '',
+          month8: form.injuryDate3 ? form.injuryDate3.slice(0, 2) : '',
+          day8: form.injuryDate3 ? form.injuryDate3.slice(3, 5) : '',
+          year8: form.injuryDate3 ? form.injuryDate3.slice(6, 10) : '',
+          radiobuttonlist11: form.checkOptions3 && form.checkOptions3 == 'Killed in action' ? true : false,
+          radiobuttonlist12: form.checkOptions3 && form.checkOptions3 == 'Wounded in action' ? true : false,
+          radiobuttonlist13: form.checkOptions3 && form.checkOptions3 == 'Killed non-battle' ? true : false,
+          radiobuttonlist14: form.checkOptions3 && form.checkOptions3 == 'Injured non-battle' ? true : false,
+          unit_assignment_during_incident5: form.unitAssignmentDuringIncident4 ? form.unitAssignmentDuringIncident4 : '',
+          claimantsfirstname5: form.person4FirstName ? form.person4FirstName.slice(0, 12) : '',
+          claimantsmiddleinitial5: '',
+          claimantslastname5: form.person4LastName ? form.person4LastName.slice(0, 18) : '',
+          rank7b: form.person4Rank ? form.person4Rank.slice(0, 4) : '',
+          month9: form.injuryDate4 ? form.injuryDate4.slice(0, 2) : '',
+          day9: form.injuryDate4 ? form.injuryDate4.slice(3, 5) : '',
+          year9: form.injuryDate4 ? form.injuryDate4.slice(6, 10) : '',
+          radiobuttonlist16: form.checkOptions4 && form.checkOptions4 == 'Killed in action' ? true : false,
+          radiobuttonlist17: form.checkOptions4 && form.checkOptions4 == 'Wounded in action' ? true : false,
+          radiobuttonlist18: form.checkOptions4 && form.checkOptions4 == 'Killed non-battle' ? true : false,
+          radiobuttonlist19: form.checkOptions4 && form.checkOptions4 == 'Injured non-battle' ? true : false,
+          radiobuttonlist20: form.checkOptions4 && form.checkOptions4 == 'Other' ? true : false,
+          other4: form.checkOptions4 && form.checkOptions4 == 'Other'  && form.checkOptionsOther4 ? form.checkOptionsOther4 : '',
+          unit_assignment_during_incident6: form.unitAssignmentDuringIncident5 ? form.unitAssignmentDuringIncident5 : '',
+          remarks: form.remarks ? form.remarks : '',
+          field110: form.signature ? form.signature : '',
+          date_signed_month: form.dateSigned ? form.dateSigned.slice(0, 2) : '',
+          date_signed_day: form.dateSigned ? form.dateSigned.slice(3, 5) : '',
+          date_signed_year: form.dateSigned ? form.dateSigned.slice(6, 10) : '',
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};
