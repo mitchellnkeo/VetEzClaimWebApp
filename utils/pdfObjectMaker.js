@@ -2530,3 +2530,422 @@ export const generatePTSDStressorPdfObject = async (form) => {
   };
   return infoToPDF;
 };
+
+export const generateMedicalRecordsPdfObject = async (form) => {
+  const infoToPDF = {
+    content: {
+      documentKey: 'tpl_R6J3rxGNzsqXzzKq5c',
+      f: {
+        page_1: {
+          veteranfirstname: form.firstName ? form.firstName.slice(0, 12) : '',
+          veteranmiddleinitial1: '',
+          veteranlastname: form.lastName ? form.lastName.slice(0, 18) : '',
+          veteranssocialsecuritynumber_first: form.ssn ? form.ssn?.slice(0, 3) : '',
+          veteranssocialsecuritynumber_second: form.ssn ? form.ssn?.slice(3, 5) : '',
+          veteranssocialsecuritynumber_last: form.ssn ? form.ssn?.slice(5, 9) : '',
+          vafilenumber: form.currentVa ? form.currentVa.slice(0, 9) : '',
+          dobmonth: form.birthday ? form.birthday.slice(0, 2) : '',
+          dobday: form.birthday ? form.birthday.slice(3, 5) : '',
+          dobyear: form.birthday ? form.birthday.slice(6, 10) : '',
+          veteransservicenumber: form.serviceNumber ? form.serviceNumber.slice(0, 9) : '',
+
+          street: form.street ? form.street.slice(0, 30) : '',
+          apartmentorunitnumber: form.unitNumber ? form.unitNumber.slice(0, 5) : '',
+          city: form.city ? form.city.slice(0, 18) : '',
+          stateorprovince: form.province ? form.province.slice(0, 2) : '',
+          country: form.country ? form.country.slice(0, 2) : '',
+          ziporpostalcode_firstfivenumbers: form.zipCode ? form.zipCode.slice(0, 5) : '',
+          ziporpostalcode_lastfournumbers: form.zipCode ? form.zipCode.slice(6, 10) : '',
+          telephonenumber_areacode: form.phone ? form.phone?.slice(0, 3) : '',
+          telephonenumber_secondthreenumbers: form.phone ? form.phone?.slice(4, 7) : '',
+          telephonenumber_lastfournumbers: form.phone ? form.phone?.slice(8, 12) : '',
+
+          international_telephone_number: form.phoneI ? form.phoneI : '',
+          e_mail_address1: form.email ? form.email.slice(0, 15) : '',
+          e_mail_address2: form.email ? form.email.slice(15, 30) : '',
+          i_agree_to_receive_electronic: form.emailE ? true : false,
+          patients_firstname: form.isVeteran && form.claimantsName ? form.claimantsName.slice(0, 12) : '',
+          patients_middleinitial1: '',
+          patients_lastname: form.isVeteran && form.claimantsLastName ? form.claimantsLastName.slice(0, 18) : '',
+          patient_socialsecuritynumber_firstthreenumbers: form.isVeteran && form.claimantsSsn ? form.claimantsSsn.slice(0, 3) : '',
+          patient_socialsecuritynumber_secondtwonumbers: form.isVeteran && form.claimantsSsn ? form.claimantsSsn.slice(3, 5) : '',
+          patient_socialsecuritynumber_lastfournumbers: form.isVeteran && form.claimantsSsn ? form.claimantsSsn.slice(5, 9) : '',
+          patients_vafilenumber: form.isVeteran && form.claimantsCurrentVa ? form.claimantsCurrentVa.slice(0, 9) : '',
+
+          informationislimited: form.consent ? form.consent : '',
+          field140: form.signature ? form.signature : '',
+          
+          date_signed_month: form.veteranDateSigned ? form.veteranDateSigned.slice(0, 2) : '',
+          date_signed_day: form.veteranDateSigned ? form.veteranDateSigned.slice(3, 5) : '',
+          date_signed_year: form.veteranDateSigned ? form.veteranDateSigned.slice(6, 10) : '',
+          printed_name_of_person_signing_first: form.printedName ? form.printedName.slice(0, 12) : '',
+          printed_name_of_person_signing_middle_initial: '',
+          printed_name_of_person_signing_last: form.printedLastName ? form.printedLastName.slice(0, 18) : '',
+          relationship_to_veteran_claimant: '',
+
+
+          veteran_firstname: form.firstName ?  form.firstName.slice(0, 12) : '',
+          veteran_middleinitial1: '',
+          veteran_lastname: form.lastName ? form.lastName.slice(0, 18) : '',
+          veteran_ssocialsecuritynumber_firstthreenumbers: form.ssn ? form.ssn.slice(0, 3) : '',
+          veterans_socialsecuritynumber_secondtwonumbers: form.ssn ? form.ssn.slice(3, 5) : '',
+          veteran_ssocialsecuritynumber_lastfournumbers: form.ssn ? form.ssn.slice(5, 9) : '',
+          va_file_number: form.currentVa ? form.currentVa.slice(0, 9) : '',
+          dob_month: form.birthday ? form.birthday.slice(0, 2) : '',
+          dob_day: form.birthday ? form.birthday.slice(3, 5) : '',
+          dob_year: form.birthday ? form.birthday.slice(6, 10) : '',
+          veteran_sservicenumber: form.serviceNumber ? form.serviceNumber.slice(0, 9) : '',
+          patients_firstname2: form.isVeteran && form.claimantsName ? form.claimantsName : '',
+          patientmiddleinitial2: '',
+          patients_lastname2: form.isVeteran && form.claimantsLastName ? form.claimantsLastName : '',
+          patientssocialsecuritynumber_firstthreenumbers2: form.isVeteran && form.claimantsSsn ? form.claimantsSsn.slice(0, 3) : '',
+          patientssocialsecuritynumber_secondtwonumbers2: form.isVeteran && form.claimantsSsn ? form.claimantsSsn.slice(3, 5) : '',
+          patientssocialsecuritynumber_lastfournumbers2:  form.isVeteran && form.claimantsSsn ? form.claimantsSsn.slice(5, 9) : '',
+          vafilenumber2: form.isVeteran && form.claimantsCurrentVa ? form.claimantsCurrentVa.slice(0, 9) : '',
+
+
+
+          provider_or_facility_name: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['provider'] : '',
+          conditions_you_are_being_treated_for: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['conditions'] : '',
+          fromdate_month: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['dateTreatmentFrom']?.slice(0, 2) : '',
+          fromdate_day: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['dateTreatmentFrom']?.slice(3, 5) : '',
+          fromdate_year: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['dateTreatmentFrom']?.slice(6, 10) : '', 
+          todate_month: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['dateTreatmentTo']?.slice(0, 2) : '',
+          todate_day: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['dateTreatmentTo']?.slice(3, 5) : '',
+          todate_year: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['dateTreatmentTo']?.slice(6, 10) : '',
+          provider_street: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['medicalStreet']?.slice(0,30) : '',
+          provider_apartmentorunitnumber: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['medicalApartment']?.slice(0,5)  : '',
+          provider_city: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['medicalCity']?.slice(0,18) : '',
+          provider_stateorprovince: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['medicalState']?.slice(0,2) : '',
+          provider_country: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['medicalCountry']?.slice(0,2) : '',
+          provider_ziporpostalcode_firstfivenumbers: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['medicalZipCode']?.slice(0, 5) : '', 
+          provider_ziporpostalcode_lastfournumbers: form.medicalProvider && form.medicalProvider.length > 0 ? form.medicalProvider[0]?.['medicalZipCode']?.slice(6, 10) : '',
+
+          provider_or_facility_name2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['provider'] : '',
+          conditions_you_are_being_treated_for2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['conditions'] : '',
+          fromdate_month2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['dateTreatmentFrom']?.slice(0, 2) : '',
+          fromdate_day2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['dateTreatmentFrom']?.slice(3, 5) : '',
+          fromdate_year2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['dateTreatmentFrom']?.slice(6, 10) : '',
+          todate_month2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['dateTreatmentTo']?.slice(0, 2) : '',
+          todate_day2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['dateTreatmentTo']?.slice(3, 5) : '',
+          todate_year2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['dateTreatmentTo']?.slice(6, 10) : '',
+          provider_street2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['medicalStreet']?.slice(0,30) : '',
+          provider_apartmentorunitnumber2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['medicalApartment']?.slice(0,5) : '',
+          provider_city2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['medicalCity']?.slice(0,18) : '',
+          provider_stateorprovince2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['medicalState']?.slice(0,2) : '',
+          provider_country2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['medicalCountry']?.slice(0,2) : '',
+          provider_ziporpostalcode_firstfivenumbers2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['medicalZipCode']?.slice(0, 5) : '',
+          provider_ziporpostalcode_lastfournumbers2: form.medicalProvider && form.medicalProvider.length > 1 ? form.medicalProvider[1]?.['medicalZipCode']?.slice(6, 10) : '',
+          
+         
+          provider_or_facility_name3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['provider'] : '',
+          conditions_you_are_being_treated_for3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['conditions'] : '',
+          fromdate_month3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['dateTreatmentFrom']?.slice(0, 2) : '',
+          fromdate_day3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['dateTreatmentFrom']?.slice(3, 5) : '',
+          fromdate_year3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['dateTreatmentFrom']?.slice(6, 10) : '',
+          todate_month3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['dateTreatmentTo']?.slice(0, 2) : '',
+          todate_day3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['dateTreatmentTo']?.slice(3, 5) : '',
+          todate_year3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['dateTreatmentTo']?.slice(6, 10) : '',
+          provider_street3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['medicalStreet']?.slice(0,30) : '',
+          provider_apartmentorunitnumber3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['medicalApartment']?.slice(0,5)   : '',
+          provider_city3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['medicalCity']?.slice(0,18) : '',
+          provider_stateorprovince3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['medicalState']?.slice(0,2) : '',
+          provider_country3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['medicalCountry'].slice(0,2) : '',
+          provider_ziporpostalcode_firstfivenumbers3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['medicalZipCode']?.slice(0, 5) : '',
+          provider_ziporpostalcode_lastfournumbers3: form.medicalProvider && form.medicalProvider.length > 2 ? form.medicalProvider[2]?.['medicalZipCode']?.slice(6, 10) : '',
+          
+          provider_or_facility_name4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['provider'] : '',
+          conditions_you_are_being_treated_for4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['conditions'] : '',
+          fromdate_month4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['dateTreatmentFrom']?.slice(0, 2) : '',
+          fromdate_day4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['dateTreatmentFrom']?.slice(3, 5) : '',
+          fromdate_year4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['dateTreatmentFrom']?.slice(6, 10) : '',
+          todate_month4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['dateTreatmentTo']?.slice(0, 2) : '',
+          todate_day4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['dateTreatmentTo']?.slice(3, 5) : '',
+          todate_year4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['dateTreatmentTo']?.slice(6, 10) : '',
+          provider_street4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['medicalStreet']?.slice(0, 30) : '',
+          provider_apartmentorunitnumber4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['medicalApartment']?.slice(0, 5) : '',
+          provider_city4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['medicalCity']?.slice(0, 18) : '',
+          provider_stateorprovince4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['medicalState']?.slice(0, 2) : '',
+          provider_country4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['medicalCountry']?.slice(0, 2) : '',
+          provider_ziporpostalcode_firstfivenumbers4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['medicalZipCode']?.slice(0, 5) : '',
+          provider_ziporpostalcode_lastfournumbers4: form.medicalProvider && form.medicalProvider.length > 3 ? form.medicalProvider[3]?.['medicalZipCode']?.slice(6, 10) : '',
+          
+          provider_or_facility_name5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['provider'] : '',
+          conditions_you_are_being_treated_for5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['conditions'] : '',
+          fromdate_month5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['dateTreatmentFrom']?.slice(0, 2) : '',
+          fromdate_day5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['dateTreatmentFrom']?.slice(3, 5) : '',
+          fromdate_year5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['dateTreatmentFrom']?.slice(6, 10) : '',
+          todate_month5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['dateTreatmentTo']?.slice(0, 2) : '',
+          todate_day5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['dateTreatmentTo']?.slice(3, 5) : '',
+          todate_year5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['dateTreatmentTo']?.slice(6, 10) : '',
+          provider_street5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['medicalStreet']?.slice(0, 30) : '',
+          provider_apartmentorunitnumber5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['medicalApartment']?.slice(0, 5) : '',
+          provider_city5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['medicalCity']?.slice(0, 18) : '',
+          provider_stateorprovince5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['medicalState']?.slice(0, 2) : '',
+          provider_country5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['medicalCountry']?.slice(0, 2) : '',
+          provider_ziporpostalcode_firstfivenumbers5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['medicalZipCode']?.slice(0, 5) : '',
+          provider_ziporpostalcode_lastfournumbers5: form.medicalProvider && form.medicalProvider.length > 4 ? form.medicalProvider[4]?.['medicalZipCode']?.slice(6, 10) : '',
+          
+          
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};
+
+export const generateTdiuPdfObject = async (form) => {
+  const infoToPDF = {
+    content: {
+      documentKey: 'tpl_bTckqKaGDkC2Yt2spA',
+      f: {
+        page_1: {
+          veteransfirstname: form.firstName ? form.firstName.slice(0, 12) : '',
+          veteransmiddleinitial: '',
+          veteranslastname: form.lastName ? form.lastName.slice(0, 18) : '',
+          veteranssocialsecuritynumber_first: form.ssn ? form.ssn.slice(0, 3) : '',
+          veteranssocialsecuritynumber_second: form.ssn ? form.ssn.slice(3, 5) : '',
+          veteranssocialsecuritynumber_last: form.ssn ? form.ssn.slice(5, 9) : '',
+
+          vafilenumber: form.currentVa ? form.currentVa.slice(0, 9) : '',
+          dobmonth: form.birthday ? form.birthday.slice(0, 2) : '',
+          dobday: form.birthday ? form.birthday.slice(3, 5) : '',
+          dobyear: form.birthday ? form.birthday.slice(6, 10) : '',
+
+          street: form.street ? form.street.slice(0, 30) : '',
+          apartmentorunitnumber: form.unitNumber ? form.unitNumber.slice(0, 5) : '',
+          city: form.city ? form.city.slice(0, 18) : '',
+          stateorprovince: form.province ? form.province.slice(0, 2) : '',
+          country: form.country ? form.country.slice(0, 2) : '',
+          ziporpostalcode_firstfivenumbers: form.zipCode ? form.zipCode.slice(0, 5) : '',
+          ziporpostalcode_lastfournumbers: form.zipCode.slice(6, 10),
+
+          i_agree_to_receive_electronic: form.emailE ? form.emailE : false,
+          e_mail_address1: form.email ? form.email.slice(0, 17) : '',
+          e_mail_address2: form.email ? form.email.slice(17, 34) : '',
+          isNewFormat: true,
+          e_mail_address3: form.email ? form.email.slice(0, 4) : '',
+          e_mail_address4: form.email ? form.email.slice(4, 8) : '',
+          e_mail_address5: form.email ? form.email.slice(8, 12) : '',
+          e_mail_address6: form.email ? form.email.slice(12, 17) : '',
+          e_mail_address7: form.email ? form.email.slice(17, 21) : '',
+          e_mail_address8: form.email ? form.email.slice(21, 25) : '',
+          e_mail_address9: form.email ? form.email.slice(25, 29) : '',
+          e_mail_address10: form.email ? form.email.slice(29, 34) : '',
+
+          telephonenumber_areacode: form.phone ? form.phone.slice(0, 3) : '',
+          telephonenumber_secondthreenumbers: form.phone ? form.phone.slice(4, 7) : '',
+          telephonenumber_lastfournumbers: form.phone ? form.phone.slice(8, 12) : '',
+
+          international_telephone_number: form.phoneI ? form.phoneI.slice(0, 15) : '',
+          service_connected_disability: form.gainfulOccupation ? form.gainfulOccupation : '',
+          radiobuttonlist2: form.doctorCare ? form.doctorCare == 'Yes' ? true : false : false,
+          radiobuttonlist3: form.doctorCare ? form.doctorCare == 'No' ? true : false : false,
+          month1: form.dateTreatmentFrom ? form.dateTreatmentFrom.slice(0, 2) : '',
+          day1: form.dateTreatmentFrom ? form.dateTreatmentFrom.slice(3, 5) : '',
+          year1: form.dateTreatmentFrom ? form.dateTreatmentFrom.slice(6, 10) : '',
+          month2: form.dateTreatmentTo ? form.dateTreatmentTo.slice(0, 2) : '',
+          day2: form.dateTreatmentTo ? form.dateTreatmentTo.slice(3, 5) : '',
+          year2: form.dateTreatmentTo ? form.dateTreatmentTo.slice(6, 10) : '',
+
+
+          name_and_address_of_doctors: form.nameAddressDoctors ? form.nameAddressDoctors : '',
+          name_and_address_of_hospital: form.nameAddressHospital ? form.nameAddressHospital : '',
+
+          month3: form.dateHospitalizationFrom ? form.dateHospitalizationFrom.slice(0, 2) : '',
+          day3: form.dateHospitalizationFrom ? form.dateHospitalizationFrom.slice(3, 5) : '',
+          year3: form.dateHospitalizationFrom ? form.dateHospitalizationFrom.slice(6, 10) : '',
+
+          month4: form.dateHospitalizationTo ? form.dateHospitalizationTo.slice(0, 2) : '',
+          day4: form.dateHospitalizationTo ? form.dateHospitalizationTo.slice(3, 5) : '',
+          year4: form.dateHospitalizationTo ? form.dateHospitalizationTo.slice(6, 10) : '',
+
+          month5: form.dateFullTimeEmployment ? form.dateFullTimeEmployment.slice(0, 2) : '',
+          day5: form.dateFullTimeEmployment ? form.dateFullTimeEmployment.slice(3, 5) : '',
+          year5: form.dateFullTimeEmployment ? form.dateFullTimeEmployment.slice(6, 10) : '',
+
+          month6: form.dateFullTimeWorked ? form.dateFullTimeWorked.slice(0, 2) : '',
+          day6: form.dateFullTimeWorked ? form.dateFullTimeWorked.slice(3, 5) : '',
+          year6: form.dateFullTimeWorked ? form.dateFullTimeWorked.slice(6, 10) : '',
+
+          month7: form.dateDisabledWork ? form.dateDisabledWork.slice(0, 2) : '',
+          day7: form.dateDisabledWork ? form.dateDisabledWork.slice(3, 5) : '',
+          year7: form.dateDisabledWork ? form.dateDisabledWork.slice(6, 10) : '',
+
+          amount: form.amountEarnedYear ? (await formatAmount(form.amountEarnedYear)).slice(0,3) : '',
+          amount1: form.amountEarnedYear ? (await formatAmount(form.amountEarnedYear)).slice(3,6) : '',
+
+          year8: form.whatYear ? form.whatYear.slice(0, 4) : '',
+          occupation_during_that_year: form.occupationDuring ? form.occupationDuring : '',
+
+          occupation_during_that_year1: form.employmentStatement && form.employmentStatement.length > 0 ? form.employmentStatement[0]?.['nameAddress'] : '',
+          type_of_work1: form.employmentStatement && form.employmentStatement.length > 0 ? form.employmentStatement[0]?.['typeWork'] : '',
+          hours_per_week1: form.employmentStatement && form.employmentStatement.length > 0 ? form.employmentStatement[0]?.['hoursPerWeek']?.slice(0, 3) : '',
+          month_1: form.employmentStatement && form.employmentStatement.length > 0 ? form.employmentStatement[0]?.['dateEmploymentFrom']?.slice(0, 2) : '',
+          day_1: form.employmentStatement && form.employmentStatement.length > 0 ? form.employmentStatement[0]?.['dateEmploymentFrom']?.slice(3, 5) : '',
+          year_1: form.employmentStatement && form.employmentStatement.length > 0 ? form.employmentStatement[0]?.['dateEmploymentFrom']?.slice(6, 10) : '',
+          month_1_1: form.employmentStatement && form.employmentStatement.length > 0 ? form.employmentStatement[0]?.['dateEmploymentTo']?.slice(0, 2) : '',
+          day_1_1: form.employmentStatement && form.employmentStatement.length > 0  ? form.employmentStatement[0]?.['dateEmploymentTo']?.slice(3, 5) : '',
+          year_1_1: form.employmentStatement && form.employmentStatement.length > 0 ? form.employmentStatement[0]?.['dateEmploymentTo']?.slice(6, 10) : '',
+          time_lost_from_illness_days1: form.employmentStatement && form.employmentStatement.length > 0 ? form.employmentStatement[0]?.['timeLostIllness'] : '',
+          amount_1: form.employmentStatement && form.employmentStatement.length > 0 && form.employmentStatement[0].amountGross ? (await formatAmount(form.employmentStatement[0].amountGross)).slice(0,3) : '',
+          amount_1_1: form.employmentStatement && form.employmentStatement.length > 0 && form.employmentStatement[0].amountGross ? (await formatAmount(form.employmentStatement[0].amountGross)).slice(3,6) : '',
+
+         
+          occupation_during_that_year2: form.employmentStatement && form.employmentStatement.length > 1  ? form.employmentStatement[1]?.['nameAddress'] : '',
+          type_of_work2: form.employmentStatement && form.employmentStatement.length > 1 ? form.employmentStatement[1]?.['typeWork'] : '',
+          hours_per_week2: form.employmentStatement && form.employmentStatement.length > 1 ? form.employmentStatement[1]?.['hoursPerWeek']?.slice(0, 3) : '',
+          month_2: form.employmentStatement && form.employmentStatement.length > 1 ? form.employmentStatement[1]?.['dateEmploymentFrom']?.slice(0, 2) : '',
+          day_2: form.employmentStatement && form.employmentStatement.length > 1 ? form.employmentStatement[1]?.['dateEmploymentFrom']?.slice(3, 5) : '',
+          year_2: form.employmentStatement && form.employmentStatement.length > 1 ? form.employmentStatement[1]?.['dateEmploymentFrom']?.slice(6, 10) : '',
+          month_2_2: form.employmentStatement && form.employmentStatement.length > 1 ? form.employmentStatement[1]?.['dateEmploymentTo']?.slice(0, 2) : '',
+          day_2_2: form.employmentStatement && form.employmentStatement.length > 1  ? form.employmentStatement[1]?.['dateEmploymentTo']?.slice(3, 5) : '',
+          year_2_2: form.employmentStatement && form.employmentStatement.length > 1 ? form.employmentStatement[1]?.['dateEmploymentTo']?.slice(6, 10) : '',
+          time_lost_from_illness_days2: form.employmentStatement && form.employmentStatement.length > 1 ? form.employmentStatement[1]?.['timeLostIllness'] : '',
+          amount_2: form.employmentStatement && form.employmentStatement.length > 1 && form.employmentStatement[1].amountGross ? (await formatAmount(form.employmentStatement[1].amountGross)).slice(0,3) : '',
+          amount_2_2: form.employmentStatement && form.employmentStatement.length > 1 && form.employmentStatement[1].amountGross ? (await formatAmount(form.employmentStatement[1].amountGross)).slice(3,6) : '',
+
+          occupation_during_that_year3: form.employmentStatement && form.employmentStatement.length > 2  ? form.employmentStatement[2]?.['nameAddress'] : '',
+          type_of_work3: form.employmentStatement && form.employmentStatement.length > 2 ? form.employmentStatement[2]?.['typeWork'] : '',
+          hours_per_week3: form.employmentStatement && form.employmentStatement.length > 2 ? form.employmentStatement[2]?.['hoursPerWeek']?.slice(0, 3) : '',
+          month_3: form.employmentStatement && form.employmentStatement.length > 2 ? form.employmentStatement[2]?.['dateEmploymentFrom']?.slice(0, 2) : '',
+          day_3: form.employmentStatement && form.employmentStatement.length > 2 ? form.employmentStatement[2]?.['dateEmploymentFrom']?.slice(3, 5) : '',
+          year_3: form.employmentStatement && form.employmentStatement.length > 2 ? form.employmentStatement[2]?.['dateEmploymentFrom']?.slice(6, 10) : '',
+          month_3_3: form.employmentStatement && form.employmentStatement.length > 2 ? form.employmentStatement[2]?.['dateEmploymentTo']?.slice(0, 2) : '',
+          day_3_3: form.employmentStatement && form.employmentStatement.length > 2  ? form.employmentStatement[2]?.['dateEmploymentTo']?.slice(3, 5) : '',
+          year_3_3: form.employmentStatement && form.employmentStatement.length > 2 ? form.employmentStatement[2]?.['dateEmploymentTo']?.slice(6, 10) : '',
+          time_lost_from_illness_days3: form.employmentStatement && form.employmentStatement.length > 2 ? form.employmentStatement[2]?.['timeLostIllness'] : '',
+          amount_3: form.employmentStatement && form.employmentStatement.length > 2 && form.employmentStatement[2].amountGross ? (await formatAmount(form.employmentStatement[2].amountGross)).slice(0,3) : '',
+          amount_3_3: form.employmentStatement && form.employmentStatement.length > 2 && form.employmentStatement[2].amountGross ? (await formatAmount(form.employmentStatement[2].amountGross)).slice(3,6) : '',
+
+
+          occupation_during_that_year4: form.employmentStatement && form.employmentStatement.length > 3  ? form.employmentStatement[3]?.['nameAddress'] : '',
+          type_of_work4: form.employmentStatement && form.employmentStatement.length > 3 ? form.employmentStatement[3]?.['typeWork'] : '',
+          hours_per_week4: form.employmentStatement && form.employmentStatement.length > 3 ? form.employmentStatement[3]?.['hoursPerWeek']?.slice(0, 3) : '',
+          month_4: form.employmentStatement && form.employmentStatement.length > 3 ? form.employmentStatement[3]?.['dateEmploymentFrom']?.slice(0, 2) : '',
+          day_4: form.employmentStatement && form.employmentStatement.length > 3 ? form.employmentStatement[3]?.['dateEmploymentFrom']?.slice(3, 5) : '',
+          year_4: form.employmentStatement && form.employmentStatement.length > 3 ? form.employmentStatement[3]?.['dateEmploymentFrom']?.slice(6, 10) : '',
+          month_4_4: form.employmentStatement && form.employmentStatement.length > 3 ? form.employmentStatement[3]?.['dateEmploymentTo']?.slice(0, 2) : '',
+          day_4_4: form.employmentStatement && form.employmentStatement.length > 3  ? form.employmentStatement[3]?.['dateEmploymentTo']?.slice(3, 5) : '',
+          year_4_4: form.employmentStatement && form.employmentStatement.length > 3 ? form.employmentStatement[3]?.['dateEmploymentTo']?.slice(6, 10) : '',
+          time_lost_from_illness_days4: form.employmentStatement && form.employmentStatement.length > 3 ? form.employmentStatement[3]?.['timeLostIllness'] : '',
+          amount_4: form.employmentStatement && form.employmentStatement.length > 3 && form.employmentStatement[3].amountGross ? (await formatAmount(form.employmentStatement[3].amountGross)).slice(0,3) : '',
+          amount_4_4: form.employmentStatement && form.employmentStatement.length > 3 && form.employmentStatement[3].amountGross ? (await formatAmount(form.employmentStatement[3].amountGross)).slice(3,6) : '',
+
+
+          occupation_during_that_year5: form.employmentStatement && form.employmentStatement.length > 4  ? form.employmentStatement[4]?.['nameAddress'] : '',
+          type_of_work5: form.employmentStatement && form.employmentStatement.length > 4 ? form.employmentStatement[4]?.['typeWork'] : '',
+          hours_per_week5: form.employmentStatement && form.employmentStatement.length > 4 ? form.employmentStatement[4]?.['hoursPerWeek']?.slice(0, 3) : '',
+          month_5: form.employmentStatement && form.employmentStatement.length > 4 ? form.employmentStatement[4]?.['dateEmploymentFrom']?.slice(0, 2) : '',
+          day_5: form.employmentStatement && form.employmentStatement.length > 4 ? form.employmentStatement[4]?.['dateEmploymentFrom']?.slice(3, 5) : '',
+          year_5: form.employmentStatement && form.employmentStatement.length > 4 ? form.employmentStatement[4]?.['dateEmploymentFrom']?.slice(6, 10) : '',
+          month_5_5: form.employmentStatement && form.employmentStatement.length > 4 ? form.employmentStatement[4]?.['dateEmploymentTo']?.slice(0, 2) : '',
+          day_5_5: form.employmentStatement && form.employmentStatement.length > 4  ? form.employmentStatement[4]?.['dateEmploymentTo']?.slice(3, 5) : '',
+          year_5_5: form.employmentStatement && form.employmentStatement.length > 4 ? form.employmentStatement[4]?.['dateEmploymentTo']?.slice(6, 10) : '',
+          time_lost_from_illness_days5: form.employmentStatement && form.employmentStatement.length > 4 ? form.employmentStatement[4]?.['timeLostIllness'] : '',
+          amount_5: form.employmentStatement && form.employmentStatement.length > 4 && form.employmentStatement[4].amountGross ? (await formatAmount(form.employmentStatement[4].amountGross)).slice(0,3) : '',
+          amount_5_5: form.employmentStatement && form.employmentStatement.length > 4 && form.employmentStatement[4].amountGross ? (await formatAmount(form.employmentStatement[4].amountGross)).slice(3,6) : '',
+
+
+
+          radiobuttonlist4: form.disabilityMilitary && form.disabilityMilitary == 'Yes' ? true : false,
+          radiobuttonlist5: form.disabilityMilitary && form.disabilityMilitary == 'No' ? true : false,
+
+          amount_13: form.amountTotal12Months ? (await formatAmount(form.amountTotal12Months)).slice(0, 3) : '',
+          amount_12: form.amountTotal12Months ? (await formatAmount(form.amountTotal12Months)).slice(3, 6) : '',
+          amount_15: form.amountTotalMonthly ? (await formatAmount(form.amountTotalMonthly)).slice(0, 3) : '',
+          amount_14: form.amountTotalMonthly ? (await formatAmount(form.amountTotalMonthly)).slice(3, 6) : '',
+
+
+          radiobuttonlist6: form.disabilityJobSelf && form.disabilityJobSelf == 'Yes' ? true : false,
+          radiobuttonlist7: form.disabilityJobSelf && form.disabilityJobSelf == 'No' ? true : false,
+
+          radiobuttonlist8: form.disabilityReceiveExpect && form.disabilityReceiveExpect == 'Yes' ? true : false,
+          radiobuttonlist9: form.disabilityReceiveExpect && form.disabilityReceiveExpect == 'No' ? true : false,
+
+
+          radiobuttonlist10: form.workersReceiveExpect && form.workersReceiveExpect == 'Yes' ? true : false,
+          radiobuttonlist11: form.workersReceiveExpect && form.workersReceiveExpect == 'No' ? true : false,
+
+
+          radiobuttonlist12: form.disabledWork && form.disabledWork == 'Yes' ? true : false,
+          radiobuttonlist13: form.disabledWork && form.disabledWork == 'No' ? true : false,
+
+          name_and_address_of_employer11: form.disabledWork && form.disabledWork == 'Yes' && form.employerNameAddress1 ? form.employerNameAddress1 : '',
+          type_of_work11: form.disabledWork && form.disabledWork == 'Yes' && form.typeOfWork1 ? form.typeOfWork1 : '',
+          month_11: form.disabledWork && form.disabledWork == 'Yes' && form.dateApplied1 ? form.dateApplied1.slice(0, 2) : '',
+          day_11: form.disabledWork && form.disabledWork == 'Yes' && form.dateApplied1 ? form.dateApplied1.slice(3, 5) : '',
+          year_11: form.disabledWork && form.disabledWork == 'Yes' && form.dateApplied1 ? form.dateApplied1.slice(6, 10) : '',
+
+          name_and_address_of_employer22: form.disabledWork && form.disabledWork == 'Yes' && form.employerNameAddress2 ? form.employerNameAddress2 : '',
+          type_of_work22: form.disabledWork && form.disabledWork == 'Yes' && form.typeOfWork2 ? form.typeOfWork2 : '',
+          month_22: form.disabledWork && form.disabledWork == 'Yes' && form.dateApplied2 ? form.dateApplied2.slice(0, 2) : '',
+          day_22: form.disabledWork && form.disabledWork == 'Yes' && form.dateApplied2 ? form.dateApplied2.slice(3, 5) : '',
+          year_22: form.disabledWork && form.disabledWork == 'Yes' && form.dateApplied2 ? form.dateApplied2.slice(6, 10) : '',
+
+          name_and_address_of_employer33: form.disabledWork && form.disabledWork == 'Yes' && form.employerNameAddress3 ? form.employerNameAddress3 : '',
+          type_of_work33: form.disabledWork && form.disabledWork == 'Yes' && form.typeOfWork3 ? form.typeOfWork3 : '',
+          month_33: form.disabledWork && form.disabledWork == 'Yes' && form.dateApplied3 ? form.dateApplied3.slice(0, 2) : '',
+          day_33: form.disabledWork && form.disabledWork == 'Yes' && form.dateApplied3 ? form.dateApplied3.slice(3, 5) : '',
+          year_33: form.disabledWork && form.disabledWork == 'Yes' && form.dateApplied3 ? form.dateApplied3.slice(6, 10) : '',
+
+          s1: form.education && form.education == '1 Grade School' ? true : false,
+          s2: form.education && form.education == '2 Grade School' ? true : false,
+          s3: form.education && form.education == '3 Grade School' ? true : false,
+          s4: form.education && form.education == '4 Grade School' ? true : false,
+          s5: form.education && form.education == '5 Grade School' ? true : false,
+          s6: form.education && form.education == '6 Grade School' ? true : false,
+          s7: form.education && form.education == '7 Grade School' ? true : false,
+          s8: form.education && form.education == '8 Grade School' ? true : false,
+          s9: form.education && form.education == '9 High School' ? true : false,
+          s10: form.education && form.education == '10 High School' ? true : false,
+          s11: form.education && form.education == '11 High School' ? true : false,
+          s12: form.education && form.education == '12 High School' ? true : false,
+          s13: form.education && form.education == 'Fresh' ? true : false,
+          s14: form.education && form.education == 'Soph' ? true : false,
+          s15: form.education && form.education == 'Jr' ? true : false,
+          s16: form.education && form.education == 'Sr' ? true : false,
+     
+          radiobuttonlist14: form.educationDisabledWorkOne && form.educationDisabledWorkOne === 'Yes' ? true : false,
+          radiobuttonlist15: form.educationDisabledWorkOne && form.educationDisabledWorkOne === 'No' ? true : false,
+          type_of_education_or_training: form.educationDisabledWorkOne && form.educationDisabledWorkOne === 'Yes' && form.typeOfTrainingOne ? form.typeOfTrainingOne.slice(0, 15) : '',
+          month_44: form.educationDisabledWorkOne && form.educationDisabledWorkOne === 'Yes' && form.dateOfTrainingOneFrom ? form.dateOfTrainingOneFrom.slice(0, 2) : '',
+          day_44: form.educationDisabledWorkOne && form.educationDisabledWorkOne === 'Yes' && form.dateOfTrainingOneFrom ? form.dateOfTrainingOneFrom.slice(3, 5) : '',
+          year_44: form.educationDisabledWorkOne && form.educationDisabledWorkOne === 'Yes' && form.dateOfTrainingOneFrom ? form.dateOfTrainingOneFrom.slice(6, 10) : '',
+          month_55: form.educationDisabledWorkOne && form.educationDisabledWorkOne === 'Yes' && form.dateOfTrainingOneTo ? form.dateOfTrainingOneTo.slice(0, 2) : '',
+          day_55: form.educationDisabledWorkOne && form.educationDisabledWorkOne === 'Yes' && form.dateOfTrainingOneTo ? form.dateOfTrainingOneTo.slice(3, 5) : '',
+          year_55: form.educationDisabledWorkOne && form.educationDisabledWorkOne === 'Yes' && form.dateOfTrainingOneTo ? form.dateOfTrainingOneTo.slice(6, 10) : '',
+          
+          radiobuttonlist16: form.educationDisabledWorkTwo && form.educationDisabledWorkTwo === 'Yes' ? true : false,
+          radiobuttonlist17: form.educationDisabledWorkTwo && form.educationDisabledWorkTwo === 'No' ? true : false,
+          type_of_education_or_training2: form.educationDisabledWorkTwo && form.educationDisabledWorkTwo === 'Yes' && form.typeOfTrainingTwo ? form.typeOfTrainingTwo.slice(0, 15) : '',
+          month_66: form.educationDisabledWorkTwo && form.educationDisabledWorkTwo === 'Yes' && form.dateOfTrainingTwoFrom ? form.dateOfTrainingTwoFrom.slice(0, 2) : '',
+          day_66: form.educationDisabledWorkTwo && form.educationDisabledWorkTwo === 'Yes' && form.dateOfTrainingTwoFrom ? form.dateOfTrainingTwoFrom.slice(3, 5) : '',
+          year_66: form.educationDisabledWorkTwo && form.educationDisabledWorkTwo === 'Yes' && form.dateOfTrainingTwoFrom ? form.dateOfTrainingTwoFrom.slice(6, 10) : '',
+          month_77: form.educationDisabledWorkTwo && form.educationDisabledWorkTwo === 'Yes' && form.dateOfTrainingTwoTo ? form.dateOfTrainingTwoTo.slice(0, 2) : '',
+          day_77: form.educationDisabledWorkTwo && form.educationDisabledWorkTwo === 'Yes' && form.dateOfTrainingTwoTo ? form.dateOfTrainingTwoTo.slice(3, 5) : '',  
+          year_77: form.educationDisabledWorkTwo && form.educationDisabledWorkTwo === 'Yes' && form.dateOfTrainingTwoTo ? form.dateOfTrainingTwoTo.slice(6, 10) : '',
+          
+          remarks: form.remarks ? form.remarks : '',
+          field195: form.signature ? form.signature : '',
+          month_88: form.veteranDateSigned ? form.veteranDateSigned.slice(0, 2) : '',
+          day_88: form.veteranDateSigned ? form.veteranDateSigned.slice(3, 5) : '',
+          year_88: form.veteranDateSigned ? form.veteranDateSigned.slice(6, 10) : '',
+          address_of_witness: '',
+          address_of_witness2: '',
+          address_of_witness3: '',
+          address_of_witness4: '',
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};
+
+
+const formatAmount = async (amount) => {
+  if (amount.length < 6) {
+   return amount.padStart(6, '0');
+  }
+  return amount;
+}

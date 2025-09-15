@@ -411,3 +411,114 @@ export const PTSDStressorFileMap = {
   signature: 'Add Signature on your Profile',
   dateSigned: 'Date Signed',
 };
+
+export const MedicalRecordsFileMap = {
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  ssn: 'SSN (Social Security Number)',
+  currentVa: 'VA File Number',
+  birthday: 'Birthday',
+  serviceNumber: 'Service Number',
+  street: 'Street',
+  unitNumber: 'Unit Number',
+  city: 'City',
+  province: 'Province',
+  country: 'US',
+  zipCode: 'Zip Code',
+  phone: 'Phone',
+  phoneI: 'Int. Phone Number',
+  email: 'Email',
+  emailE: 'Electronic Correspondence',
+  //seciton II
+  isVeteran: 'Is Veteran?',
+  claimantsName: `Patient's Name`,
+  claimantsLastName: `Patient's Last Name`,
+  claimantsSsn: `Patient's SSN`,
+  claimantsCurrentVa: `Patient's Current VA`,
+  medicalProvider: `Complete Medical Provider Information`,
+  consent: `Consent`,
+  veteranDateSigned: 'Veteran Date Signed',
+  printedName: 'First Name of person signing',
+  printedLastName: 'Last Name of person signing',
+  signature: 'Add Signature on your Profile',
+  hasSignature: 'Add Signature on your Profile',
+};
+
+export const TdiuFileMap = {
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  ssn: 'SSN (Social Security Number)',
+  currentVa: 'VA File Number',
+  birthday: 'Birthday',
+  serviceNumber: 'Service Number',
+  street: 'Street',
+  unitNumber: 'Unit Number',
+  city: 'City',
+  province: 'Province',
+  country: 'US',
+  zipCode: 'Zip Code',
+  phone: 'Phone',
+  phoneI: 'Int. Phone No.',
+  email: 'Email',
+  emailE: 'Electronic Correspondence',
+
+  //   section II
+  gainfulOccupation: 'Gainful Occupation',
+  doctorCare: 'Doctor Care',
+  dateTreatmentFrom: 'Date Treatment From',
+  dateTreatmentTo: 'Date Treatment To',
+  nameAddressDoctors: 'Name Address Doctors',
+  nameAddressHospital: 'Name Address Hospital',
+  dateHospitalizationFrom: 'Date Hospitalization From',
+  dateHospitalizationTo: 'Date Hospitalization To',
+
+
+  //   section III
+  dateFullTimeEmployment: 'Date Full Time Employment',
+  dateFullTimeWorked: 'Date You Last Worked Full-Time',
+  dateDisabledWork: 'Date Became Disabled To Work',
+  amountEarnedYear: 'Amount Earned Year',
+  whatYear: 'What Year',
+  occupationDuring: 'Occupation During',
+  employmentStatement: 'Employment Statement',
+
+
+  disabilityMilitary: 'Disability Military',
+  disabilityJobSelf: 'Disability Job Self',
+  amountTotalMonthly: 'Amount Total Monthly',
+  amountTotal12Months: 'Amount Total 12 Months',
+  disabilityReceiveExpect: 'Disability Receive Expect',
+  workersReceiveExpect: 'Workers Receive Expect',
+  disabledWork: 'Disabled Work',
+
+  // options 
+  employerNameAddress1: 'Employer Name Address (1)', 
+  typeOfWork1: 'Type Of Work (1)',
+  dateApplied1: 'Date Applied (1)',
+  employerNameAddress2: 'Employer Name Address (2)', 
+  typeOfWork2: 'Type Of Work (2)',
+  dateApplied2: 'Date Applied (2)',
+  employerNameAddress3: 'Employer Name Address (3)', 
+  typeOfWork3: 'Type Of Work 3',
+  dateApplied3: 'Date Applied 3',
+
+
+  // section IV
+  education: 'Education',
+  educationDisabledWorkOne: 'Education Disabled Work One',
+  typeOfTrainingOne: 'Type Of Training One',
+  dateOfTrainingOneFrom: 'Date Of Training (1) From',
+  dateOfTrainingOneTo: 'Date Of Training (1) To',
+  educationDisabledWorkTwo: 'Education Disabled Work Two',
+  typeOfTrainingTwo: 'Type Of Training Two',
+  dateOfTrainingTwoFrom: 'Date Of Training (2) From',
+  dateOfTrainingTwoTo: 'Date Of Training (2) To',
+
+  // section V
+  remarks: 'Remarks',
+
+  // section VI
+  hasSignature: 'Add Signature on your Profile',
+  signature: 'Add Signature on your Profile',
+  veteranDateSigned: 'Date Signed',
+};

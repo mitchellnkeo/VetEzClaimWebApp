@@ -1482,3 +1482,252 @@ export const PTSDStressorValidationSchema = yup.object().shape({
   signature: yup.string().required('This field is required to save PDF'),
   dateSigned: yup.string().required('This field is required to save PDF'),
 });
+
+export const MedicalRecordsValidationSchema = yup.object().shape({
+  firstName: firstNameValidation,
+  lastName: lastNameValidation,
+  ssn: ssnValidation,
+  currentVa: vaFileNumberValidation,
+  serviceNumber: serviceNumberValidationAlt,
+  birthday: yup.string().required('This field is required to save PDF'),
+  phone: phoneValidation,
+  phoneI: internationalPhoneValidation,
+  email: emailValidation,
+  street: validStreetCharacters.required('This field is required to save PDF'),
+  unitNumber: unitNumberValidation,
+  city: yup.string().matches(cityRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }).required('This field is required to save PDF'),
+  province: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }).required('This field is required to save PDF'),
+  country: yup.string().required('This field is required to save PDF'),
+  zipCode: zipCodeValidation,
+  veteranDateSigned: yup
+    .string()
+    .required('This field is required to save PDF'),
+  emailE: yup.bool(),
+  isVeteran: yup.bool(),
+  claimantsName: yup.string().when('isVeteran', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(nameRegex, 'Only letters, single spaces, and single periods allowed')
+    .min(2, 'First name must be at least 2 characters'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsLastName: yup.string().when('isVeteran', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(nameRegex, 'Only letters, single spaces, and single periods allowed')
+    .min(2, 'Last name must be at least 2 characters'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsSsn: yup.string().when('isVeteran', {
+    is: true,
+    then: schema => schema.required('This field is required to save PDF').matches(/^\d{9}$/, 'Social Security Number must be exactly 9 digits')
+    .min(9, 'Social Security Number must be exactly 9 digits'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  claimantsCurrentVa: vaFileNumberValidation.when('isVeteran', {
+    is: true,
+    then: schema => schema.matches(/^\d{8,9}[A-Z]?$/, 'Invalid VA File Number format').required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  medicalProvider: yup.array().of(
+    yup.object().shape({
+      provider: yup.string().matches(validCharactersRegex, {
+        message: 'Must contain valid characters',
+        excludeEmptyString: true
+      }).required('This field is required to save PDF'),
+      conditions: yup.string().matches(validCharactersRegex, {
+        message: 'Must contain valid characters',
+        excludeEmptyString: true
+      }).required('This field is required to save PDF'),
+      dateTreatmentFrom: yup.string(),
+      dateTreatmentTo: yup.string(),
+      medicalStreet: validStreetCharacters.required('This field is required to save PDF'),
+      medicalApartment: yup.string().matches(validCharactersRegex, {
+        message: 'Must contain valid characters',
+        excludeEmptyString: true
+      }),
+      medicalCity: yup.string().matches(cityRegex, {
+        message: 'Must contain valid characters',
+        excludeEmptyString: true
+      }).required('This field is required to save PDF'),
+      medicalState: yup.string().matches(validCharactersRegex, {
+        message: 'Must contain valid characters',
+        excludeEmptyString: true
+      }).required('This field is required to save PDF'),
+      medicalCountry: yup
+        .string().matches(validCharactersRegex, {
+          message: 'Must contain valid characters',
+          excludeEmptyString: true
+        })
+        .required('This field is required to save PDF'),
+      medicalZipCode: zipCodeValidation,
+    }),
+  ),
+  consent: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  printedName: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  printedLastName: yup.string().matches(validCharactersRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }),
+  signature: yup.string().required('Add Signature on your Profile'),
+  hasSignature: yup.bool(),
+});
+
+export const TDIUFormValidationSchema = yup.object().shape({
+  firstName: firstNameValidation,
+  lastName: lastNameValidation,
+  ssn: ssnValidation,
+  currentVa: vaFileNumberValidation,
+  serviceNumber: serviceNumberValidationAlt,
+  birthday: yup.string().required('This field is required to save PDF'),
+  street: validStreetCharacters,
+  unitNumber: unitNumberValidation,
+  city: yup.string().matches(cityRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }).required('This field is required to save PDF'),
+  province: yup.string().required('This field is required to save PDF').matches(
+    validCharactersRegex,
+    'Must contain valid characters'
+  ),
+  country: yup.string().required('This field is required to save PDF'),
+  zipCode: zipCodeValidation,
+  phone: phoneValidation,
+  phoneI: internationalPhoneValidation,
+  email: emailValidation,
+  emailE: yup.bool(),
+  gainfulOccupation: yup
+    .string()
+    .matches(validCharactersRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true
+    })
+    .required('This field is required to save PDF'),
+  doctorCare: yup.string(),
+  dateTreatmentFrom: yup.string(),
+  dateTreatmentTo: yup.string(),
+  nameAddressDoctors: yup.string().matches(nameRegex, 'Only letters, single spaces, and single periods allowed').min(2, 'First name must be at least 2 characters'),
+  nameAddressHospital: containValidCharacters,
+  dateHospitalizationFrom: yup.string(),
+  dateHospitalizationTo: yup.string(),
+  dateFullTimeEmployment: yup.string().required('This field is required to save PDF'),
+  dateFullTimeWorked: yup.string().required('This field is required to save PDF'),
+  dateDisabledWork: yup.string().required('This field is required to save PDF'),
+  amountEarnedYear: yup.string().matches(/^\d{1,10}$/, 'Only digits are allowed'),
+  whatYear: yup.string().matches(/^\d{1,10}$/, 'Only digits are allowed'),
+  occupationDuring: containValidCharacters,
+  employmentStatement: yup.array().of(
+    yup.object().shape({
+      nameAddress: containValidCharacters.required('This field is required to save PDF'),
+      typeWork: containValidCharacters.required('This field is required to save PDF'),
+      hoursPerWeek: yup.string()
+        .matches(/^\d{1,3}$/, 'Only digits are allowed')
+        .test('hours-range', 'Hours per week must be between 0 and 168', function(value) {
+          if (!value) return true; // Let required handle empty values
+          const hours = parseInt(value, 10);
+          return hours >= 0 && hours <= 168;
+        })
+        .required('This field is required to save PDF'),
+      dateEmploymentFrom: yup.string().required('This field is required'),
+      dateEmploymentTo: yup.string().required('This field is required'),
+      timeLostIllness: yup.string().matches(/^\d{1,3}$/, 'Only digits are allowed').required('This field is required to save PDF'),
+      amountGross: yup.string().matches(/^\d{1,6}$/, 'Only digits are allowed').required('This field is required to save PDF'),
+    }),
+  ).notRequired(),
+  disabilityMilitary: yup.string(),
+  disabilityJobSelf: yup.string(),
+  amountTotal12Months: yup.string().matches(/^\d{1,10}$/, 'Only digits are allowed'),
+  amountTotalMonthly: yup.string().matches(/^\d{1,10}$/, 'Only digits are allowed'),
+  disabilityReceiveExpect: yup.string(),
+  workersReceiveExpect: yup.string(),
+  disabledWork: yup.string(),
+
+  employerNameAddress1: yup.string().when('disabledWork', {
+    is: 'Yes',
+    then: schema => schema.matches(validCharactersRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true
+    }).required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }), 
+  typeOfWork1: yup.string().when('disabledWork', {
+    is: 'Yes',
+    then: schema => schema.matches(validCharactersRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true
+    }).required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  dateApplied1: yup.string().when('disabledWork', {
+    is: 'Yes',
+    then: schema => schema.required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  employerNameAddress2: containValidCharacters, 
+  typeOfWork2: containValidCharacters,
+  dateApplied2: yup.string(),
+  employerNameAddress3: containValidCharacters, 
+  typeOfWork3: containValidCharacters,
+  dateApplied3: yup.string(),
+
+
+  education: yup.string().required('This field is required to save PDF'),
+  educationDisabledWorkOne: yup.string(),
+
+  typeOfTrainingOne: yup.string().when('educationDisabledWorkOne', {
+    is: 'Yes',
+    then: schema => schema.matches(validCharactersRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true
+    }).required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  dateOfTrainingOneFrom: yup.string().when('educationDisabledWorkOne', {
+    is: 'Yes',
+    then: schema => schema.required('This field is required'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  dateOfTrainingOneTo: yup.string().when('educationDisabledWorkOne', {
+    is: 'Yes',
+    then: schema => schema.required('This field is required'),
+    otherwise: schema => schema.notRequired(),
+  }),
+
+  educationDisabledWorkTwo: yup.string(),
+  typeOfTrainingTwo: yup.string().when('educationDisabledWorkTwo', {
+    is: 'Yes',
+    then: schema => schema.matches(validCharactersRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true
+    }).required('This field is required to save PDF'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  dateOfTrainingTwoFrom: yup.string().when('educationDisabledWorkTwo', {
+    is: 'Yes',
+    then: schema => schema.required('This field is required'),
+    otherwise: schema => schema.notRequired(),
+  }),
+  dateOfTrainingTwoTo: yup.string().when('educationDisabledWorkTwo', {
+    is: 'Yes',
+    then: schema => schema.required('This field is required'),
+    otherwise: schema => schema.notRequired(),
+  }),
+
+  remarks: remarkValidation,
+
+  hasSignature: yup.bool(),
+  signature: yup.string(),
+  veteranDateSigned: yup
+    .string()
+    .required('This field is required to save PDF.'),
+});
