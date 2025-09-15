@@ -3,125 +3,45 @@ import FormContent from '@/components/Common/FormContent';
 import FrontLayout from '@/components/layouts/FrontLayout';
 import { Formik, Form, ErrorMessage } from 'formik';
 import TextInput from '@/components/Common/TextInput';
-import { BoardAppealValidationSchema } from '@/utils/validators';
+import { PTSDStressorValidationSchema } from '@/utils/validators';
 import SectionTitle from '@/components/Common/SectionTitle';
 import DateSelectorExtended from '@/components/Common/DateSelectorExtended';
 import OptionSelector from '@/components/Common/OptionSelector';
 import { GetErrorFieldsString } from '@/utils/utils';
-import { BoardAppealFileMap } from '@/utils/FormikFieldMap';
+import { PTSDStressorFileMap } from '@/utils/FormikFieldMap';
 import ToastModal from '@/components/Common/ToastModal';
 import { postFormData, getFormData } from '@/firebase/firebaseOperations';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Loader from '@/components/Common/Loader';
-import { generateBoardAppealPdfObject } from '@/utils/pdfObjectMaker';
+import { generatePTSDStressorPdfObject } from '@/utils/pdfObjectMaker';
 import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import Breadcrumb from '@/components/Common/Breadcrumb';
+import DropDownExtended from '@/components/Common/DropDownExtended';
+import Divider from '@/components/Common/Divider';
 
-const benefitTypeData = [
-    'Compensation',
-    'Pensions/Survivors Benefits',
-    'Fiduciary',
-    'Life Insurance',
-    'Veterans Health Administration',
-    'Veteran Readiness and Employment',
-    'Loan Guaranty',
-    'Education',
-    'National Cemetery Administration'
-];
-
-const condition1 = '10A. Direct Review by a Veterans Law Judge: I do not want a Board hearing, and will not submit any additional evidence in support of my appeal. (Choosing this option often results in the Board issuing its decision most quickly.)';
-const condition2 = '10B. Evidence Submission Reviewed by a Veterans Law Judge: I have additional evidence in support of my appeal that I will submit to the Board with my VA Form 10182 or within the 90 days of the Board\'s receipt of my VA Form 10182. (Choosing this option will extend the time it takes for the Board to decide your appeal.)';
-const condition3 = '10C. Hearing with a Veterans Law Judge: I want a Board hearing and the opportunity to submit additional evidence in support of my appeal that I will provide within 90 days after my hearing. I want the hearing type below: (Choosing this option will extend the time it takes for the Board to decide your appeal.)';
-
-const specificIssue1 = 'Check here if you are including a request for an extension of time to file the VA Form 10182 due to good cause and then attach additional sheets explaining why you believe there is good cause for the extension.';
-const specificIssue2 = 'Check here if you are appealing a denial of benefits by the Veterans Health Administration (VHA).';
-
-const hearingType1 = 'Central Office Hearing (I will attend in person in Washington, DC)'
-const hearingType2 = 'Videoconference Hearing (I will go to a Regional Office)'
-const hearingType3 = 'Virtual Telehearing (I will attend using an internet-connected device)'
-
-
-
-const homelessOption = [
-    {
-      option: 'I am experiencing homelessness',
-      isSelected: false,
-    },
-];
-
-const additionalIssueOption = [
-  {
-    option:'Check here if you attached additional sheets. Include the Veteran\'s last name and the file number.',
-    isSelected: false,
-  },
+const checkOptionsData = [
+  "Killed in action",
+  "Wounded in action",
+  "Killed non-battle",
+  "Injured non-battle",
+  "Other",
 ];
 
 const signatureOption = [
   {
-    option: 'Signature (Appellant or appointed representative) (Required)',
+    option: 'Veteran/Claimant\'s Signature (Required)',
     isSelected: true,
   },
 ];
 
-const lawJudgeOption = [
-  {
-    option: condition1,
-    isSelected: false,
-    value: '10A',
-  },
-  {
-    option: condition2,
-    isSelected: false,
-    value: '10B',
-  },
-  {
-    option: condition3,
-    isSelected: false,
-    value: '10C',
-  },
-];
-
-const specificIssueOption = [
-  {
-    option: specificIssue1,
-    isSelected: false,
-    value: 'va10182',
-  },
-  {
-    option: specificIssue2,
-    isSelected: false,
-    value: 'vha',
-  },
-];
-
-const hearingTypeOption = [
-  {
-    option: hearingType1,
-    isSelected: false,
-    value: 'centralOffice',
-  },
-  {
-    option: hearingType2,
-    isSelected: false,
-    value: 'videoconference',
-  },
-  {
-    option: hearingType3,
-    isSelected: false,
-    value: 'virtualTelehearing',
-  },
-];
-
-
-
-export default function BoardAppealForm() {
+export default function PTSDStressorForm() {
   const formTitle       = 'PTSD Stressor Statement (Form 21-0781)';
-  const formId          = 'boardappeal';
-  const formName        = '10182';
+  const formId          = 'ptsdform';
+  const formName        = '21-0781';
 
 
   const [isLoading, setIsLoading] = useState(false);
@@ -139,28 +59,75 @@ export default function BoardAppealForm() {
   // console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
-    name: '',
-    fileNumber: '',
+    // section I
+    firstName: '',
+    lastName: '',
+    ssn: '',
+    currentVa: '', // optional
     birthday: '',
-    notVetName: '',
-    notVetBirthday: '',
-    street: '',
-    homelessness: false,
-    homelessnessOpt: homelessOption,
+    serviceNumber: '', // optional
+
     phone: '',
+    phoneI: '',
     email: '',
-    rName: '',
-    lawJudge: '',
-    lawJudgeOpt: lawJudgeOption,
-    hearingType: '',
-    hearingTypeOpt: hearingTypeOption,
-    issueDecided: '',
-    issueDecidedOpt: specificIssueOption,
-    issues: [{specificIssue: '', date: ''}] ,
-    additionalIssue: false,
-    additionalIssueOpt: additionalIssueOption,
-    dateSigned: '',
+
+    // section II
+    incidentDate1: '',
+    dateOfAssignmentFrom1: '',
+    dateOfAssignmentTo1: '',
+    incidentLocation1: '',
+    unitAssignmentDuringIncident0: '',
+    descriptionOfIncident1: '',
+    medalReceived1: '',
+
+    person1FirstName: '',
+    person1LastName: '',
+    person1Rank: '', // optional
+    injuryDate1: '',
+    checkOptions1: '', 
+    checkOptionsOther1: '', 
+    unitAssignmentDuringIncident1: '',
+
+    person2FirstName: '',
+    person2LastName: '',
+    person2Rank: '', // optional
+    injuryDate2: '',
+    checkOptions2: '', 
+    checkOptionsOther2: '', 
+    unitAssignmentDuringIncident2: '',
+
+
+
+    incidentDate2: '', // optional
+    dateOfAssignmentFrom2: '', // optional
+    dateOfAssignmentTo2: '', // optional
+    incidentLocation2: '', // optional
+    unitAssignmentDuringIncident3: '', // optional
+    descriptionOfIncident2: '', // optional
+    medalReceived2: '', // optional
+
+
+    person3FirstName: '', // optional
+    person3LastName: '', // optional
+    person3Rank: '', // optional
+    injuryDate3: '', // optional
+    checkOptions3: '', // optional
+    checkOptionsOther3: '', // optional
+    unitAssignmentDuringIncident4: '', // optional
+    
+
+    person4FirstName: '', // optional
+    person4LastName: '',
+    person4Rank: '', // optional
+    injuryDate4: '',  
+    checkOptions4: '', 
+    checkOptionsOther4: '', 
+    unitAssignmentDuringIncident5: '',
+
+    remarks: '', // optional
+    hasSignature: false,
     signature: '',
+    dateSigned: '',
   });
 
   return (
@@ -172,7 +139,7 @@ export default function BoardAppealForm() {
       />
       <Formik
         initialValues={initialValues}
-        validationSchema={BoardAppealValidationSchema}
+        validationSchema={PTSDStressorValidationSchema}
       >
         {({
           values,
@@ -188,62 +155,20 @@ export default function BoardAppealForm() {
             console.log('loading data from local storage : ', user);
             await setValues({
                 ...values,
-                name: user.firstName ? user.firstName + ' ' + user.lastName : '',
+                firstName: user.firstName ? user.firstName : '',
+                lastName: user.lastName ? user.lastName : '',
+                ssn: user.ssn ? user.ssn : '',
                 birthday: user.dob ? user.dob : '',
                 phone: user.phone ? user.phone : '',
                 email: user.email ? user.email : '',
-                street: user.street ? user.street + ', ' + user.unitNumber + ', ' + user.city + ', ' + user.province + ', ' + 'US' + ', ' + user.zipCode : '',
-                signature: user.signature ? user.signature : '',
+                signature: user.signature ? user.signature : ''
             });
           };
 
           const loadDataFromFirebase = async (data) => {
-            let homelessOpt = [...homelessOption];
-            let lawJudgeOpt = [...lawJudgeOption];
-            let hearingTypeOpt = [...hearingTypeOption];
-            let issueDecidedOpt = [...specificIssueOption];
-            let additionalIssueOpt = [...additionalIssueOption];
-            
-            if (data.homelessness) {
-              homelessOpt = homelessOpt.map((item) => ({
-                ...item,
-                isSelected: true,
-              }));
-            }
-            if (data.lawJudge) {
-              lawJudgeOpt = lawJudgeOpt.map((item) => ({
-                ...item,
-                isSelected: item.value === data.lawJudge,
-              }));
-            }
-            if (data.hearingType) {
-              hearingTypeOpt = hearingTypeOpt.map((item) => ({
-                ...item,
-                isSelected: item.value === data.hearingType,
-              }));
-            }
-            if (data.issueDecided) {
-              issueDecidedOpt = issueDecidedOpt.map((item) => ({
-                ...item,
-                isSelected: item.value === data.issueDecided,
-              }));
-            }
-            if (data.additionalIssue) {
-              additionalIssueOpt = additionalIssueOpt.map((item) => ({
-                ...item,
-                isSelected: true,
-              }));
-            }
-          
             const dataBody = {
               ...data,
-              homelessnessOpt: homelessOpt,
-              lawJudgeOpt: lawJudgeOpt,
-              hearingTypeOpt: hearingTypeOpt,
-              issueDecidedOpt: issueDecidedOpt,
-              additionalIssueOpt: additionalIssueOpt,
             };
-          
             setValues(dataBody);
           };
           
@@ -342,8 +267,8 @@ export default function BoardAppealForm() {
           const generatePdf = async (formValues, isFromGeneratePdf = false) => {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
-            const pdfObject = await  generateBoardAppealPdfObject(formData);
-            await generatePdfService(pdfObject, 'generatepdf11')
+            const pdfObject = await  generatePTSDStressorPdfObject(formData);
+            await generatePdfService(pdfObject, 'generatepdf14')
               .then(async (res) => {
                 if (isFromGeneratePdf) {
                   await saveData({ pdf: true }, false);
@@ -385,7 +310,7 @@ export default function BoardAppealForm() {
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
-              BoardAppealFileMap
+              PTSDStressorFileMap
             );
 
             if (hasErrors) {
@@ -411,7 +336,7 @@ export default function BoardAppealForm() {
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
-              BoardAppealFileMap
+              PTSDStressorFileMap
             );
 
             if (hasErrors) {
@@ -434,7 +359,7 @@ export default function BoardAppealForm() {
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
-              BoardAppealFileMap
+              PTSDStressorFileMap
             );
 
             if (hasErrors) {
@@ -451,10 +376,10 @@ export default function BoardAppealForm() {
               setIsLoading(true);
               const formData = await transformFormValues(values);
               console.log('1  faxData >> ', formData);
-              const pdfObject = await generateBoardAppealPdfObject(formData);
+              const pdfObject = await generatePTSDStressorPdfObject(formData);
               console.log('2  faxData >> ', pdfObject);
 
-              await generatePdfService(pdfObject, 'generatepdf11')
+              await generatePdfService(pdfObject, 'generatepdf14')
                 .then(async (res) => {
                   console.log(res.download_url);
                   const faxBody = await getFaxBodyData(
@@ -545,301 +470,530 @@ export default function BoardAppealForm() {
                   onClose={() => setToastOpen(false)}
                 />
 
-                <SectionTitle title="Section I: Personal Information" />
+                <SectionTitle title="Section I:  Veteran's Identification Information" />
                 <> 
                     <TextInput
-                        label={`Veteran's Name (First, Middle Initial, Last)`}
-                        name="name"
+                        label={`Veteran's First Name`}
+                        name="firstName"
                         placeholder="Enter first name"
-                        fieldCounter="(1 of 13)"
+                        fieldCounter="(1 of 16)"
+                        limit={12}
                     />
                     <TextInput
-                        label="Veteran's File Number"
-                        name="fileNumber"
+                        label="Veteran's Last Name"
+                        name="lastName"
                         placeholder="Enter file number"
-                        fieldCounter="(2 of 13)"
+                        fieldCounter="(1-2 of 16)"
+                        limit={18}
+                    />
+                    <TextInput
+                        label="Veteran's Social Security Number"
+                        name="ssn"
+                        placeholder="Enter ssn"
+                        fieldCounter="(2 of 16)"
+                        limit={9}
+                    />
+                    <TextInput
+                        label="VA File Number"
+                        name="currentVa"
+                        placeholder="Enter va file number"
+                        fieldCounter="(3 of 16)"
                         limit={9}
                         hasCounter
                     />
                     <DateSelectorExtended
-                        label="Date of Birth"
+                        label="Veteran's Date of Birth"
                         name="birthday"
                         value={values.birthday}
                         placeholder="Select Date"
                         onChange={(val) => setFieldValue('birthday', val)}
                         isDOB
-                        fieldCounter="(3 of 13)"  
+                        fieldCounter="(4 of 16)"  
                     />
+
                     <TextInput
-                        label="If I'm not the veteran, my name is: (First name, middle initial, last name)"
-                        name="notVetName"
-                        placeholder="Enter name"
-                        fieldCounter="(4 of 13)"
-                        limit={41}
+                        label="Veteran's Service Number"
+                        name="serviceNumber"
+                        placeholder="Enter service number"
+                        fieldCounter="(5 of 16)"
+                        limit={9}
                         hasCounter
                     />
-                    <DateSelectorExtended
-                        label="My Date of Birth"
-                        name="notVetBirthday"
-                        value={values.notVetBirthday}
-                        placeholder="Select Date"
-                        onChange={(val) => setFieldValue('notVetBirthday', val)}
-                        isDOB
-                        fieldCounter="(5 of 13)"  
-                    />
+
                     <TextInput
-                        label="My Preferred Mailing Address\n(Number and street or rural route, P.O. Box, City, State, ZIP Code and Country)"
-                        name="street"
-                        placeholder="Enter mailing address"
-                        fieldCounter="(6 of 13)"
-                        limit={133}
-                        hasCounter
-                    />
-                    <OptionSelector
-                        name="homelessnessOpt"
-                        options={values.homelessnessOpt}
-                        multiSelect={true}
-                        isOtherAllowed={false}
-                        onSelectionChange={(options) => {
-                            setFieldValue('homelessness', options[0].isSelected)
-                        }}
-                    />
-                    <TextInput
-                        label="My Preferred Telephone\nNumber (Include Area Code)"
+                        label="Telephone Number"
                         name="phone"
                         placeholder="Enter telephone number"
-                        fieldCounter="(7 of 13)"
+                        fieldCounter="(6 of 16)"
                         limit={12}
                         hasCounter
                     />
+
                     <TextInput
-                        label="My Preferred Email Address"
-                        name="email"
-                        placeholder="Enter email"
-                        fieldCounter="(8 of 13)"
-                    />
-                    <TextInput
-                        label="My Representative's Name"
-                        name="rName"
-                        placeholder="Enter representative's name"
-                        fieldCounter="(9 of 13)"
-                        limit={34}
+                        label="International Telephone Number"
+                        name="phoneI"
+                        placeholder="Enter international telephone number"
+                        fieldCounter="(6-2 of 16)"
+                        limit={15}
                         hasCounter
                     />
                 </>
 
-                <SectionTitle title="Section II: Board Review Option" />
+                <SectionTitle title="Section II: Stressful Incidents" />
                 <> 
-                    <p className="text-gray-700 text-sm leading-relaxed mt-3 mb-5">
-                        A Veterans Law Judge will consider your appeal in the order in which it is
-                        received, depending on which of the following review options you select.{" "}
-                        <span className="italic">
-                            (For additional explanation of your options, please see the attached
-                            information and instructions.)
-                        </span>
-                    </p>
-
-                    <OptionSelector
-                        name="lawJudgeOpt"
-                        options={values.lawJudgeOpt}
-                        multiSelect={false}
-                        isOtherAllowed={false}
-                        onSelectionChange={(options) => {
-                            console.log('options >> ', options);
-                            const selectedOption = options.find(item => item.isSelected);
-                            let lawJudgeStr = '' 
-                            if (selectedOption) {
-                                switch (selectedOption.option) {
-                                    case condition1:
-                                        lawJudgeStr = '10A';
-                                        break;
-                                    case condition2:
-                                        lawJudgeStr = '10B';
-                                        break;
-                                    case condition3:
-                                        lawJudgeStr = '10C';
-                                        break;
-                                }
-                            }
-                            setFieldValue('lawJudge', lawJudgeStr)
-                        }}
+                  <>
+                    <Divider title="First Incident Information" /> 
+                    <DateSelectorExtended
+                      label="Date First Incident Occurred"
+                      name="incidentDate1"
+                      value={values.incidentDate1}
+                      placeholder="Select Date"
+                      onChange={(val) => setFieldValue('incidentDate1', val)}
+                      fieldCounter="(8 of 16)"
                     />
-                    <ErrorMessage name="lawJudge" component="div" style={{ fontSize: '12px', color: 'red' }} />
 
-                    {values.lawJudge === '10C' && (
                     <>
-                        <OptionSelector
-                            label="Please select the type of hearing you would like to attend."
-                            name="hearingTypeOpt"
-                            options={values.hearingTypeOpt}
-                            multiSelect={false}
-                            isOtherAllowed={false}
-                            onSelectionChange={(options) => {
-                                console.log('options >> ', options);
-                                const selectedOption = options.find(item => item.isSelected);
-                                let hearingTypeStr = '' 
-                                if (selectedOption) {
-                                    switch (selectedOption.option) {
-                                        case hearingType1:
-                                            hearingTypeStr = 'centralOffice';
-                                            break;
-                                        case hearingType2:
-                                            hearingTypeStr = 'videoconference';
-                                            break;
-                                        case hearingType3:
-                                            hearingTypeStr = 'virtualTelehearing';
-                                            break;
-                                    }
-                                }
-                                setFieldValue('hearingType', hearingTypeStr)
-                            }}
-                        />
-                        <ErrorMessage name="hearingType" component="div" style={{ fontSize: '12px', color: 'red' }} />
-                    </>
-                    )}
-                </>
-
-                <SectionTitle title="Section III: Specific Issue(s) to be Appealed to a Veterans Law Judge at the Board" />
-                <> 
-                    <p className="text-gray-700 text-sm leading-relaxed mt-3 mb-5">
-                        Please list each issue decided by VA that you would like to appeal. Please
-                        refer to your decision notice(s) for a list of adjudicated issues. For each
-                        issue, please identify the date of VA's decision and the area of disagreement{" "}
-                        <span className="italic">
-                            (e.g., service connection, disability evaluation, or effective date of
-                            award).
-                        </span>
-                    </p>
-
-
-                    <OptionSelector
-                        name="issueDecidedOpt"
-                        options={values.issueDecidedOpt}
-                        multiSelect={false}
-                        isOtherAllowed={false}
-                        onSelectionChange={(options) => {
-                            console.log('options >> ', options);
-                            const selectedOption = options.find(item => item.isSelected);
-                            let issueDecidedStr = '' 
-                            if (selectedOption) {
-                                switch (selectedOption.option) {
-                                    case specificIssue1:
-                                        issueDecidedStr = 'va10182';
-                                        break;
-                                    case specificIssue2:
-                                        issueDecidedStr = 'vha';
-                                        break;
-                                }
-                            }
-                            setFieldValue('issueDecided', issueDecidedStr)
-                        }}
-                    />
-                    <ErrorMessage name="issueDecided" component="div" style={{ fontSize: '12px', color: 'red' }} />
-
-                    <div className="mb-10">
-                        {values.issues.map((item, ind) => {
-                        return (
-                            <div key={ind} className="mt-10">
-                            <TextInput
-                                label={`Issues #${ ind + 1}`}
-                                name={`issues[${ind}].specificIssue`}
-                                placeholder="Enter specific issue"
-                                hasCounter
-                                limit={150}
-                            />
-
-                            <DateSelectorExtended
-                                label="Date of VA Decision Notice"
-                                name={`issues[${ind}].date`}
-                                value={values.issues[ind].date}
+                      <div>
+                        <p
+                          className="my-3"
+                          style={{
+                            color: '#035F92',
+                          }}
+                        >
+                              Dates of Unit Assignment
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-6">
+                              <DateSelectorExtended
+                                label="From"
+                                allowRange={true}
+                                name="dateOfAssignmentFrom1"
+                                referenceDate={values.dateOfAssignmentTo1}
+                                value={values.dateOfAssignmentFrom1}
                                 placeholder="Select Date"
                                 onChange={(val) =>
-                                    setFieldValue(
-                                    `issues[${ind}].date`,
-                                    val
-                                    )
+                                  setFieldValue('dateOfAssignmentFrom1', val)
                                 }
-                                />
-                            </div>
-                        );
-                        })}
+                                isStartDate={true}
+                              />
 
-                        <div className="mt-5 grid grid-cols-2 gap-6">
-                        <button
-                            className="cursor-pointer rounded bg-gray-200 px-5 py-2.5 text-[15px] font-bold text-black hover:bg-gray-300"
-                            disabled={values.issues.length >= 5}
-                            onClick={() => {
-                            setValues({
-                                ...values,
-                                issues: [
-                                ...values.issues,
-                                {
-                                    specificIssue: '',
-                                    date: '',
-                                },
-                                ],
-                            });
-                            }}
-                        >
-                            Add Issue
-                        </button>
+                              <DateSelectorExtended
+                                label="To"
+                                allowRange={true}
+                                name="dateOfAssignmentTo1"
+                                value={values.dateOfAssignmentTo1}
+                                referenceDate={values.dateOfAssignmentFrom1}
+                                placeholder="Select Date"
+                                onChange={(val) =>
+                                  setFieldValue('dateOfAssignmentTo1', val)
+                                }
+                                isStartDate={false}
+                              />
+                      </div>
+                    </>
 
-                        <button
-                            className="cursor-pointer rounded bg-yellow-400 px-5 py-2.5 text-[15px] font-bold text-black hover:bg-yellow-500 disabled:cursor-not-allowed disabled:opacity-50"
-                            hidden={values.issues.length <= 1}
-                            onClick={() => {
-                            if (values.issues.length > 1) {
-                                const updatedIssue = [
-                                ...values.issues,
-                                ];
-                                updatedIssue.pop();
-                                setValues({
-                                ...values,
-                                issues: [...updatedIssue],
-                                });
-                            }
-                            }}
-                        >
-                            Remove Issue
-                        </button>
-                        </div>
-                    </div>
-
-                    <OptionSelector
-                        name="additionalIssueOpt"
-                        options={values.additionalIssueOpt}
-                        multiSelect={true}
-                        isOtherAllowed={false}
-                        onSelectionChange={(options) => {
-                            console.log('options >> ', options);
-                            setFieldValue('additionalIssue', options[0].isSelected)
-                        }}
+                    <TextInput
+                      label="Location of incident (City, State, Country, Province, landmark or military installation)"
+                      name="incidentLocation1"
+                      placeholder="Enter incident location"
+                      fieldCounter="(8-3 of 16)"
                     />
-                </>
 
-                <SectionTitle title="Section VI: Certification and Signature" />
-                <> 
+                    <TextInput
+                      label="Unit assignment during incident (Such as, division, wing, battalion, cavalry, ship)"
+                      name="unitAssignmentDuringIncident0"
+                      placeholder="Enter unit assignment during incident"
+                      fieldCounter="(8-4 of 16)"
+                      multiline={true}
+                      rows={4}
+                      limit={300}
+                    />
 
-                    <p className="text-[14px] text-left font-normal text-blue-600 mt-3">
-                        I certify that the statements on this form are true and correct to the best of
-                        my knowledge and belief.
-                    </p>
+                    <TextInput
+                      label="Description of the incident"
+                      name="descriptionOfIncident1"
+                      placeholder="Enter description of incident"
+                      fieldCounter="(8-5 of 16)"
+                      multiline={true}
+                      rows={4}
+                      limit={1000}
+                    />
 
-                    <OptionSelector
-                    name="signatureOption"
-                    options={signatureOption}
-                    multiSelect={false}
-                    isOtherAllowed={false}
-                    lockOption={true}
+                    <TextInput
+                      label="Medals or citations you received because of the incident"
+                      name="medalReceived1"
+                      placeholder="Enter medal received"
+                      fieldCounter="(8-6 of 16)"
+                    />
+                    
+                     <br /> 
+                    <Divider title="Injured/Death Person Information" /> 
+                    <Divider title="First Person's Information" lightTitle /> 
+                    <TextInput
+                      label="First Name"
+                      name="person1FirstName"
+                      placeholder="Enter first name"
+                      fieldCounter="(9-1-1 of 16)"
+                      limit={12}
+                    />
+
+                    <TextInput
+                      label="Last Name"
+                      name="person1LastName"
+                      placeholder="Enter last name"
+                      fieldCounter="(9-1-2 of 16)"
+                      limit={18}
+                    />
+
+                    <TextInput
+                      label="Rank"
+                      name="person1Rank"
+                      placeholder="Enter rank"
+                      fieldCounter="(9-2 of 16)"
+                      limit={4}
                     />
 
                     <DateSelectorExtended
-                    label="Date Signed"
-                    name="dateSigned"
-                    value={values.dateSigned}
-                    placeholder="Select Date"
-                    onChange={(val) => setFieldValue('dateSigned', val)}
-                    fieldCounter="(13 of 13)"
+                      label="Date of Injury/Death"
+                      name="injuryDate1"
+                      value={values.injuryDate1}
+                      placeholder="Select Date"
+                      onChange={(val) => setFieldValue('injuryDate1', val)}
+                      fieldCounter="(9-3 of 16)"
+                    />
+
+                    <DropDownExtended
+                      label="Please check one"
+                      name="checkOptions1"
+                      data={checkOptionsData}
+                      fieldCounter="(9-4 of 16)"
+                    />
+
+                    {values.checkOptions1 === 'Other' && (
+                      <TextInput
+                        label="Please specify"
+                        name="checkOptionsOther1"
+                        placeholder="specify other"
+                      />
+                    )}
+
+                    <TextInput
+                      label="Unit assignment during incident(Such as, division, wing, battalion, cavalry, ship)"
+                      name="unitAssignmentDuringIncident1"
+                      placeholder="Enter unit assignment during incident"
+                      fieldCounter="(9-5 of 16)"
+                      multiline={true}
+                      rows={4}
+                      limit={300}
+                    />
+
+                    <Divider title="Second Person's Information" lightTitle /> 
+                    <TextInput
+                      label="First Name"
+                      name="person2FirstName"
+                      placeholder="Enter first name"
+                      fieldCounter="(10-1-1 of 16)"
+                      limit={12}
+                    />
+                    
+                    <TextInput
+                      label="Last Name"
+                      name="person2LastName"
+                      placeholder="Enter last name"
+                      fieldCounter="(10-1-2 of 16)"
+                      limit={18}
+                    />
+
+                    <TextInput
+                      label="Rank"
+                      name="person2Rank"
+                      placeholder="Enter rank"
+                      fieldCounter="(10-2 of 16)"
+                      limit={4}
+                    />
+
+                    <DateSelectorExtended
+                      label="Date of Injury/Death"
+                      name="injuryDate2"
+                      value={values.injuryDate2}
+                      placeholder="Select Date"
+                      onChange={(val) => setFieldValue('injuryDate2', val)}
+                      fieldCounter="(10-3 of 16)"
+                    />
+
+                    <DropDownExtended
+                      label="Please check one"
+                      name="checkOptions2"
+                      data={checkOptionsData}
+                      fieldCounter="(10-4 of 16)"
+                    />
+
+                    {values.checkOptions2 === 'Other' && (
+                      <TextInput
+                        label="Please specify"
+                        name="checkOptionsOther2"
+                        placeholder="specify other"
+                      
+                      />
+                    )}
+
+                    <TextInput
+                      label="Unit assignment during incident(Such as, division, wing, battalion, cavalry, ship)"
+                      name="unitAssignmentDuringIncident2"
+                      placeholder="Enter unit assignment during incident"
+                      fieldCounter="(10-5 of 16)"
+                      multiline={true}
+                      rows={4}
+                      limit={300}
+                    />
+                  </> 
+                  
+                  <> 
+                    <br />
+                    <br />
+                    <Divider title="Second Incident Information" /> 
+                    <DateSelectorExtended
+                      label="Date First Incident Occurred"
+                      name="incidentDate2"
+                      value={values.incidentDate2}
+                      placeholder="Select Date"
+                      onChange={(val) => setFieldValue('incidentDate2', val)}
+                      fieldCounter="(8 of 16)"
+                    />
+
+                    <>
+                      <div>
+                        <p
+                          className="my-3"
+                          style={{
+                            color: '#035F92',
+                          }}
+                        >
+                              Dates of Unit Assignment
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-6">
+                              <DateSelectorExtended
+                                label="From"
+                                allowRange={true}
+                                name="dateOfAssignmentFrom2"
+                                referenceDate={values.dateOfAssignmentTo2}
+                                value={values.dateOfAssignmentFrom2}
+                                placeholder="Select Date"
+                                onChange={(val) =>
+                                  setFieldValue('dateOfAssignmentFrom2', val)
+                                }
+                                isStartDate={true}
+                              />
+
+                              <DateSelectorExtended
+                                label="To"
+                                allowRange={true}
+                                name="dateOfAssignmentTo2"
+                                value={values.dateOfAssignmentTo2}
+                                referenceDate={values.dateOfAssignmentFrom2}
+                                placeholder="Select Date"
+                                onChange={(val) =>
+                                  setFieldValue('dateOfAssignmentTo2', val)
+                                }
+                                isStartDate={false}
+                              />
+                      </div>
+                    </>
+
+                    <TextInput
+                      label="Location of incident (City, State, Country, Province, landmark or military installation)"
+                      name="incidentLocation2"
+                      placeholder="Enter incident location"
+                      fieldCounter="(8-3 of 16)"
+                    />
+
+                    <TextInput
+                      label="Unit assignment during incident (Such as, division, wing, battalion, cavalry, ship)"
+                      name="unitAssignmentDuringIncident3"
+                      placeholder="Enter unit assignment during incident"
+                      fieldCounter="(8-4 of 16)"
+                      multiline={true}
+                      rows={4}
+                      limit={300}
+                    />
+
+                    <TextInput
+                      label="Description of the incident"
+                      name="descriptionOfIncident2"
+                      placeholder="Enter description of incident"
+                      fieldCounter="(8-5 of 16)"
+                      multiline={true}
+                      rows={4}
+                      limit={1000}
+                    />
+
+                    <TextInput
+                      label="Medals or citations you received because of the incident"
+                      name="medalReceived2"
+                      placeholder="Enter medal received"
+                      fieldCounter="(8-6 of 16)"
+                    />
+
+                    <br />
+                    <Divider title="Injured/Death Person Information" /> 
+                    <Divider title="First Person's Information" lightTitle /> 
+                    <TextInput
+                      label="First Name"
+                      name="person3FirstName"
+                      placeholder="Enter first name"
+                      fieldCounter="(9-1-1 of 16)"
+                      limit={12}
+                    />
+
+                    <TextInput
+                      label="Last Name"
+                      name="person3LastName"
+                      placeholder="Enter last name"
+                      fieldCounter="(9-1-2 of 16)"
+                      limit={18}
+                    />
+
+                    <TextInput
+                      label="Rank"
+                      name="person3Rank"
+                      placeholder="Enter rank"
+                      fieldCounter="(9-2 of 16)"
+                      limit={4}
+                    />
+
+                    <DateSelectorExtended
+                      label="Date of Injury/Death"
+                      name="injuryDate3"
+                      value={values.injuryDate3}
+                      placeholder="Select Date"
+                      onChange={(val) => setFieldValue('injuryDate3', val)}
+                      fieldCounter="(9-3 of 16)"
+                    />
+
+                    <DropDownExtended
+                      label="Please check one"
+                      name="checkOptions3"
+                      data={checkOptionsData}
+                      fieldCounter="(9-4 of 16)"
+                    />
+
+                    {values.checkOptions3 === 'Other' && (
+                      <TextInput
+                        label="Please specify"
+                        name="checkOptionsOther3"
+                        placeholder="specify other"
+                      />
+                    )}
+
+                    <TextInput
+                      label="Unit assignment during incident(Such as, division, wing, battalion, cavalry, ship)"
+                      name="unitAssignmentDuringIncident4"
+                      placeholder="Enter unit assignment during incident"
+                      fieldCounter="(9-5 of 16)"
+                      multiline={true}
+                      rows={4}
+                      limit={300}
+                    />
+
+                    <Divider title="Second Person's Information" lightTitle /> 
+                    <TextInput
+                      label="First Name"
+                      name="person4FirstName"
+                      placeholder="Enter first name"
+                      fieldCounter="(10-1-1 of 16)"
+                      limit={12}
+                    />
+                    
+                    <TextInput
+                      label="Last Name"
+                      name="person4LastName"
+                      placeholder="Enter last name"
+                      fieldCounter="(10-1-2 of 16)"
+                      limit={18}
+                    />
+
+                    <TextInput
+                      label="Rank"
+                      name="person4Rank"
+                      placeholder="Enter rank"
+                      fieldCounter="(10-2 of 16)"
+                      limit={4}
+                    />
+
+                    <DateSelectorExtended
+                      label="Date of Injury/Death"
+                      name="injuryDate4"
+                      value={values.injuryDate4}
+                      placeholder="Select Date"
+                      onChange={(val) => setFieldValue('injuryDate4', val)}
+                      fieldCounter="(10-3 of 16)"
+                    />
+
+                    <DropDownExtended
+                      label="Please check one"
+                      name="checkOptions4"
+                      data={checkOptionsData}
+                      fieldCounter="(10-4 of 16)"
+                    />
+
+                    {values.checkOptions4 === 'Other' && (
+                      <TextInput
+                        label="Please specify"
+                        name="checkOptionsOther4"
+                        placeholder="specify other"
+                      
+                      />
+                    )}
+
+                    <TextInput
+                      label="Unit assignment during incident(Such as, division, wing, battalion, cavalry, ship)"
+                      name="unitAssignmentDuringIncident5"
+                      placeholder="Enter unit assignment during incident"
+                      fieldCounter="(10-5 of 16)"
+                      multiline={true}
+                      rows={4}
+                      limit={300}
+                    />
+                  </> 
+                </>
+
+                <SectionTitle title="Section III: Remarks" />
+                <> 
+                  <TextInput
+                      label="Remarks"
+                      name="remarks"
+                      placeholder="Enter remarks if any"
+                      fieldCounter="(14 of 16)"
+                      limit={1500}
+                      hasCounter
+                      multiline
+                  />
+                </>
+
+                <SectionTitle title="Section IV: Certification and Signature" />
+                <> 
+                  <p className="text-sm md:text-base leading-relaxed text-gray-700 mb-5">
+    I <span className="font-bold">hereby certify that the information </span>
+    I have given on this form is true and correct to the best of my knowledge and belief.
+                  </p>
+
+
+                    <OptionSelector
+                      name="signatureOption"
+                      options={signatureOption}
+                      multiSelect={false}
+                      isOtherAllowed={false}
+                      lockOption={true}
+                    />
+
+                    <DateSelectorExtended
+                      label="Date Signed"
+                      name="dateSigned"
+                      value={values.dateSigned}
+                      placeholder="Select Date"
+                      onChange={(val) => setFieldValue('dateSigned', val)}
+                      fieldCounter="(16 of 16)"
                     /> 
                 </>
 
