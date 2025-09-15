@@ -27,7 +27,7 @@ const DropDownExtended = ({
         {label && (
           <label
             htmlFor={props.id || name}
-            className="text-sm font-medium text-blue-800"
+            style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
           >
             {label}
           </label>

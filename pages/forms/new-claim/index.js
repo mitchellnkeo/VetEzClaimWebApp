@@ -1190,9 +1190,7 @@ export default function NewClaimForm() {
                           <div>
                             <p
                               className="my-3"
-                              style={{
-                                color: '#035F92',
-                              }}
+                              style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
                             >
                               When did you serve in these locations?
                             </p>
@@ -1244,9 +1242,7 @@ export default function NewClaimForm() {
                           <div>
                             <p
                               className="my-3"
-                              style={{
-                                color: '#035F92',
-                              }}
+                              style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
                             >
                               When did you serve in these locations?
                             </p>
@@ -1301,9 +1297,7 @@ export default function NewClaimForm() {
                       <div>
                         <p
                           className="my-3"
-                          style={{
-                            color: '#035F92',
-                          }}
+                          style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
                         >
                           When were you exposed?
                         </p>
@@ -1654,9 +1648,7 @@ export default function NewClaimForm() {
                         <div>
                           <p
                             className="my-3"
-                            style={{
-                              color: '#035F92',
-                            }}
+                            style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
                           >
                             Obligation term of service
                           </p>

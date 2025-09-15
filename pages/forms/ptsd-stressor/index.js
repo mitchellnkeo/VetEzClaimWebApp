@@ -383,7 +383,7 @@ export default function PTSDStressorForm() {
                 .then(async (res) => {
                   console.log(res.download_url);
                   const faxBody = await getFaxBodyData(
-                    'boardappeal.pdf',
+                    'ptsdform.pdf',
                     false
                   );
                   const faxData = {
@@ -556,9 +556,7 @@ export default function PTSDStressorForm() {
                       <div>
                         <p
                           className="my-3"
-                          style={{
-                            color: '#035F92',
-                          }}
+                          style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
                         >
                               Dates of Unit Assignment
                         </p>
@@ -765,9 +763,7 @@ export default function PTSDStressorForm() {
                       <div>
                         <p
                           className="my-3"
-                          style={{
-                            color: '#035F92',
-                          }}
+                          style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
                         >
                               Dates of Unit Assignment
                         </p>
