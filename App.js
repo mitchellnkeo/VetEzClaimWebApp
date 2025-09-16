@@ -13,6 +13,7 @@ import {
 } from './store/slices/themeConfigSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { requestNotificationPermission, onMessageListener } from './firebase/firebaseNotifications';
 
 function App({ children }) {
   const themeConfig = useSelector((state) => state.themeConfig);
@@ -54,6 +55,19 @@ function App({ children }) {
     themeConfig.locale,
     themeConfig.semidark,
   ]);
+
+
+  useEffect(() => {
+    requestNotificationPermission()
+      .catch(console.error);
+
+    onMessageListener()
+      .then((payload) => {
+        console.log("Foreground message received:", payload);
+        // Show toast or update UI
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <>
