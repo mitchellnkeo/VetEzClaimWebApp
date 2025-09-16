@@ -492,14 +492,14 @@ export default function SubmitToIntentForm() {
                   name="firstName"
                   placeholder="Enter first name"
                   fieldCounter="(1 of 21)"
-                  limit={18}
+                  limit={12}
                 />
                 <TextInput
                   label="Veteran's Last Name"
                   name="lastName"
                   placeholder="Enter last name"
                   fieldCounter="(1-2 of 21)"
-                  limit={12}
+                  limit={18}
                 />
                 <TextInput
                   label="Social Security Number"

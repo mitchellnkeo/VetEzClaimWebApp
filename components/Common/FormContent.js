@@ -39,11 +39,12 @@ export default function FormContent({
           </button>
 
           <button
-            onClick={onSubmit}
-            className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+            onClick={onSubmit} 
+            className="flex items-center gap-2 rounded-md px-4 py-2 text-sm text-white cursor-pointer bg-[#035F92] hover:bg-[#024b70]" 
           >
             <FaArrowRight /> Submit to VA
           </button>
+
         </div>
       </div>
 
