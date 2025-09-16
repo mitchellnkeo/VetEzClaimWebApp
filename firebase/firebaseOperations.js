@@ -5,6 +5,9 @@ import {
   getDoc,
   getDocs,
   collection,
+  query, orderBy,
+  serverTimestamp,
+  deleteDoc
 } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import { formsIdList } from '@/utils/staticData';
@@ -240,4 +243,65 @@ export const getFormHistory = async (uid) => {
     return [];
   }
 };
+
+export const fetchBuddyRequests = async (uid) => {
+  try {
+    const buddyStatementRef = query(
+      collection(db, "buddy_statement", uid, "buddyStatement"),
+      orderBy("createdAt", "desc")
+    );
+
+    const querySnapshot = await getDocs(buddyStatementRef);
+    const fetchedStatements = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    console.log("Fetched statements:", fetchedStatements);
+    return fetchedStatements;
+  } catch (error) {
+    console.error("Error fetching buddy data:", error);
+    return [];
+  }
+};
+
+export const setBuddyRequestData = async (uid, data, docId) => {
+  const fcmToken = localStorage.getItem("fcm_token");
+
+  const buddyStatementData = {
+    ...data,
+    fcm_token: fcmToken || null,
+    status: "email_sent",
+    userId: uid,
+    docId: docId,
+    formId: "Buddy form",
+    createdAt: serverTimestamp(),
+  };
+  console.log("Buddy Request data: >> ", buddyStatementData);
+
+  try {
+    const docRef = doc(db, "buddy_statement", uid, "buddyStatement", docId);
+    await setDoc(docRef, buddyStatementData);
+    console.log("Buddy statement saved successfully!");
+    return true;
+  } catch (error) {
+    console.error("Error saving buddy statement:", error);
+    throw error;
+  }
+};
+
+export const deleteBuddyRequestData = async (uid, docId) => {
+  console.log("Doc Id:", docId);
+  console.log("Uid:", uid);
+  try {
+    const docRef = doc(db, "buddy_statement", uid, "buddyStatement", docId);
+    await deleteDoc(docRef);
+    console.log(`Document '${docId}' deleted for UID '${uid}'.`);
+    return true;
+  } catch (error) {
+    console.error("Error deleting buddy statement:", error);
+    return false;
+  }
+};
+
 

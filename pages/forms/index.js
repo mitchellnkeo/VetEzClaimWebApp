@@ -60,7 +60,7 @@ const FormsMenu = () => {
       name: 'Request Buddy Statement (Form 21-10210)',
       onPress: () => {
         dispatch(setSelectedForm({ id: 'buddy_statement' }));
-        router.push('/forms/menu');
+        router.push('/forms/buddy-requests');
       },
       disabled: !isSubscribed,
     },

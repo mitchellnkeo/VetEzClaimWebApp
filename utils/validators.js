@@ -1731,3 +1731,14 @@ export const TDIUFormValidationSchema = yup.object().shape({
     .string()
     .required('This field is required to save PDF.'),
 });
+
+export const BuddyRequestsValidationSchema = yup.object().shape({
+    witness_first_name: firstNameValidation,
+    witness_last_name: lastNameValidation,
+    witness_primary_email: emailValidation,
+    message: yup.string().matches(validCharactersRegex, {
+      message: 'Must contain valid characters',
+      excludeEmptyString: true
+    }),
+  });
+  

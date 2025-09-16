@@ -522,3 +522,10 @@ export const TdiuFileMap = {
   signature: 'Add Signature on your Profile',
   veteranDateSigned: 'Date Signed',
 };
+
+export const BuddyRequestsFileMap = {
+  witness_first_name: 'Witness First Name',
+  witness_last_name: 'Witness Last Name',
+  witness_primary_email: 'Witness Primary Email',
+  message: 'Information Requested',
+};
