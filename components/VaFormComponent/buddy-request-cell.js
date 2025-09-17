@@ -41,7 +41,8 @@ const BuddyRequestCell = ({
   request, 
   onPress, 
   onCancel, 
-  onView 
+  onView,
+  onRequestModification
 }) => {
   const status = getStatusNumber(request.status);
 
@@ -66,29 +67,74 @@ const BuddyRequestCell = ({
         </div>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 5, alignItems: "flex-end" }}>
+      <div className="flex flex-col gap-1 items-end">
         {status === 0 && (
-          <ButtonComp
-            title="Cancel"
+          <button
             onClick={() => onCancel(request)}
-            style={{ backgroundColor: "#c1272d", color: "#fff", width: 70, height: 30, border: "none", borderRadius: 4 }}
-          />
+            className="bg-danger hover:bg-red-700 text-white rounded px-3 py-1"
+          >
+            Cancel
+          </button>
         )}
-        {status !== 0 && (
-          <ButtonComp
-            title="View"
-            onClick={() => onView(request)}
-            style={{ backgroundColor: "#016092", color: "#fff", width: 70, height: 30, border: "none", borderRadius: 4 }}
-          />
+
+        {status === 1 && (
+          <>
+            <div className="flex flex-row gap-1 items-end">
+              <button
+                onClick={() => onView(request)}
+                className="bg-primary hover:bg-primaryHover text-white rounded px-3 py-1"
+              >
+                View Response
+              </button>
+              <button
+                  onClick={() => onRequestModification(request)}
+                  className=" bg-gray hover:bg-grayHover text-white rounded px-3 py-1"
+                >
+                  Request Changes
+              </button> 
+            </div>
+            <div className="flex flex-row gap-1 items-end">
+              <button
+                onClick={() => onCancel(request)}
+                className="bg-danger hover:bg-red-700 text-white rounded px-3 py-1"
+              >
+                Cancel 
+              </button>
+              <button
+                onClick={() => onPress(request)}
+                className="bg-primary hover:bg-primaryHover text-white rounded px-4 py-1"
+              >
+                Complete & Submit
+              </button>
+            </div>
+          </>
         )}
-        {status !== 0 && status !== 2 && (
-          <ButtonComp
-            title="Complete & Submit"
-            onClick={() => onPress(request)}
-            style={{ backgroundColor: "#016092", color: "#fff", width: 140, height: 30, border: "none", borderRadius: 4 }}
-          />
+
+        {status === 2 && (
+          <> 
+            <button
+              onClick={() => onView(request)}
+              className="bg-primary hover:bg-primaryHover text-white rounded px-3 py-1"
+            >
+             View Submitted Form
+            </button>
+          </>
+        )}
+        
+        {status === 3 && (
+          <>
+            <div className="flex flex-row gap-1 items-end">
+              <button
+                onClick={() => onView(request)}
+                className="bg-primary hover:bg-primaryHover text-white rounded px-3 py-1"
+              >
+                View Response
+              </button>
+            </div>
+          </>
         )}
       </div>
+
     </div>
   );
 };
