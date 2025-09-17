@@ -1740,5 +1740,24 @@ export const BuddyRequestsValidationSchema = yup.object().shape({
       message: 'Must contain valid characters',
       excludeEmptyString: true
     }),
-  });
-  
+});
+
+export const BuddyFormValidationSchema = yup.object().shape({
+  first_name: firstNameValidation,
+  last_name: lastNameValidation,
+  ssn: ssnValidation,
+  claim: yup.boolean(),
+  current_va: vaFileNumberValidation.notRequired(),
+  birthday: yup.string().required('Birthday is required'),
+  insurance_number: yup.string().matches(/^\d+$/, 'Only digits are allowed').notRequired(),
+  street: validStreetCharacters.required('Street is required'),
+  unit_number: unitNumberValidation,
+  city: yup.string().matches(cityRegex, {
+    message: 'Must contain valid characters',
+    excludeEmptyString: true
+  }).required('City is required'),
+  province: yup.string().required('Province is required'),
+  zip_code: zipCodeValidation,
+  phone_number: internationalPhoneValidation,
+  email: emailValidation,
+});
