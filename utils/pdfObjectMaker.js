@@ -1,3 +1,6 @@
+import moment from 'moment';
+import { formatAmount } from './utils';
+
 export const generateSubmitToIntentPdf = async (form) => {
   const infoToPDF = {
     content: {
@@ -2942,10 +2945,95 @@ export const generateTdiuPdfObject = async (form) => {
   return infoToPDF;
 };
 
+export const generateBuddyFormPdfObject = async (data) => {
+  const attachmentKey = 'tpl_eR93yC72xa7cZfcXH4';
+  const withoutAttachmentKey = 'tpl_ea9QqPMHCjStQNfJeX';
+  const documentKey = data?.statement?.length > 6250 ? attachmentKey : withoutAttachmentKey;
+  const infoToPDF = {
+    content: {
+      documentKey: documentKey,
+      f: {
+        page_1: {
+          veterans_first_name: data?.first_name?.slice(0, 12) || '',
+          veterans_middle_name: '',
+          veterans_last_name: data?.last_name?.slice(0, 18) || '',
+          veterans_ssn1: data?.ssn?.slice(0, 3) || '',
+          veterans_ssn2: data?.ssn?.slice(3, 5) || '',
+          veterans_ssn3: data?.ssn?.slice(5, 9) || '',
+          veterans_va_file_number: data?.current_va || '',
+          veterans_month: data?.birthday ? moment(data?.birthday, 'MM/DD/YYYY').format('MM').slice(0, 2) : '',
+          veterans_day: data?.birthday ? moment(data?.birthday, 'MM/DD/YYYY').format('DD').slice(0, 2) : '',
+          veterans_year: data?.birthday ? moment(data?.birthday, 'MM/DD/YYYY').format('YYYY').slice(0, 4) : '',
+          veterans_va_insurance_file_number: data?.insurance_number?.slice(0, 20) || '',
+          veterans_street: data?.street?.slice(0, 30) || '',
+          veterans_unit: data?.unit_number?.slice(0, 5) || '',
+          veterans_city: data?.city?.slice(0, 18) || '',
+          veterans_state: data?.province?.slice(0, 2) || '',
+          veterans_country: data?.country?.slice(0, 2) || '',
+          veterans_zip1: data?.zip_code?.slice(0, 5) || '',
+          veterans_zip2: data?.zip_code?.slice(6, 10) || '',
+          veterans_areacode: data?.phone_number?.slice(0, 3) || '',
+          veterans_phone1: data?.phone_number?.slice(3, 6) || '',
+          veterans_phone2: data?.phone_number?.slice(6, 10) || '',
+          veterans_phoneI: data?.phone_number || '',
+          veterans_email1: data?.email?.slice(0, 20) || '',
+          veterans_email2: data?.email?.slice(20, 40) || '', 
 
-const formatAmount = async (amount) => {
-  if (amount.length < 6) {
-   return amount.padStart(6, '0');
-  }
-  return amount;
-}
+          // Absent on App Form but Present on PDF
+          claimant_first_name:  '',
+          claimant_middle_name: '',
+          claimant_last_name: '',
+          claimant_ssn1: '',
+          claimant_ssn2: '',
+          claimant_ssn3: '',
+          claimant_va_file_number: '',
+          claimant_month: '',
+          claimant_day: '',
+          claimant_year: '',
+          claimant_va_insurance_file_number: '',
+          claimant_street: '',
+          claimant_unit: '',
+          claimant_city: '',
+          claimant_state: '',
+          claimant_country: '',
+          claimant_zip1: '',
+          claimant_zip2: '',
+          claimant_areacode: '',
+          claimant_phone1: '',
+          claimant_phone2: '',
+          claimant_phoneI: '',
+          claimant_email1: '',
+          claimant_email2: '',
+
+
+          statement: data?.statement?.slice(0, 5500) || '',
+          statement1: data?.statement?.slice(5500, 7500 ) || '',
+          see_attachment: data?.statement?.length > 7500 ? 'See Attachment' : '',
+          attachment: data?.statement?.slice(7500) || '', 
+          witness_first_name: data?.witness_first_name?.slice(0, 12) || '',
+          witness_middle_name:  '',
+          witness_last_name: data?.witness_last_name?.slice(0, 18) || '',
+          witness_areacode: data?.witness_phone?.slice(0, 3) || '',
+          witness_phone1: data?.witness_phone?.slice(4, 7) || '',
+          witness_phone2: data?.witness_phone?.slice(8, 12) || '',
+          witness_email1: data?.witness_primary_email?.slice(0, 20) || '',
+          witness_email2: data?.witness_primary_email?.slice(20, 40) || '',
+          rel_vet_cla: data?.relationship === 'Veteran/Claimant' ? true : false,
+          rel_fam_fri: data?.relationship === 'Family/Friend' ? true : false,
+          rel_cow: data?.relationship === 'Coworker/Supervisor' ? true : false,
+          rel_others: data?.relationship === 'Other' ? true : false,
+          other_specify: "",
+
+          digital_signature: data?.signature ? { base64: data?.signature } : { text: {
+            "name": data?.witness_first_name + " " + data?.witness_last_name,
+            "typeface": "Dancing Script"
+          } } ,
+          ds_month: data?.dateSigned ? moment(data?.dateSigned).format('MM').slice(0, 2) : '',
+          ds_day: data?.dateSigned ? moment(data?.dateSigned).format('DD').slice(0, 2) : '',
+          ds_year: data?.dateSigned ? moment(data?.dateSigned).format('YYYY').slice(0, 4) : '',
+        },
+      },
+    },
+  };
+  return infoToPDF;
+};

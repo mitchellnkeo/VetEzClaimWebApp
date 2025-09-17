@@ -32,10 +32,11 @@ export default function InProgressForms() {
   }, [uid]);
 
   const onDraft = async (item) => {
-    router.push({
-      pathname: item.formUrl,
-      query: { 'in-progress': true },
-    });
+    let routerBody = { pathname: item.formUrl }
+    if(item.formId !== 'buddy_statement'){
+      routerBody.query = { 'in-progress': true };
+    } 
+    router.push(routerBody);
   };
 
   const onDiscard = async (item) => {

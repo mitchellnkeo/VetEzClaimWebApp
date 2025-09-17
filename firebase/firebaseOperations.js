@@ -125,7 +125,7 @@ export const getInprogressFormData = async (uid) => {
       inProgressForms.push({
         formId: 'buddy_statement',
         formTitle: 'Buddy Statement',
-        formUrl: '/buddy-statement',
+        formUrl: '/forms/buddy-requests',
         inProgress: true,
       });
     }
@@ -265,13 +265,13 @@ export const fetchBuddyRequests = async (uid) => {
   }
 };
 
-export const setBuddyRequestData = async (uid, data, docId) => {
+export const setBuddyRequestData = async (uid, data, docId, formStatus, recordExists) => {
   const fcmToken = localStorage.getItem("fcm_token");
 
   const buddyStatementData = {
     ...data,
     fcm_token: fcmToken || null,
-    status: "email_sent",
+    status: formStatus,
     userId: uid,
     docId: docId,
     formId: "Buddy form",
@@ -281,7 +281,11 @@ export const setBuddyRequestData = async (uid, data, docId) => {
 
   try {
     const docRef = doc(db, "buddy_statement", uid, "buddyStatement", docId);
-    await setDoc(docRef, buddyStatementData);
+    if (recordExists) {
+      await updateDoc(docRef, buddyStatementData);
+    } else {
+      await setDoc(docRef, buddyStatementData);
+    }
     console.log("Buddy statement saved successfully!");
     return true;
   } catch (error) {
@@ -304,4 +308,41 @@ export const deleteBuddyRequestData = async (uid, docId) => {
   }
 };
 
+
+export const getBuddyFormData = async (uid, docId) => {
+  console.log("uid:", uid);
+  console.log("docId:", docId);
+  try {
+    const docRef = doc(db, "buddy_statement", uid, "buddyStatement", docId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      console.log("No buddy statement found for the given UID and DocID.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error retrieving buddy statement:", error);
+    return null;
+  }
+};
+
+
+export const updateBuddyStatementData = async (uid, data) => {
+  console.log("updateBuddyStatementData : >> ", data);
+  try {
+    const docRef = doc(db, "buddy_statement", uid, "buddyStatement", data.docId);
+    if (data.recordExists) {
+      await updateDoc(docRef, {...data});
+      console.log("Buddy statement updated in Firestore");
+    } else {
+      await setDoc(docRef, { ...data});
+      console.log("Buddy statement created in Firestore");
+    }
+    return true;
+  } catch (error) {
+    console.error("Error uploading buddy statement:", error);
+    return false;
+  }
+};
 

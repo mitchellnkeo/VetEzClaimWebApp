@@ -529,3 +529,17 @@ export const BuddyRequestsFileMap = {
   witness_primary_email: 'Witness Primary Email',
   message: 'Information Requested',
 };
+
+export const BuddyFormFileMap = {
+  first_name: 'Veteran\'s First Name',
+  last_name: 'Veteran\'s Last Name',
+  ssn: 'Social Security Number',
+  birthday: 'Date of Birth',
+  street: 'Street',
+  city: 'City',
+  province: 'Province',
+  country: 'Country',
+  zip_code: 'Zip Code',
+  email: 'Email',
+  claim: 'Claim',
+};
