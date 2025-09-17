@@ -42,7 +42,6 @@ export default function TextInput({
         </div>
       </div>
 
-      {/* Input / Textarea */}
       {!multiline ? (
         <input
           {...field}
@@ -55,6 +54,8 @@ export default function TextInput({
             borderBottom: '1px solid #ccc',
             fontSize: '14px',
             padding: '6px 4px',
+            color: readOnly ? '#777' : '#000', // 👈 grayish if readOnly
+            backgroundColor: readOnly ? '#f9f9f9' : '#fff', // optional softer bg
           }}
           readOnly={readOnly}
         />
@@ -72,10 +73,13 @@ export default function TextInput({
             borderRadius: '5px',
             fontSize: '14px',
             padding: '8px',
+            color: readOnly ? '#777' : '#000', // 👈 grayish if readOnly
+            backgroundColor: readOnly ? '#f9f9f9' : '#fff', // optional softer bg
           }}
           readOnly={readOnly}
         />
       )}
+
 
       {/* Error + Character Counter */}
       <div

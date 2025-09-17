@@ -9,6 +9,7 @@ const DropDownExtended = ({
   data = [],
   hintsMessage,
   isTextFieldEnabled = false,
+  readOnly = false,
   ...props
 }) => {
   const [field, meta, helpers] = useField(name);
@@ -19,6 +20,24 @@ const DropDownExtended = ({
   const handleSelect = (val) => {
     setValue(val);
   };
+
+  const getDisplayName = (val) => {
+    if (!val) return "";
+    const found = data.find((item) => {
+      if (typeof item === "string") return item === val;
+      return (
+        item.value === val ||
+        item.option === val ||
+        item.name === val ||
+        item.abbreviation === val
+      );
+    });
+    if (!found) return val;
+    return typeof found === "string"
+      ? found
+      : found.option || found.name || val;
+  };
+
 
   return (
     <div>
@@ -38,7 +57,11 @@ const DropDownExtended = ({
       </div>
 
       {/* Input + Dropdown */}
-      {isTextFieldEnabled ? (
+      {readOnly ? (
+        <div className="w-full rounded-md border border-gray-200 bg-gray-50 p-2 text-sm text-gray-700">
+          {getDisplayName(value) || "—"}
+        </div>
+      ) : isTextFieldEnabled ? (
         <div className="flex items-center gap-2">
           <textarea
             {...field}

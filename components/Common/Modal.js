@@ -25,7 +25,7 @@ export default function Modal({ open, onClose, children, title }) {
       <div
         role="dialog"
         aria-modal="true"
-        className="relative z-[100000] w-full max-w-lg rounded-lg bg-white p-6 shadow-2xl"
+        className="relative z-[100000] w-full  max-w-[612px] rounded-lg bg-white p-6 shadow-2xl"
       >
         <button
           onClick={onClose}

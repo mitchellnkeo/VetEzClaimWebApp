@@ -1,4 +1,4 @@
-import { FaSave, FaFilePdf, FaArrowRight, FaInfoCircle } from 'react-icons/fa';
+import { FaSave, FaFilePdf, FaArrowRight, FaInfoCircle, FaTimes } from 'react-icons/fa';
 
 export default function FormContent({
   title,
@@ -7,6 +7,8 @@ export default function FormContent({
   onSave,
   onReview,
   onSubmit,
+  isBuddyForm = false,
+
 }) {
   return (
     <div className="relative flex h-screen flex-col">
@@ -19,10 +21,20 @@ export default function FormContent({
         <div className="sticky top-0 z-10 flex justify-center gap-3 rounded-md  p-6 shadow-md">
           <button
             onClick={onViewDetails}
-            className="flex items-center gap-2 rounded-md border px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className={`flex items-center gap-2 rounded-md border px-4 py-2 text-sm 
+              ${isBuddyForm ? 'text-red-600 hover:bg-red-100' : 'text-gray-700 hover:bg-gray-100'}`}
           >
-            <FaInfoCircle /> View Form Details
+            {isBuddyForm ? (
+              <>
+                <FaTimes /> Cancel Form
+              </>
+            ) : (
+              <>
+                <FaInfoCircle /> View Form Details
+              </>
+            )}
           </button>
+
 
           <button
             onClick={onSave}
@@ -42,7 +54,7 @@ export default function FormContent({
             onClick={onSubmit} 
             className="flex items-center gap-2 rounded-md px-4 py-2 text-sm text-white cursor-pointer bg-[#035F92] hover:bg-[#024b70]" 
           >
-            <FaArrowRight /> Submit to VA
+            <FaArrowRight /> {isBuddyForm ? 'Review & Submit' : 'Submit to VA'}
           </button>
 
         </div>
