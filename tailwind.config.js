@@ -15,9 +15,14 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#006092',
+          DEFAULT: '#016092',
           light: '#eaf1ff',
-          'dark-light': 'rgba(67,97,238,.15)',
+          'dark-light': '#016092',
+        },
+        primaryHover: {
+          DEFAULT: '#014a66',
+          light: '#eaf1ff',
+          'dark-light': '#016092',
         },
         secondary: {
           DEFAULT: '#805dca',
@@ -58,6 +63,16 @@ module.exports = {
           DEFAULT: '#ffffff',
           light: '#e0e6ed',
           dark: '#888ea8',
+        },
+        gray: {
+          DEFAULT: '#434545',
+          light: '#f5f5f5',
+          'dark-light': 'rgba(128,128,128,.15)',
+        }, 
+        grayHover: {
+          DEFAULT: '#6d7372',
+          light: '#f5f5f5',
+          'dark-light': 'rgba(128,128,128,.15)',
         },
       },
       fontFamily: {
