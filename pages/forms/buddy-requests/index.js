@@ -1,7 +1,7 @@
 import FrontLayout from '@/components/layouts/FrontLayout';
 import { useRouter } from 'next/router';
 import { fetchBuddyRequests, setBuddyRequestData, deleteBuddyRequestData } from '@/firebase/firebaseOperations';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Loader from '@/components/Common/Loader';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import { FaPlusCircle, FaSync } from 'react-icons/fa';
@@ -15,76 +15,50 @@ import { useDispatch, useSelector } from 'react-redux';
 import ToastModal from '@/components/Common/ToastModal';
 import { toast } from 'react-toastify';
 import BuddyRequestCell from '@/components/VaFormComponent/buddy-request-cell';
-import {
-    sendDocToWitness,
-    sendMessageToWitness,
-  } from '@/store/slices/buddySlice';
+import { sendDocToWitness } from '@/store/slices/buddySlice';
+import OptionSelector from '@/components/Common/OptionSelector';
+import { setSelectedBuddyStatement } from '@/store/slices/formSlice';
+import SectionTitle from '@/components/Common/SectionTitle';
+import Divider from '@/components/Common/Divider';
+import DropDownExtended from '@/components/Common/DropDownExtended';
+import { StateData } from '@/utils/staticData';
 
 
 export default function BuddyRequests() {
   const pageTitle = 'Buddy Requests';
   const router = useRouter();
+  const sigCanvas = useRef(null);
   const dispatch = useDispatch();
   const { user, uid } = useSelector((state) => state.auth);
-  const [buddyRequests, setBuddyRequests] = useState([
-        {
-          docId: "92n7ij3j09vv27auhql5g",
-          fcm_token: "...",
-          formId: "Buddy form",
-          id: "92n7ij3j09vv27auhql5g",
-          message: "Hello Rob",
-          status: "email_sent",
-          userId: "sg7PGldSsKaFyLVzx01PfIv54Zi1",
-          witness_first_name: "Rob",
-          witness_last_name: "Start",
-          witness_primary_email: "testy8519@gmail.com"
-        },
-        {
-          docId: "92n7ij3j09vv27auhql6h",
-          id: "92n7ij3j09vv27auhql6h",
-          message: "Hi John",
-          status: "completed",
-          witness_first_name: "John",
-          witness_last_name: "Doe",
-          witness_primary_email: "john@example.com"
-        }, 
-        {
-            docId: "92n7ij3j09vv27auhql6h",
-            id: "92n7ij3j09vv27auhql6h",
-            message: "Hi John",
-            status: "witness_submitted",
-            witness_first_name: "John",
-            witness_last_name: "Doe",
-            witness_primary_email: "john@example.com"
-          }, {
-            docId: "92n7ij3j09vv27auhql6h",
-            id: "92n7ij3j09vv27auhql6h",
-            message: "Hi John",
-            status: "modification_requested",
-            witness_first_name: "John",
-            witness_last_name: "Doe",
-            witness_primary_email: "john@example.com"
-          }
-    ]);
+  const [buddyRequests, setBuddyRequests] = useState([]);
   const [open, setOpen] = useState(false)
   const [responseOpen, setResponseOpen] = useState(false)
-  const [completeFormOpen, setCompleteFormOpen] = useState(false)
+  const [requestModificationOpen, setRequestModificationOpen] = useState(false)
+  const [openCompleteFormModal, setOpenCompleteFormModal] = useState(false)
+  const [requestChangesToastOpen, setRequestChangesToastOpen] = useState(false)
   const [toastOpen, setToastOpen] = useState(false);
   const [outerToastOpen, setOuterToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
   const [isloading, setIsLoading] = useState(false);
+  const [changeText, setChangeText] = useState("");
+  const [messageError, setMessageError] = useState("");
   const [selectedRequest, setSelectedRequest] = useState({
-    witness_response: '',
+    dateSigned: '',
+    docId: '',
+    id: '',
+    message: '',
+    relationship: '',
+    signature: '',
+    statement: '',
+    status: '',
+    userId: '',
     witness_first_name: '',
     witness_last_name: '',
+    witness_phone: '',
     witness_primary_email: '',
-    status: '',
-    witness_relationship: '',
-    witness_signature: '',
-    witness_date_signed: '',
-    witness_certify: false,
-    message: '',
+    witness_secondary_email: '',
   })
+
 
 
   const [initialValues, setInitialValues] = useState({
@@ -112,7 +86,7 @@ export default function BuddyRequests() {
 
   useEffect(() => {
     if (!uid) return;
-   // fetchForms();
+    fetchForms();
   }, [uid]);
 
   const onCancel = async (request) => {
@@ -145,29 +119,90 @@ export default function BuddyRequests() {
 
   const onView = async (request) => {
     console.log("onView >> ", request);
-    setSelectedRequest(
-        {
-            witness_response: 'LoremipsumdolorsitametconsecteturadipiscingelitSeddoeiusmodtemporincididuntutlaboreetdoloremagnaaliquaUtEnimadminimveniamquisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequatDuisautemvelEumiriuredolorinhendreritinvolutpatvelitesse molestie consequatvelillumdoloreeufugiatnullafacilisisatveroerosetaccumsanetjustoodioDignissimquiblanditpraesentluptatumzzril delenitaugue duis doloretefeugaitnullafacilisiLoremipsumdolorsitamet consectetueradipiscingelitAeneancommodo ligulaeget dolorAeneanmassaCumsociisnatoquepenatibusetmagnisdisparturient montesnascetur ridiculus musDonecquamfelisultriciesnec pellentesqueeupretiumquissemNullaconsequatmassaquisenimDonec pedejustofringillavelaliquetnec vulputate eget arcuInenimjusto rhoncusutimperdietavenenatisvitaejustoNullamdictumfeliseu pede mollis pretiumInteger tinciduntCrasdapibusVivamus elementum semper nisiAenean vulputateeleifend tellusAenean leo ligula porttitor euconsequatvitaeeleifendac enimAliquameratvolutpatMaurisnequelaciniautTellusdoloreu.',
-            witness_first_name: request.witness_first_name,
-            witness_last_name: request.witness_last_name,
-            witness_primary_email: request.witness_primary_email,
-            message: request.message,
-            status: request.status,
-            witness_relationship: request.witness_relationship,
-            witness_signature: request.witness_signature,
-            witness_date_signed: request.witness_date_signed,
-            witness_certify: request.witness_certify,
-        }
-    );
+    setSelectedRequest({...request});
     if(request.status === "witness_submitted" || request.status === "modification_requested") {
         setResponseOpen(true);
     } else if(request.status === "completed") {
-        setCompleteFormOpen(true);
+        setOpenCompleteFormModal(true);
     }
   };
 
   const onPress = async (request) => {
     console.log("onPress >> ", request);
+    dispatch(setSelectedBuddyStatement(request));
+    router.push({ pathname: '/forms/buddy-form'});
+  };
+
+  const onRequestModification = async (request) => {
+    console.log("onRequestModification >> ", request);
+    setSelectedRequest({...request});
+    setRequestModificationOpen(true);
+  };
+
+  const onRequestChangesAction = (e) => {
+    e.preventDefault();
+    if (!validateMessage(changeText.trim())) {
+        toast.error("Please enter a meaningful message");
+        return;
+    }
+
+    console.log("Submitted message:", changeText);
+
+    setToastConfig({
+        title: 'VetEZ Claim',
+        message: `Are you sure you want to send modification request to your witness?`,
+        primaryButtonText: 'Sure',
+        primaryButtonAction: async () => {
+            setRequestChangesToastOpen(false);
+            setRequestModificationOpen(false);
+            await sendMessageToWitness(changeText);
+        },
+        secondaryButtonText: 'Cancel',
+        secondaryButtonAction: () => {
+            setRequestChangesToastOpen(false);
+        },
+    });
+    setRequestChangesToastOpen(true);
+  };
+
+
+  const sendMessageToWitness = async (message) => {
+    setIsLoading(true);
+    try {
+
+    const docId = selectedRequest.docId;
+    const sendData = {
+        message: message,
+        witness_primary_email: selectedRequest.witness_primary_email,
+        firebase_document_id: docId,
+        url: `https://admin.vetezclaim.com/buddy-statement?doc_id=${docId}&uid=${uid}`,
+    };
+    
+    const response = await dispatch(sendDocToWitness(sendData)).unwrap(); 
+
+    console.log("Response payload: ", response);
+
+    console.log(">>>> Saving buddy request to Firebase");
+    await setBuddyRequestData(uid, selectedRequest, docId, "modification_requested", true);
+    await fetchForms(false);
+    toast.success("Modification request sent to witness successfully");
+
+    } catch (error) {
+    console.error("Error sending request:", error);
+    toast.error("Failed to send email to witness. Please try again later.");
+    } finally {
+    setIsLoading(false);
+    }
+  };
+
+  const validateMessage = (text) => {
+    const meaningfulTextPattern = /[a-zA-Z]{2,}/;  
+    if (!meaningfulTextPattern.test(text)) {
+        setMessageError('Please enter a meaningful message');
+        return false;
+    }
+    setMessageError('');
+    return true;
   };
 
   const requestModal = (
@@ -220,7 +255,7 @@ export default function BuddyRequests() {
                         console.log("Response payload: ", response);
                     
                         console.log(">>>> Saving buddy request to Firebase");
-                        await setBuddyRequestData(uid, values, docId);
+                        await setBuddyRequestData(uid, values, docId, "email_sent", false);
                         await fetchForms(false);
                         toast.success("Request sent to witness successfully");
                     
@@ -340,9 +375,25 @@ export default function BuddyRequests() {
   const responseViewModal = (
     <div>
         <Modal open={responseOpen} onClose={() => setResponseOpen(false)} title="Witness Response">
-        <div className="max-h-[85vh] overflow-y-auto">
+        <div className="max-h-[88vh] overflow-y-auto">
                 <Formik initialValues={selectedRequest}>
-                {(
+                {({
+                    values,
+                    setValues,
+                    setFieldValue,
+                    errors,
+                    touched,
+                    setTouched,
+                    validateForm,
+                }) => {
+
+                useEffect(() => {
+                    if (sigCanvas.current && values.signature) {
+                          sigCanvas.current.fromDataURL(values.signature); 
+                    }
+                }, [values.signature]);
+
+                return (
                         <div className="p-1"> 
                             <Form className="space-y-4">
                                 <ToastModal
@@ -350,10 +401,267 @@ export default function BuddyRequests() {
                                     isOpen={toastOpen}
                                     onClose={() => setToastOpen(false)}
                                 />  
+                                {values.statement && (     
+                                    <TextInput  
+                                        label="Statement of Witness"
+                                        name="statement"
+                                        multiline
+                                        readOnly
+                                    />
+                                )}
+                                {values.witness_first_name && (
+                                    <TextInput
+                                        label="Witness's First Name"
+                                        name="witness_first_name"
+                                        readOnly
+                                    />
+                                )}
+                                {values.witness_last_name && (
+                                    <TextInput
+                                        label="Witness's Last Name"
+                                        name="witness_last_name"
+                                        readOnly
+                                    />
+                                )}
+                                {values.witness_phone && (
+                                    <TextInput
+                                        label="Witness's Phone Number"
+                                        name="witness_phone"
+                                        readOnly
+                                    />
+                                )}
+                                {values.witness_primary_email && (
+                                    <TextInput
+                                        label="Witness's Email Address" 
+                                        name="witness_primary_email"
+                                        readOnly
+                                    />
+                                )}
+                                {values.relationship && (
+                                    <TextInput
+                                        label="Relationship to Veteran"
+                                        name="relationship"
+                                        readOnly
+                                    />
+                                )}
+                                {values.signature && (
+                                <div className="w-full border border-gray-300 rounded-lg bg-gray-50 shadow-sm">
+                                    <img
+                                    src={values.signature}
+                                    alt="Signature"
+                                    className="w-full h-auto bg-white rounded-lg object-contain"
+                                    />
+                                </div>
+                                )}
+                                {values.dateSigned && (
+                                    <TextInput
+                                        label="Date Signed"
+                                        name="dateSigned"
+                                        readOnly
+                                    />
+                                )}
+                                <br />
+                                {values.certify && (
+                                  <OptionSelector
+                                    name="signatureOption"
+                                    options={[
+                                         {
+                                           option: 'I certify that the information provided is true and correct to the best of my knowledge.',
+                                           isSelected: values.certify,
+                                         },
+                                       ]}
+                                    multiSelect={false}
+                                    isOtherAllowed={false}
+                                    lockOption={true}
+                                  />
+                                  
+                                )}
+                            </Form>
+                        </div>
+                    );
+                }}
+                </Formik>
+            </div>
+            
+        </Modal>
+    </div>
+  )
 
+  const requestChangesModal = (
+    <div>
+        <Modal open={requestModificationOpen} onClose={() => {
+            setRequestModificationOpen(false)
+            setChangeText("")
+            setMessageError("")
+        }} title="Request Changes">
+            <ToastModal
+                {...toastConfig}
+                isOpen={requestChangesToastOpen}
+                onClose={() => setRequestChangesToastOpen(false)}
+            />  
+            <div className="max-h-[90vh] overflow-y-auto">
+                <div className="p-1"> 
+                    <form onSubmit={onRequestChangesAction} className="space-y-4">
+                        <textarea
+                            value={changeText}
+                            onChange={(e) => {
+                                setChangeText(e.target.value);
+                                validateMessage(e.target.value);
+                            }}
+                            placeholder="Write a meaningful change request to your witness."
+                            rows={4}
+                            className={`w-full border border-gray-300 rounded-md p-2 text-sm text-black bg-white`}
+                        />
+                        {messageError && (
+                            <p className="text-red-500 text-sm">{messageError}</p>
+                        )}
+
+                        <button
+                            type="submit"
+                            className="bg-primary text-white px-4 py-2 rounded hover:bg-primaryHover"
+                        >
+                            Send
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </Modal>
+    </div>
+  )
+
+  const completeFormModal = (
+    <Modal open={openCompleteFormModal} onClose={() => setOpenCompleteFormModal(false)} title="Submitted Form">
+        <div className="max-h-[89vh] overflow-y-auto">
+            <Formik 
+            initialValues={selectedRequest}
+            >
+            {({
+                values,
+            }) => {
+                return (
+                    <div className="p-1"> 
+                        <Form className="space-y-4">
+                            <SectionTitle title="Section I:  Veteran's Identification Information" />
+                            <> 
+                                <TextInput
+                                    label={`Veteran's First Name`}
+                                    name="first_name"
+                                    placeholder="Enter first name"
+                                    limit={12}
+                                    readOnly
+                                />
+                                <TextInput
+                                    label="Veteran's Last Name"
+                                    name="last_name"
+                                    placeholder="Enter file number"
+                                    limit={18}
+                                    readOnly
+                                />
+                                <TextInput
+                                    label="Social Security Number"
+                                    name="ssn"
+                                    placeholder="Enter ssn"
+                                    readOnly
+                                    limit={9}
+                                />
+                                <TextInput
+                                    label="VA File Number"
+                                    name="current_va"
+                                    placeholder="Enter va file number"
+                                    readOnly
+                                    limit={9}
+                                    
+                                />
+                                                
+                                <TextInput
+                                    label="Date of Birth"
+                                    name="birthday"
+                                    readOnly
+                                />
+                                <TextInput
+                                    label="VA Insurance File Number"
+                                    name="insurance_number"
+                                    placeholder="Enter insurance number"
+                                    readOnly
+                                    limit={20}
+                                />
+
+
+                                <Divider title="Mailing Address" />
+                                <TextInput
+                                    label="No. & Street"
+                                    name="street"
+                                    placeholder="Enter street"
+                                    readOnly
+                                    limit={30}
+                                />
+                                <TextInput
+                                    label="Apt./Unit Number"
+                                    name="unit_number"
+                                    placeholder="Enter apt/unit number"
+                                    readOnly
+                                    limit={5}
+                                />
+                                <TextInput
+                                    label="City"
+                                    name="city"
+                                    placeholder="Enter city"
+                                    readOnly
+                                    
+                                />
+                                <DropDownExtended
+                                    label="State/Province"
+                                    name="province"
+                                    data={StateData}
+                                    readOnly
+                                />
+                                <TextInput
+                                    label="Country"
+                                    name="country"
+                                    
+                                    readOnly
+                                />
+                                <TextInput
+                                    label="ZIP Code/Postal Code"
+                                    name="zip_code"
+                                    placeholder="Enter zip/postal code"
+                                    readOnly
+                                    limit={10}
+                                />
+                                <TextInput
+                                    label="International Telephone Number"
+                                    name="phone_number"
+                                    placeholder="Enter international telephone number"
+                                    readOnly
+                                    
+                                />
+
+                                <TextInput
+                                    label="Email Address"
+                                    name="email"
+                                    placeholder="Enter email"
+                                    readOnly
+                                />
+                                <br /> 
+
+                                <OptionSelector
+                                    name="receivingEmailOpt"
+                                    options={values.receivingEmailOpt}
+                                    multiSelect={true}
+                                    isOtherAllowed={false}
+                                    readOnly
+                                    lockOption={true}
+                                />
+                                <br /> 
+                                <br /> 
+                            </>
+                
+                            <SectionTitle title="Section II:  Witness's Response" />
+                            <>
+                                
                                 <TextInput  
                                     label="Statement of Witness"
-                                    name="witness_response"
+                                    name="statement"
                                     multiline
                                     readOnly
                                 />
@@ -363,14 +671,14 @@ export default function BuddyRequests() {
                                     readOnly
                                 />
                                 <TextInput
-                                    label="Witness's Last Name"
-                                    name="witness_last_name"
-                                    readOnly
+                                        label="Witness's Last Name"
+                                        name="witness_last_name"
+                                        readOnly
                                 />
                                 <TextInput
-                                    label="Witness's Phone Number"
-                                    name="witness_phone"
-                                    readOnly
+                                        label="Witness's Phone Number"
+                                        name="witness_phone"
+                                        readOnly
                                 />
                                 <TextInput
                                     label="Witness's Email Address" 
@@ -378,44 +686,48 @@ export default function BuddyRequests() {
                                     readOnly
                                 />
                                 <TextInput
-                                    label="Witness's Relationship"
-                                    name="witness_relationship"
+                                    label="Relationship to Veteran"
+                                    name="relationship"
                                     readOnly
                                 />
+                                
+                                <div className="w-full border border-gray-300 rounded-lg bg-gray-50 shadow-sm">
+                                    <img
+                                    src={values.signature}
+                                    alt="Signature"
+                                    className="w-full h-auto bg-white rounded-lg object-contain"
+                                    />
+                                </div>
+                                
                                 <TextInput
-                                    label="Witness's Signature"
-                                    name="witness_signature"
+                                    label="Date Signed"
+                                    name="dateSigned"
                                     readOnly
                                 />
-                                <TextInput
-                                    label="Witness's Date Signed"
-                                    name="witness_date_signed"
-                                    readOnly
+                                
+                                <br />
+                                
+                                <OptionSelector
+                                    name="signatureOption"
+                                    options={[
+                                        {
+                                        option: 'I certify that the information provided is true and correct to the best of my knowledge.',
+                                        isSelected: values.certify || false,
+                                        },
+                                    ]}
+                                    multiSelect={false}
+                                    isOtherAllowed={false}
+                                    lockOption={true}
                                 />
-                                <TextInput
-                                    label="Witness's Certify"
-                                    name="witness_certify"
-                                    readOnly
-                                />
-                            </Form>
-                        </div>
-                    )
-                }
-                </Formik>
-            </div>
-            
-        </Modal>
-    </div>
+                            </>
+                        </Form>
+                    </div>
+                )
+            }}
+            </Formik>
+        </div>
+    </Modal>
   )
-
-  const completeFormModal = (
-    <div>
-        <Modal open={completeFormOpen} onClose={() => setCompleteFormOpen(false)} title="Complete Form">
-
-        </Modal>
-    </div>
-  )
-
 
   return (
     <>
@@ -452,7 +764,7 @@ export default function BuddyRequests() {
                             onClick={() => {
                                 setOpen(true)
                             }}
-                            className="flex items-center gap-2 rounded-md px-6 py-2 text-sm text-white cursor-pointer bg-[#035F92] hover:bg-[#024b70]"
+                            className="flex items-center gap-2 rounded-md px-6 py-2 text-sm text-white cursor-pointer bg-primary hover:bg-primaryHover"
                         >
                             <FaPlusCircle /> New Buddy Request
                         </button>
@@ -461,6 +773,7 @@ export default function BuddyRequests() {
             </div>
             {requestModal}
             {responseViewModal}
+            {requestChangesModal}
             {completeFormModal}
             <div className="mt-10 space-y-4">
                 {buddyRequests.length > 0 ? (
@@ -476,6 +789,9 @@ export default function BuddyRequests() {
                         }}
                         onView={(request)=>{
                             onView(request);
+                        }}
+                        onRequestModification={(request)=>{
+                            onRequestModification(request);
                         }}
                     />
                 ))
