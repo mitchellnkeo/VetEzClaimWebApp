@@ -11,15 +11,8 @@ export const deltCookie = () => {
   deleteCookie("user_access_token");
 };
 
-export const getAccessToken = async () => {
-  const accessToken = getCookie("user_access_token");
-
-  if (accessToken && isTokenValid(accessToken)) {
-    return accessToken;
-  }
-  Router.push(
-    `/logout?redirectUrl=${encodeURIComponent(Router.router.asPath)}`
-  );
+export const getAccessToken = () => {
+  return getCookie("user_access_token") || null;
 };
 
 const isTokenValid = (token) => {

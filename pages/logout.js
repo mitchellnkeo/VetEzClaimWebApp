@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import AuthLayout from '@/components/layouts/AuthLayout';
 import { logoutUser } from '@/store/slices/authSlice';
+import { logoutRevenueCat } from '@/store/slices/revenueCatSlice';
 
 const Logout = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const Logout = () => {
   useEffect(() => {
     dispatch(logoutUser({}))
       .then(() => {
+        dispatch(logoutRevenueCat());
         window.location.replace(
           redirectUrl ? `/login?redirectUrl=${redirectUrl}` : `/login`
         );
