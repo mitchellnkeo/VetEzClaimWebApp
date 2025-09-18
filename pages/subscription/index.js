@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import Loader from '@/components/Common/Loader'; 
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import { revenueCatManager } from '@/services/subscriptionService';
+import { PurchasesError, ErrorCode } from "@revenuecat/purchases-js";
+import { toast } from 'react-toastify';
 
 
 export default function Subscription() {
@@ -12,29 +14,41 @@ export default function Subscription() {
   const { user, uid } = useSelector((state) => state.auth);
   const [isloading, setIsLoading] = useState(false);
   const { isSubscribed } = useSelector((state) => state.revenueCat);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSubscribedStatus, setIsSubscribedStatus] = useState(false);
+
   console.log('>> Subscription :: isSubscribed:', isSubscribed);
   console.log('>> Subscription :: user:', user);
   console.log('>> Subscription :: uid:', uid);
+
+  const openDialog = () => setIsOpen(true);
+  const closeDialog = () => setIsOpen(false);
+
+  useEffect(() => {
+    if (isSubscribed) {
+      setIsSubscribedStatus(true);
+    }
+  }, [isSubscribed]);
+  
 
   const handleSubscribeClick = async () => {
     setIsLoading(true);
     try {
       // Call the singleton purchase function
-      const checkoutUrl = await revenueCatManager.handleSubscribe();
-
-      console.log('>> checkoutUrl:', checkoutUrl);
-
-      // Optional: open the checkout URL in new tab
-      window.open(checkoutUrl, '_blank');
-
-    } catch (err) {
-      console.error("Subscription failed:", err);
-      alert("Subscription failed. Please try again.");
+      await revenueCatManager.handleSubscribe();
+      setIsSubscribedStatus(true);
+      openDialog()
+    } catch (err) {    
+      console.error('>> err:', err);
+      if (err instanceof PurchasesError && err.errorCode === ErrorCode.UserCancelledError) {
+        toast.error("Subscription cancelled.");
+      } else {
+        toast.error("Subscription failed. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
   };
-
 
   const handleTermsAndConditions = () => {
     console.log('Terms and Conditions');
@@ -45,7 +59,6 @@ export default function Subscription() {
     console.log('Explore Forms');
     router.push('/forms');
   }
-
 
   const subscribedMessage = (
     <div className="w-full p-6 mt-6 bg-green-100 border-l-4 border-green-500 rounded-lg">
@@ -59,6 +72,28 @@ export default function Subscription() {
             Explore VA Forms
         </button>
     </div>
+  )
+
+  const subscriptionDialog = (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white rounded-2xl shadow-lg p-6 max-w-sm w-full text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            🎉 Congratulations!
+          </h2>
+          <p className="text-gray-700 mb-4">
+            You’ve successfully subscribed! Let’s explore VA forms and unlock more features.
+          </p>
+          <button
+            onClick={() => {
+              closeDialog();
+              window.location.replace('/forms');
+            }}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+          >
+            OK
+          </button>
+        </div>
+      </div>
   )
 
   return (
@@ -80,7 +115,9 @@ export default function Subscription() {
             </div>
         </div>
 
-        {isSubscribed && subscribedMessage }
+        {isOpen && subscriptionDialog}
+
+        {isSubscribedStatus && subscribedMessage }
         <div className=" max-w-4xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
             <div className="bg-primary text-white p-6 rounded-lg">
                 <h3 className="font-semibold text-lg mb-4">Includes ability to:</h3>

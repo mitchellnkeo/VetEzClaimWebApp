@@ -86,6 +86,7 @@ class RevenueCatManager {
         console.error("No default offering found");
         return [];
       }
+      console.log('>> defaultOffering:', defaultOffering);
       return defaultOffering.availablePackages || [];
     } catch (err) {
       console.error("Error fetching packages:", err);
@@ -93,30 +94,31 @@ class RevenueCatManager {
     }
   }
 
-  // Handle subscribe button click
   async handleSubscribe() {
     try {
       const packages = await this.getAvailablePackages();
-  
       if (!packages || packages.length === 0) {
         throw new Error("No available packages found");
       }
-  
-      // Pick the first package if there are one or more
+
       const selectedPackage = packages[0];
-  
-      // Start purchase flow (Stripe checkout URL returned)
-      const { customerInfo, checkoutUrl } = await this.purchases.purchasePackage(
-        selectedPackage
-      );
-  
-      this.customerInfo = customerInfo;
-      return checkoutUrl;
-    } catch (err) {
-      console.error("Error initiating purchase:", err);
-      throw err;
+
+      // Web Billing → returns checkoutUrl
+      const { customerInfo, checkoutUrl } = await Purchases.getSharedInstance().purchase({
+        rcPackage: selectedPackage,
+      });
+      
+      if (checkoutUrl) {
+        window.open(checkoutUrl, "_self");
+        return null; // redirect will take over
+      }
+
+    } catch (e) {
+      throw e;
     }
   }
+
+
 }
 
 // Export singleton instance
