@@ -1,37 +1,33 @@
 import { NextResponse } from 'next/server';
 
-const publicRoutes = [
-  'buddy-statement',
-  'login',
-  'registration',
-  'verify-account',
-  'forgot-password',
-  'reset-password',
-];
-// const privateRoutes = [""];
-const privateRoutes = ['', 'profile'];
+// List of paths that don't require authentication
+const authExemptPaths = ['/login', '/registration', '/forgot-password', '/reset-password'];
 
-export function middleware(request, response) {
-  let accessToken = request.cookies.get('user_access_token')?.value;
+export async function middleware(request) {
   const path = request.nextUrl.pathname;
-  const firstRoutePath = path.substring(1).split('/')[0];
+  const accessToken = request.cookies.get('user_access_token')?.value;
 
-  if (!accessToken && privateRoutes.includes(firstRoutePath) && firstRoutePath != 'buddy-statemen' ) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  } else if (accessToken && publicRoutes.includes(firstRoutePath)) {
-    return NextResponse.redirect(new URL('/', request.url));
+  // Allow access to auth-exempt paths
+  if (authExemptPaths.some(exemptPath => path.startsWith(exemptPath))) {
+    // If user is already logged in, redirect to dashboard
+    if (accessToken) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    return NextResponse.next();
   }
+
+  // For all other paths, require authentication
+  if (!accessToken) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  // User is authenticated, allow access
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    '/',
-    '/buddy-statement',
-    '/login',
-    '/registration/:path*',
-    '/verify-account/:path*',
-    '/forgot-password',
-    '/reset-password/:path*',
-    '/profile/:path*',
+    // Match all paths except _next, api, and static files
+    '/((?!_next/|api/|.*\\.).*)' 
   ],
 };

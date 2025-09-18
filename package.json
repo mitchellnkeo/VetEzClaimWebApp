@@ -20,6 +20,7 @@
     "@mantine/hooks": "^5.10.5",
     "@next/font": "13.1.2",
     "@reduxjs/toolkit": "^1.9.1",
+    "@revenuecat/purchases-js": "^1.14.0",
     "@tippyjs/react": "^4.2.6",
     "@x1mrdonut1x/nouislider-react": "^3.4.3",
     "apexcharts": "^5.3.3",
