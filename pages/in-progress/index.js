@@ -6,10 +6,12 @@ import { useEffect, useState } from 'react';
 import Loader from '@/components/Common/Loader';
 import { postFormData } from '@/firebase/firebaseOperations';
 import Breadcrumb from '@/components/Common/Breadcrumb';
+import { toast } from 'react-toastify';
 
 export default function InProgressForms() {
   const router = useRouter();
   const { user, uid } = useSelector((state) => state.auth);
+  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [inprogressForms, setInprogressForms] = useState([]);
   const [isloading, setIsLoading] = useState(false);
 
@@ -32,6 +34,10 @@ export default function InProgressForms() {
   }, [uid]);
 
   const onDraft = async (item) => {
+    if (!isSubscribed) {
+      toast.success('Subscribe Now');
+      return;
+    }
     let routerBody = { pathname: item.formUrl }
     if(item.formId !== 'buddy_statement'){
       routerBody.query = { 'in-progress': true };
@@ -40,6 +46,10 @@ export default function InProgressForms() {
   };
 
   const onDiscard = async (item) => {
+    if (!isSubscribed) {
+      toast.success('Subscribe Now');
+      return;
+    }
     setIsLoading(true);
     await postFormData({
       docName: item.formId,
