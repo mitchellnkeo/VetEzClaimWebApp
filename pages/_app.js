@@ -5,6 +5,8 @@ import { useEffect } from 'react';
 import { initializeRevenueCat } from '../store/slices/revenueCatSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAccessToken } from '../helpers/sessionHelper';
+import { revenueCatManager } from '../services/subscriptionService';
+import { updateSubscriptionStatus } from '../store/slices/revenueCatSlice';
 
 import { appWithI18Next } from 'ni18n';
 import { ni18nConfig } from '../ni18n.config.js';
@@ -17,7 +19,24 @@ import '../styles/tailwind.css';
 // Separate component to use Redux hooks
 const RevenueCatInitializer = ({ children }) => {
   const dispatch = useDispatch();
-  const { isInitialized } = useSelector((state) => state.revenueCat);
+  const { isInitialized, isSubscribed } = useSelector((state) => state.revenueCat);
+
+  const startSubscriptionPolling = (interval = 5000) => {
+    setInterval(async () => {
+      try {
+        const status = revenueCatManager.getCurrentStatus(); // should return { isPremium: boolean }
+        const statusIsPremium = Boolean(status?.isPremium);
+  
+        console.log('>> Polling status:', isSubscribed, 'isPremium:', statusIsPremium);
+  
+        if (isSubscribed !== statusIsPremium) {
+          dispatch(updateSubscriptionStatus(statusIsPremium));
+        }
+      } catch (error) {
+        console.error('Error polling subscription status:', error);
+      }
+    }, interval);
+  };
 
   useEffect(() => {
     const accessToken = getAccessToken();
@@ -27,11 +46,13 @@ const RevenueCatInitializer = ({ children }) => {
     
     if (accessToken) {
       dispatch(initializeRevenueCat(accessToken));
+      startSubscriptionPolling();
     }
   }, [dispatch, isInitialized]);
 
   return children;
 };
+
 
 const App = ({ Component, pageProps }) => {
   return (

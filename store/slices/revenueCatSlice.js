@@ -53,15 +53,16 @@ const revenueCatSlice = createSlice({
       state.error = null;
     },
     updateSubscriptionStatus: (state, action) => {
+      console.log('>> updateSubscriptionStatus:', action.payload);
       state.isSubscribed = action.payload;
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(initializeRevenueCat.fulfilled, (state, action) => {
-        console.log('>> initializeRevenueCat.fulfilled:', action.payload);
+        console.log('>> initializeRevenueCat.fulfilled:', action.payload.isSubscribed);
         state.isInitialized = true;
-        state.isSubscribed = action.payload;
+        state.isSubscribed = action.payload.isSubscribed || false;
         state.error = null;
       })
       .addCase(initializeRevenueCat.rejected, (state, action) => {
@@ -71,7 +72,7 @@ const revenueCatSlice = createSlice({
         state.isInitialized = false;
         state.isSubscribed = false;
         state.error = null;
-      });
+      })
   },
 });
 
