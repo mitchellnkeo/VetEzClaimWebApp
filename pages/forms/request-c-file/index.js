@@ -23,6 +23,7 @@ import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import Breadcrumb from '@/components/Common/Breadcrumb';
+import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 
 
@@ -149,6 +150,7 @@ export default function SubmitToIntentForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
   const [recordExists, setRecordsExists] = useState(false);
+  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
   const [urlDocspring, setUrlDocspring] = useState('');
@@ -241,6 +243,7 @@ export default function SubmitToIntentForm() {
         preTitle="Form Menu"
         currentTitle="Request C-File/DD 214 (Form 20-10206)"
       />
+      {!isSubscribed && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={RequestCFileValidation}
@@ -379,6 +382,7 @@ export default function SubmitToIntentForm() {
 
           useEffect(() => {
             if (!router.isReady) return;
+            if (!isSubscribed) return;
             loadData();
           }, [uid, router.isReady, router.query]);
 

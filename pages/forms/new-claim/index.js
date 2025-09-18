@@ -25,6 +25,7 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { ErrorMessage } from 'formik';
 import Breadcrumb from '@/components/Common/Breadcrumb';
+import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const programData = [
   'FDC Program',
@@ -180,6 +181,7 @@ const poaSignatureOption = [
 export default function NewClaimForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
+  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [recordExists, setRecordsExists] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
@@ -342,6 +344,7 @@ export default function NewClaimForm() {
         preTitle="Form Menu"
         currentTitle="New Claim or Increase (Form 21-526EZ)"
       />
+      {!isSubscribed && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={NewClaimFileValidation}
@@ -556,6 +559,7 @@ export default function NewClaimForm() {
 
           useEffect(() => {
             if (!router.isReady) return;
+            if (!isSubscribed) return;
             loadData();
           }, [uid, router.isReady, router.query]);
 

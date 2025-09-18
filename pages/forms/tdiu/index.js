@@ -23,6 +23,7 @@ import Breadcrumb from '@/components/Common/Breadcrumb';
 import DropDownExtended from '@/components/Common/DropDownExtended';
 import Divider from '@/components/Common/Divider';
 import { StateData } from '@/utils/staticData';
+import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const signatureOption = [
   {
@@ -116,6 +117,7 @@ export default function TDIUForm() {
 
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
+  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [recordExists, setRecordsExists] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
@@ -224,6 +226,7 @@ export default function TDIUForm() {
         preTitle="Form Menu"
         currentTitle={formTitle}
       />
+      {!isSubscribed && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={TDIUFormValidationSchema}
@@ -321,6 +324,7 @@ export default function TDIUForm() {
 
           useEffect(() => {
             if (!router.isReady) return;
+            if (!isSubscribed) return;
             loadData();
           }, [uid, router.isReady, router.query]);
 

@@ -4,11 +4,12 @@ import FrontLayout from '@/components/layouts/FrontLayout';
 import { useDispatch } from 'react-redux';
 import { setSelectedForm } from '@/store/slices/formSlice';
 import Breadcrumb from '@/components/Common/Breadcrumb';
+import { useSelector } from 'react-redux';
 
 const FormsMenu = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [isSubscribed, setIsSubscribed] = useState(true);
+  const { isSubscribed } = useSelector((state) => state.revenueCat);
 
   const homeScreenButtonData = [
     {

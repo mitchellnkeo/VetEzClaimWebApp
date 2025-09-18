@@ -22,6 +22,7 @@ import { useRouter } from 'next/router';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import DropDownExtended from '@/components/Common/DropDownExtended';
 import Divider from '@/components/Common/Divider';
+import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const checkOptionsData = [
   "Killed in action",
@@ -46,6 +47,7 @@ export default function PTSDStressorForm() {
 
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
+  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [recordExists, setRecordsExists] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
@@ -137,6 +139,7 @@ export default function PTSDStressorForm() {
         preTitle="Form Menu"
         currentTitle={formTitle}
       />
+      {!isSubscribed && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={PTSDStressorValidationSchema}
@@ -224,6 +227,7 @@ export default function PTSDStressorForm() {
 
           useEffect(() => {
             if (!router.isReady) return;
+            if (!isSubscribed) return;
             loadData();
           }, [uid, router.isReady, router.query]);
 
