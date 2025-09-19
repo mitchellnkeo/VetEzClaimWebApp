@@ -1,16 +1,18 @@
 import FrontLayout from '@/components/layouts/FrontLayout';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Loader from '@/components/Common/Loader'; 
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import { revenueCatManager } from '@/services/subscriptionService';
 import { PurchasesError, ErrorCode } from "@revenuecat/purchases-js";
 import { toast } from 'react-toastify';
+import { updateSubscriptionStatus } from '@/store/slices/revenueCatSlice';
 
 
 export default function Subscription() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { user, uid } = useSelector((state) => state.auth);
   const [isloading, setIsLoading] = useState(false);
   const { isSubscribed } = useSelector((state) => state.revenueCat);
@@ -37,6 +39,7 @@ export default function Subscription() {
       // Call the singleton purchase function
       await revenueCatManager.handleSubscribe();
       setIsSubscribedStatus(true);
+      dispatch(updateSubscriptionStatus({ uid: uid, currentStatus: 'true' })).unwrap();
       openDialog()
     } catch (err) {    
       console.error('>> err:', err);
@@ -52,7 +55,7 @@ export default function Subscription() {
 
   const handleTermsAndConditions = () => {
     console.log('Terms and Conditions');
-    // router.push('/subscription/terms-and-conditions');
+    router.push('/terms-conditions');
   }
 
   const handleExploreForms = () => {
@@ -97,7 +100,7 @@ export default function Subscription() {
   )
 
   return (
-    <FrontLayout title="History">
+    <FrontLayout title="Subscription">
       <Loader show={isloading} />
       <Breadcrumb
         preUrl="/"

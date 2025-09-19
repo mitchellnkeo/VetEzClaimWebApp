@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { revenueCatManager } from '@/services/subscriptionService';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebase/firebase';
 
 export const initializeRevenueCat = createAsyncThunk(
   'revenueCat/initialize',
@@ -39,6 +41,22 @@ export const logoutRevenueCat = createAsyncThunk(
   }
 );
 
+export const updateSubscriptionStatus = createAsyncThunk(
+  'revenueCat/updateSubscriptionStatus',
+  async (uidAndCurrentStatus, { rejectWithValue }) => {
+    console.log('>> updateSubscriptionStatus:', uidAndCurrentStatus);
+    const { uid, currentStatus } = uidAndCurrentStatus;
+    try {
+      const docRef = doc(db, 'profile', uid);
+      await updateDoc(docRef, {subscriptionStatus: currentStatus});
+      const isSubscribed = currentStatus === 'true' ? true : false;
+      return isSubscribed;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Profile update failed');
+    }
+  }
+);
+
 const revenueCatSlice = createSlice({
   name: 'revenueCat',
   initialState: {
@@ -52,10 +70,6 @@ const revenueCatSlice = createSlice({
       state.isSubscribed = false;
       state.error = null;
     },
-    updateSubscriptionStatus: (state, action) => {
-      console.log('>> updateSubscriptionStatus:', action.payload);
-      state.isSubscribed = action.payload;
-    }
   },
   extraReducers: (builder) => {
     builder
@@ -73,8 +87,15 @@ const revenueCatSlice = createSlice({
         state.isSubscribed = false;
         state.error = null;
       })
+      .addCase(updateSubscriptionStatus.fulfilled, (state, action) => {
+        state.isSubscribed = action.payload;
+        state.error = null;
+      })
+      .addCase(updateSubscriptionStatus.rejected, (state, action) => {
+        state.error = action.payload;
+      })
   },
 });
 
-export const { resetRevenueCatState, updateSubscriptionStatus } = revenueCatSlice.actions;
+export const { resetRevenueCatState } = revenueCatSlice.actions;
 export default revenueCatSlice.reducer;

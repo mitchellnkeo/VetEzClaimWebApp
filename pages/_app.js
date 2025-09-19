@@ -10,6 +10,7 @@ import { updateSubscriptionStatus } from '../store/slices/revenueCatSlice';
 
 import { appWithI18Next } from 'ni18n';
 import { ni18nConfig } from '../ni18n.config.js';
+import { updateProfile } from '../store/slices/authSlice';
 
 // Perfect Scrollbar
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -20,6 +21,7 @@ import '../styles/tailwind.css';
 const RevenueCatInitializer = ({ children }) => {
   const dispatch = useDispatch();
   const { isInitialized, isSubscribed } = useSelector((state) => state.revenueCat);
+  const { uid } = useSelector((state) => state.auth);
 
   const startSubscriptionPolling = (interval = 5000) => {
     setInterval(async () => {
@@ -27,10 +29,11 @@ const RevenueCatInitializer = ({ children }) => {
         const status = revenueCatManager.getCurrentStatus(); // should return { isPremium: boolean }
         const statusIsPremium = Boolean(status?.isPremium);
   
-        console.log('>> Polling status:', isSubscribed, 'isPremium:', statusIsPremium);
+        console.log('>> Polling statu :', isSubscribed, 'isPremium:', statusIsPremium);
   
         if (isSubscribed !== statusIsPremium) {
-          dispatch(updateSubscriptionStatus(statusIsPremium));
+          const statusIsPremiumStr = statusIsPremium ? "true" : "false";
+          await dispatch(updateSubscriptionStatus({ uid: uid, currentStatus: statusIsPremiumStr })).unwrap();
         }
       } catch (error) {
         console.error('Error polling subscription status:', error);
