@@ -16,6 +16,7 @@ const MenuItem = ({
   deepSubMenu,
   deepMenuTitle,
   disabled = false,
+  active = false,
 }) => {
   const { t } = useTranslation();
   const [errorSubMenu, setErrorSubMenu] = useState(false);
@@ -32,11 +33,11 @@ const MenuItem = ({
   };
 
   return (
-    <li
-      className={`menu nav-item ${
-        disabled ? 'cursor-not-allowed opacity-50' : ''
-      }`}
-    >
+      <li
+        className={`menu nav-item ${
+          disabled ? 'cursor-not-allowed opacity-50' : ''
+        } ${active ? 'bg-[#005985] text-white rounded-md' : ''}`}
+      >
       {!submenu ? (
         <Link href={disabled ? '#' : path} className="group">
           <div className="flex items-center">

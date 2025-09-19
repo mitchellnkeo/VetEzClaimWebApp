@@ -30,6 +30,8 @@ const Sidebar = () => {
   const semidark = useSelector((state) => state.themeConfig.semidark);
   const [buttonStatus, setButtonStatus] = useState(0);
 
+  console.log("------------->Router ::", router.pathname);
+
   const toggleMenu = (value) => setCurrentMenu(value);
 
   const isProfileComplete = async () => {
@@ -83,18 +85,21 @@ const Sidebar = () => {
       title: 'In-Progress',
       icon: <InProgressIcon />,
       keyID: 'In-Progress',
+      disabled: buttonStatus < 2,
     },
     {
       path: '/history',
       title: 'History',
       icon: <HistoryIcon />,
       keyID: 'History',
+      disabled: buttonStatus < 2,
     },
     {
       path: '/subscription',
       title: 'Subscription',
       icon: <SubscriptionIcon />,
       keyID: 'Subscription',
+      disabled: buttonStatus < 2,
     },
   ];
 
@@ -148,6 +153,7 @@ const Sidebar = () => {
                     title={item?.title}
                     icon={item?.icon}
                     disabled={item?.disabled}
+                    active={router.pathname === item?.path}
                   />
                 );
               })}
