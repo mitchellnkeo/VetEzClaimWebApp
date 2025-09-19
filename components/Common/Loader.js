@@ -5,7 +5,7 @@ const Loader = ({ show = false }) => {
   if (!show) return null;
 
   return createPortal(
-    <div className="pointer-events-none fixed inset-0 z-[9999] grid place-content-center">
+    <div className="fixed inset-0 z-[9999] grid place-content-center bg-black/40">
       <svg
         width="64"
         height="64"
