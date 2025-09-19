@@ -30,7 +30,6 @@ const Sidebar = () => {
   const semidark = useSelector((state) => state.themeConfig.semidark);
   const [buttonStatus, setButtonStatus] = useState(0);
 
-  console.log("------------->Router ::", router.pathname);
 
   const toggleMenu = (value) => setCurrentMenu(value);
 

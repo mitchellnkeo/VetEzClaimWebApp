@@ -7,10 +7,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAccessToken } from '../helpers/sessionHelper';
 import { revenueCatManager } from '../services/subscriptionService';
 import { updateSubscriptionStatus } from '../store/slices/revenueCatSlice';
-
+import { subscribeToMessages } from '../firebase/firebaseNotifications';
+import { toast } from 'react-toastify';
 import { appWithI18Next } from 'ni18n';
 import { ni18nConfig } from '../ni18n.config.js';
-import { updateProfile } from '../store/slices/authSlice';
 
 // Perfect Scrollbar
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -40,6 +40,15 @@ const RevenueCatInitializer = ({ children }) => {
       }
     }, interval);
   };
+
+
+  useEffect(() => {
+    subscribeToMessages((payload) => {
+      console.log("Foreground message received:", payload);
+      const { title, body } = payload.notification || {};
+      toast.success(`${title}: ${body}`);
+    });
+  }, []);
 
   useEffect(() => {
     const accessToken = getAccessToken();
