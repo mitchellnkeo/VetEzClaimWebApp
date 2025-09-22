@@ -34,8 +34,8 @@ export default function InProgressForms() {
   }, [uid]);
 
   const onDraft = async (item) => {
-    if (!isSubscribed) {
-      toast.success('Subscribe Now');
+    if (!isSubscribed && item.formId !== 'financial_hardship' && item.formId !== 'courtform' && item.formId !== 'fillform') {
+      toast.info('Subscribe Now');
       return;
     }
     let routerBody = { pathname: item.formUrl }
@@ -46,8 +46,8 @@ export default function InProgressForms() {
   };
 
   const onDiscard = async (item) => {
-    if (!isSubscribed) {
-      toast.success('Subscribe Now');
+    if (!isSubscribed && item.formId !== 'financial_hardship' && item.formId !== 'courtform' && item.formId !== 'fillform') {
+      toast.info('Subscribe Now');
       return;
     }
     setIsLoading(true);
