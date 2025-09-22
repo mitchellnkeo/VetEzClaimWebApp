@@ -29,7 +29,6 @@ class RevenueCatManager {
   async initialize(userId = null) {
     try {
       console.log("Initializing RevenueCat with userId:", userId);
-      console.log("REVENUECAT_API_KEY:", REVENUECAT_API_KEY);
 
       this.purchases = Purchases.configure({
         apiKey: REVENUECAT_API_KEY,
