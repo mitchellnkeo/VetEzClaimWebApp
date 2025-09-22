@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { signInWithEmailAndPassword, deleteUser } from 'firebase/auth';
+import { signInWithEmailAndPassword, deleteUser, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { auth, db, provider } from '@/firebase/firebase';
 import { sendOtp, verifyOtp } from '@/services/auth';
@@ -305,6 +305,27 @@ export const authSlice = createSlice({
     });
   },
 });
+
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async ({ currentPassword, newPassword }, { rejectWithValue }) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("No authenticated user");
+
+      // Re-authenticate
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      await reauthenticateWithCredential(user, credential);
+
+      // Now update password
+      await updatePassword(user, newPassword);
+      return "Password updated successfully";
+    } catch (error) {
+      console.log("error", error);
+      return rejectWithValue({ code: error.code, message: error.message });
+    } 
+  }
+);
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;
