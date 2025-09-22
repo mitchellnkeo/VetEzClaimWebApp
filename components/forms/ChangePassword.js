@@ -17,24 +17,40 @@ const ChangePasswordForm = () => {
   const [eyeForConfirmPass, setEyeForConfirmPass] = useState(false);
   const dispatch = useDispatch();
 
+  const getFriendlyError = (errorCode) => {
+    console.log("errorCode : ", errorCode);
+    switch (errorCode) {
+      case "auth/wrong-password":
+        return "Your current password is incorrect.";
+      case "auth/requires-recent-login":
+        return "Please log in again to change your password.";
+      case "auth/weak-password":
+        return "New password is too weak. Please choose a stronger one.";
+      default:
+        return "Something went wrong. Please try again.";
+    }
+  };
+  
+  
   const handlePasswordChange = async (values, setSubmitting, resetForm) => {
     const { oldPassword, newPassword } = values;
     try {
+      const currentPassword = oldPassword;
       const response = await dispatch(
-        changePassword({ oldPassword, newPassword })
+        changePassword({ currentPassword, newPassword })
       ).unwrap();
-      if (response.success) {
-        showAlert(response.message, 'success');
-        resetForm();
-      }
+
+      showAlert(response, "success");
+      resetForm();
     } catch (error) {
-      showAlert(error.message || 'Network Error', 'error');
-      setSubmitting(false);
+      const errorCode = error.code || "unknown";
+      const friendlyMessage = getFriendlyError(errorCode);
+      showAlert(friendlyMessage, "error");
     } finally {
       setSubmitting(false);
     }
   };
-
+  
   const initialValues = {
     oldPassword: '',
     newPassword: '',
