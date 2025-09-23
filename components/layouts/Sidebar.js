@@ -18,6 +18,7 @@ import {
   InProgressIcon,
   SubscriptionIcon,
   SideToggleCloseIcon,
+  CalculatorIcon,
 } from '../icons/SvgIcons';
 
 const Sidebar = () => {
@@ -94,12 +95,20 @@ const Sidebar = () => {
       disabled: buttonStatus < 2,
     },
     {
+      path: '/calculators',
+      title: 'Calculators',
+      icon: <CalculatorIcon />,
+      keyID: 'Calculators',
+      disabled: false,
+    },
+    {
       path: '/subscription',
       title: 'Subscription',
       icon: <SubscriptionIcon />,
       keyID: 'Subscription',
       disabled: buttonStatus < 2,
     },
+
   ];
 
   return (
