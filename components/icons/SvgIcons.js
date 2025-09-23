@@ -1997,3 +1997,12 @@ export const InProgressIcon = ({
     </svg>
   );
 };
+
+export const CalculatorIcon = ({ height = '20', width = '20', className = '' }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 24 24" className={className}>
+      <path fill="white" d="M19 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM16 6H8a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2zM7.5 11.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM7.5 14.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM7 18h10v1H7v-1z"/>
+    </svg>
+    
+  );
+};
