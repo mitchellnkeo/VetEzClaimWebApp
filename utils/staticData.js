@@ -1266,3 +1266,1093 @@ export const formsIdList = [
     formUrl: '/forms/supplemnetal-claim-reopening',
   },
 ];
+
+
+export const CompensationRateData = [
+  {
+      "cola_year": "2025",
+      "effective_date": "2024-12-01",
+      "rates": {
+        "10%": {
+          "flat": 175.51
+        },
+        "20%": {
+          "flat": 346.95
+        },
+        "30%": {
+          "base": {
+            "veteran_alone": 537.42,
+            "veteran_spouse": 601.42,
+            "veteran_spouse_one_parent": 652.42,
+            "veteran_spouse_two_parents": 703.42,
+            "veteran_one_parent": 588.42,
+            "veteran_two_parents": 639.42,
+            "veteran_one_child": 579.42,
+            "veteran_spouse_one_child": 648.42,
+            "veteran_spouse_one_parent_one_child": 699.42,
+            "veteran_spouse_two_parents_one_child": 750.42,
+            "veteran_one_parent_one_child": 630.42,
+            "veteran_two_parents_one_child": 681.42
+          },
+          "addons": {
+            "additional_child_under_18": 31.00,
+            "additional_child_over_18_school": 102.00,
+            "spouse_aid_and_attendance": 58.00
+          }
+        },
+        "40%": {
+          "base": {
+            "veteran_alone": 774.16,
+            "veteran_spouse": 859.16,
+            "veteran_spouse_one_parent": 927.16,
+            "veteran_spouse_two_parents": 995.16,
+            "veteran_one_parent": 842.16,
+            "veteran_two_parents": 910.16,
+            "veteran_one_child": 831.16,
+            "veteran_spouse_one_child": 922.16,
+            "veteran_spouse_one_parent_one_child": 990.16,
+            "veteran_spouse_two_parents_one_child": 1058.16,
+            "veteran_one_parent_one_child": 899.16,
+            "veteran_two_parents_one_child": 967.16
+          },
+          "addons": {
+            "additional_child_under_18": 42.00,
+            "additional_child_over_18_school": 137.00,
+            "spouse_aid_and_attendance": 78.00
+          }
+        },
+        "50%": {
+          "base": {
+            "veteran_alone": 1102.04,
+            "veteran_spouse": 1208.04,
+            "veteran_spouse_one_parent": 1293.04,
+            "veteran_spouse_two_parents": 1378.04,
+            "veteran_one_parent": 1187.04,
+            "veteran_two_parents": 1272.04,
+            "veteran_one_child": 1173.04,
+            "veteran_spouse_one_child": 1287.04,
+            "veteran_spouse_one_parent_one_child": 1372.04,
+            "veteran_spouse_two_parents_one_child": 1457.04,
+            "veteran_one_parent_one_child": 1258.04,
+            "veteran_two_parents_one_child": 1343.04
+          },
+          "addons": {
+            "additional_child_under_18": 53.00,
+            "additional_child_over_18_school": 171.00,
+            "spouse_aid_and_attendance": 98.00
+          }
+        },
+        "60%": {
+          "base": {
+            "veteran_alone": 1395.93,
+            "veteran_spouse": 1523.93,
+            "veteran_spouse_one_parent": 1625.93,
+            "veteran_spouse_two_parents": 1727.93,
+            "veteran_one_parent": 1497.93,
+            "veteran_two_parents": 1599.93,
+            "veteran_one_child": 1480.93,
+            "veteran_spouse_one_child": 1617.93,
+            "veteran_spouse_one_parent_one_child": 1719.93,
+            "veteran_spouse_two_parents_one_child": 1821.93,
+            "veteran_one_parent_one_child": 1582.93,
+            "veteran_two_parents_one_child": 1684.93
+          },
+          "addons": {
+            "additional_child_under_18": 63.00,
+            "additional_child_over_18_school": 205.00,
+            "spouse_aid_and_attendance": 117.00
+          }
+        },
+        "70%": {
+          "base": {
+            "veteran_alone": 1759.19,
+            "veteran_spouse": 1908.19,
+            "veteran_spouse_one_parent": 2028.19,
+            "veteran_spouse_two_parents": 2148.19,
+            "veteran_one_parent": 1879.19,
+            "veteran_two_parents": 1999.19,
+            "veteran_one_child": 1858.19,
+            "veteran_spouse_one_child": 2018.19,
+            "veteran_spouse_one_parent_one_child": 2138.19,
+            "veteran_spouse_two_parents_one_child": 2258.19,
+            "veteran_one_parent_one_child": 1978.19,
+            "veteran_two_parents_one_child": 2098.19
+          },
+          "addons": {
+            "additional_child_under_18": 74.00,
+            "additional_child_over_18_school": 239.00,
+            "spouse_aid_and_attendance": 137.00
+          }
+        },
+        "80%": {
+          "base": {
+            "veteran_alone": 2044.89,
+            "veteran_spouse": 2214.89,
+            "veteran_spouse_one_parent": 2351.89,
+            "veteran_spouse_two_parents": 2488.89,
+            "veteran_one_parent": 2181.89,
+            "veteran_two_parents": 2318.89,
+            "veteran_one_child": 2158.89,
+            "veteran_spouse_one_child": 2340.89,
+            "veteran_spouse_one_parent_one_child": 2477.89,
+            "veteran_spouse_two_parents_one_child": 2614.89,
+            "veteran_one_parent_one_child": 2295.89,
+            "veteran_two_parents_one_child": 2432.89
+          },
+          "addons": {
+            "additional_child_under_18": 84.00,
+            "additional_child_over_18_school": 274.00,
+            "spouse_aid_and_attendance": 157.00
+          }
+        },
+        "90%": {
+          "base": {
+            "veteran_alone": 2297.96,
+            "veteran_spouse": 2489.96,
+            "veteran_spouse_one_parent": 2643.96,
+            "veteran_spouse_two_parents": 2797.96,
+            "veteran_one_parent": 2451.96,
+            "veteran_two_parents": 2605.96,
+            "veteran_one_child": 2425.96,
+            "veteran_spouse_one_child": 2630.96,
+            "veteran_spouse_one_parent_one_child": 2784.96,
+            "veteran_spouse_two_parents_one_child": 2938.96,
+            "veteran_one_parent_one_child": 2579.96,
+            "veteran_two_parents_one_child": 2733.96
+          },
+          "addons": {
+            "additional_child_under_18": 95.00,
+            "additional_child_over_18_school": 308.00,
+            "spouse_aid_and_attendance": 176.00
+          }
+        },
+        "100%": {
+          "base": {
+            "veteran_alone": 3831.30,
+            "veteran_spouse": 4044.91,
+            "veteran_spouse_one_parent": 4216.35,
+            "veteran_spouse_two_parents": 4387.79,
+            "veteran_one_parent": 4002.74,
+            "veteran_two_parents": 4174.18,
+            "veteran_one_child": 3974.15,
+            "veteran_spouse_one_child": 4201.35,
+            "veteran_spouse_one_parent_one_child": 4372.79,
+            "veteran_spouse_two_parents_one_child": 4544.23,
+            "veteran_one_parent_one_child": 4145.59,
+            "veteran_two_parents_one_child": 4317.03
+          },
+          "addons": {
+            "additional_child_under_18": 106.14,
+            "additional_child_over_18_school": 342.85,
+            "spouse_aid_and_attendance": 195.92
+          }
+        }
+      }
+  }, 
+
+  {
+      "cola_year": "2024",
+      "effective_date": "2023-12-01",
+      "rates": {
+        "10%": {
+          "flat": 171.23
+        },
+        "20%": {
+          "flat": 338.49
+        },
+        "30%": {
+          "base": {
+            "veteran_alone": 524.31,
+            "veteran_spouse": 586.31,
+            "veteran_spouse_one_parent": 636.31,
+            "veteran_spouse_two_parents": 686.31,
+            "veteran_one_parent": 574.31,
+            "veteran_two_parents": 624.31,
+            "veteran_one_child": 565.31,
+            "veteran_spouse_one_child": 632.31,
+            "veteran_spouse_one_parent_one_child": 682.31,
+            "veteran_spouse_two_parents_one_child": 732.31,
+            "veteran_one_parent_one_child": 615.31,
+            "veteran_two_parents_one_child": 665.31
+          },
+          "addons": {
+            "additional_child_under_18": 31.00,
+            "additional_child_over_18_school": 100.00,
+            "spouse_aid_and_attendance": 57.00
+          }
+        },
+        "40%": {
+          "base": {
+            "veteran_alone": 755.28,
+            "veteran_spouse": 838.28,
+            "veteran_spouse_one_parent": 904.28,
+            "veteran_spouse_two_parents": 970.28,
+            "veteran_one_parent": 821.28,
+            "veteran_two_parents": 887.28,
+            "veteran_one_child": 810.28,
+            "veteran_spouse_one_child": 899.28,
+            "veteran_spouse_one_parent_one_child": 965.28,
+            "veteran_spouse_two_parents_one_child": 1031.28,
+            "veteran_one_parent_one_child": 876.28,
+            "veteran_two_parents_one_child": 942.28
+          },
+          "addons": {
+            "additional_child_under_18": 41.00,
+            "additional_child_over_18_school": 133.00,
+            "spouse_aid_and_attendance": 76.00
+          }
+        },
+        "50%": {
+          "base": {
+            "veteran_alone": 1075.16,
+            "veteran_spouse": 1179.16,
+            "veteran_spouse_one_parent": 1262.16,
+            "veteran_spouse_two_parents": 1345.16,
+            "veteran_one_parent": 1160.16,
+            "veteran_two_parents": 1243.16,
+            "veteran_one_child": 1144.16,
+            "veteran_spouse_one_child": 1255.16,
+            "veteran_spouse_one_parent_one_child": 1338.16,
+            "veteran_spouse_two_parents_one_child": 1421.16,
+            "veteran_one_parent_one_child": 1229.16,
+            "veteran_two_parents_one_child": 1312.16
+          },
+          "addons": {
+            "additional_child_under_18": 51.00,
+            "additional_child_over_18_school": 167.00,
+            "spouse_aid_and_attendance": 95.00
+          }
+        },
+        "60%": {
+          "base": {
+            "veteran_alone": 1361.88,
+            "veteran_spouse": 1486.88,
+            "veteran_spouse_one_parent": 1586.88,
+            "veteran_spouse_two_parents": 1686.88,
+            "veteran_one_parent": 1461.88,
+            "veteran_two_parents": 1561.88,
+            "veteran_one_child": 1444.88,
+            "veteran_spouse_one_child": 1577.88,
+            "veteran_spouse_one_parent_one_child": 1677.88,
+            "veteran_spouse_two_parents_one_child": 1777.88,
+            "veteran_one_parent_one_child": 1544.88,
+            "veteran_two_parents_one_child": 1644.88
+          },
+          "addons": {
+            "additional_child_under_18": 62.00,
+            "additional_child_over_18_school": 200.00,
+            "spouse_aid_and_attendance": 114.00
+          }
+        },
+        "70%": {
+          "base": {
+            "veteran_alone": 1716.28,
+            "veteran_spouse": 1861.28,
+            "veteran_spouse_one_parent": 1978.28,
+            "veteran_spouse_two_parents": 2095.28,
+            "veteran_one_parent": 1833.28,
+            "veteran_two_parents": 1950.28,
+            "veteran_one_child": 1813.28,
+            "veteran_spouse_one_child": 1968.28,
+            "veteran_spouse_one_parent_one_child": 2085.28,
+            "veteran_spouse_two_parents_one_child": 2202.28,
+            "veteran_one_parent_one_child": 1930.28,
+            "veteran_two_parents_one_child": 2047.28
+          },
+          "addons": {
+            "additional_child_under_18": 68.00,
+            "additional_child_over_18_school": 221.00,
+            "spouse_aid_and_attendance": 134.00
+          }
+        },
+        "80%": {
+          "base": {
+            "veteran_alone": 1995.01,
+            "veteran_spouse": 2161.01,
+            "veteran_spouse_one_parent": 2294.01,
+            "veteran_spouse_two_parents": 2427.01,
+            "veteran_one_parent": 2128.01,
+            "veteran_two_parents": 2261.01,
+            "veteran_one_child": 2106.01,
+            "veteran_spouse_one_child": 2283.01,
+            "veteran_spouse_one_parent_one_child": 2416.01,
+            "veteran_spouse_two_parents_one_child": 2549.01,
+            "veteran_one_parent_one_child": 2239.01,
+            "veteran_two_parents_one_child": 2372.01
+          },
+          "addons": {
+            "additional_child_under_18": 77.00,
+            "additional_child_over_18_school": 250.00,
+            "spouse_aid_and_attendance": 153.00
+          }
+        },
+        "90%": {
+          "base": {
+            "veteran_alone": 2241.91,
+            "veteran_spouse": 2428.91,
+            "veteran_spouse_one_parent": 2578.91,
+            "veteran_spouse_two_parents": 2728.91,
+            "veteran_one_parent": 2391.91,
+            "veteran_two_parents": 2541.91,
+            "veteran_one_child": 2366.91,
+            "veteran_spouse_one_child": 2565.91,
+            "veteran_spouse_one_parent_one_child": 2715.91,
+            "veteran_spouse_two_parents_one_child": 2865.91,
+            "veteran_one_parent_one_child": 2516.91,
+            "veteran_two_parents_one_child": 2666.91
+          },
+          "addons": {
+            "additional_child_under_18": 86.00,
+            "additional_child_over_18_school": 279.00,
+            "spouse_aid_and_attendance": 172.00
+          }
+        },
+        "100%": {
+          "base": {
+            "veteran_alone": 3737.85,
+            "veteran_spouse": 3946.25,
+            "veteran_spouse_one_parent": 4113.51,
+            "veteran_spouse_two_parents": 4280.77,
+            "veteran_one_parent": 3905.11,
+            "veteran_two_parents": 4072.37,
+            "veteran_one_child": 3877.22,
+            "veteran_spouse_one_child": 4098.87,
+            "veteran_spouse_one_parent_one_child": 4266.13,
+            "veteran_spouse_two_parents_one_child": 4433.39,
+            "veteran_one_parent_one_child": 4045.47,
+            "veteran_two_parents_one_child": 4212.73
+          },
+          "addons": {
+            "additional_child_under_18": 97.00,
+            "additional_child_over_18_school": 313.00,
+            "spouse_aid_and_attendance": 191.14
+          }
+        }
+      }
+  }, 
+
+  {
+      "cola_year": "2023",
+      "effective_date": "2022-12-01",
+      "rates": {
+        "10%": {
+          "flat": 165.92
+        },
+        "20%": {
+          "flat": 327.99
+        },
+        "30%": {
+          "base": {
+            "veteran_alone": 508.05,
+            "veteran_spouse": 568.05,
+            "veteran_spouse_one_parent": 616.05,
+            "veteran_spouse_two_parents": 664.05,
+            "veteran_one_parent": 556.05,
+            "veteran_two_parents": 604.05,
+            "veteran_one_child": 548.05,
+            "veteran_spouse_one_child": 612.05,
+            "veteran_spouse_one_parent_one_child": 660.05,
+            "veteran_spouse_two_parents_one_child": 708.05,
+            "veteran_one_parent_one_child": 596.05,
+            "veteran_two_parents_one_child": 644.05
+          },
+          "addons": {
+            "additional_child_under_18": 30.00,
+            "additional_child_over_18_school": 97.00,
+            "spouse_aid_and_attendance": 55.00
+          }
+        },
+        "40%": {
+          "base": {
+            "veteran_alone": 731.86,
+            "veteran_spouse": 811.86,
+            "veteran_spouse_one_parent": 875.86,
+            "veteran_spouse_two_parents": 939.86,
+            "veteran_one_parent": 795.86,
+            "veteran_two_parents": 859.86,
+            "veteran_one_child": 785.86,
+            "veteran_spouse_one_child": 870.86,
+            "veteran_spouse_one_parent_one_child": 934.86,
+            "veteran_spouse_two_parents_one_child": 998.86,
+            "veteran_one_parent_one_child": 849.86,
+            "veteran_two_parents_one_child": 913.86
+          },
+          "addons": {
+            "additional_child_under_18": 39.00,
+            "additional_child_over_18_school": 129.00,
+            "spouse_aid_and_attendance": 74.00
+          }
+        },
+        "50%": {
+          "base": {
+            "veteran_alone": 1041.82,
+            "veteran_spouse": 1141.82,
+            "veteran_spouse_one_parent": 1222.82,
+            "veteran_spouse_two_parents": 1303.82,
+            "veteran_one_parent": 1122.82,
+            "veteran_two_parents": 1203.82,
+            "veteran_one_child": 1108.82,
+            "veteran_spouse_one_child": 1215.82,
+            "veteran_spouse_one_parent_one_child": 1296.82,
+            "veteran_spouse_two_parents_one_child": 1377.82,
+            "veteran_one_parent_one_child": 1189.82,
+            "veteran_two_parents_one_child": 1270.82
+          },
+          "addons": {
+            "additional_child_under_18": 50.00,
+            "additional_child_over_18_school": 162.00,
+            "spouse_aid_and_attendance": 92.00
+          }
+        },
+        "60%": {
+          "base": {
+            "veteran_alone": 1319.65,
+            "veteran_spouse": 1440.65,
+            "veteran_spouse_one_parent": 1537.65,
+            "veteran_spouse_two_parents": 1634.65,
+            "veteran_one_parent": 1416.65,
+            "veteran_two_parents": 1513.65,
+            "veteran_one_child": 1400.65,
+            "veteran_spouse_one_child": 1528.65,
+            "veteran_spouse_one_parent_one_child": 1625.65,
+            "veteran_spouse_two_parents_one_child": 1722.65,
+            "veteran_one_parent_one_child": 1497.65,
+            "veteran_two_parents_one_child": 1594.65
+          },
+          "addons": {
+            "additional_child_under_18": 60.00,
+            "additional_child_over_18_school": 194.00,
+            "spouse_aid_and_attendance": 111.00
+          }
+        },
+        "70%": {
+          "base": {
+            "veteran_alone": 1663.06,
+            "veteran_spouse": 1804.06,
+            "veteran_spouse_one_parent": 1917.06,
+            "veteran_spouse_two_parents": 2030.06,
+            "veteran_one_parent": 1776.06,
+            "veteran_two_parents": 1889.06,
+            "veteran_one_child": 1757.06,
+            "veteran_spouse_one_child": 1907.06,
+            "veteran_spouse_one_parent_one_child": 2020.06,
+            "veteran_spouse_two_parents_one_child": 2133.06,
+            "veteran_one_parent_one_child": 1870.06,
+            "veteran_two_parents_one_child": 1983.06
+          },
+          "addons": {
+            "additional_child_under_18": 70.00,
+            "additional_child_over_18_school": 226.00,
+            "spouse_aid_and_attendance": 130.00
+          }
+        },
+        "80%": {
+          "base": {
+            "veteran_alone": 1933.15,
+            "veteran_spouse": 2094.15,
+            "veteran_spouse_one_parent": 2223.15,
+            "veteran_spouse_two_parents": 2353.15,
+            "veteran_one_parent": 2062.15,
+            "veteran_two_parents": 2191.15,
+            "veteran_one_child": 2041.15,
+            "veteran_spouse_one_child": 2212.15,
+            "veteran_spouse_one_parent_one_child": 2341.15,
+            "veteran_spouse_two_parents_one_child": 2470.15,
+            "veteran_one_parent_one_child": 2170.15,
+            "veteran_two_parents_one_child": 2299.15
+          },
+          "addons": {
+            "additional_child_under_18": 80.00,
+            "additional_child_over_18_school": 259.00,
+            "spouse_aid_and_attendance": 148.00
+          }
+        },
+        "90%": {
+          "base": {
+            "veteran_alone": 2172.39,
+            "veteran_spouse": 2353.39,
+            "veteran_spouse_one_parent": 2498.39,
+            "veteran_spouse_two_parents": 2643.39,
+            "veteran_one_parent": 2317.39,
+            "veteran_two_parents": 2462.39,
+            "veteran_one_child": 2293.39,
+            "veteran_spouse_one_child": 2486.39,
+            "veteran_spouse_one_parent_one_child": 2631.39,
+            "veteran_spouse_two_parents_one_child": 2776.39,
+            "veteran_one_parent_one_child": 2438.39,
+            "veteran_two_parents_one_child": 2583.39
+          },
+          "addons": {
+            "additional_child_under_18": 90.00,
+            "additional_child_over_18_school": 291.00,
+            "spouse_aid_and_attendance": 167.00
+          }
+        },
+        "100%": {
+          "base": {
+            "veteran_alone": 3621.95,
+            "veteran_spouse": 3823.89,
+            "veteran_spouse_one_parent": 3985.96,
+            "veteran_spouse_two_parents": 4148.03,
+            "veteran_one_parent": 3784.02,
+            "veteran_two_parents": 3946.09,
+            "veteran_one_child": 3753.02,
+            "veteran_spouse_one_child": 3974.66,
+            "veteran_spouse_one_parent_one_child": 4136.73,
+            "veteran_spouse_two_parents_one_child": 4298.80,
+            "veteran_one_parent_one_child": 3915.09,
+            "veteran_two_parents_one_child": 4077.16
+          },
+          "addons": {
+            "additional_child_under_18": 94.00,
+            "additional_child_over_18_school": 304.00,
+            "spouse_aid_and_attendance": 185.00
+          }
+        }
+      }
+  }, 
+
+  {
+      "cola_year": "2022",
+      "effective_date": "2021-12-01",
+      "rates": {
+        "10%": {
+          "flat": 152.64
+        },
+        "20%": {
+          "flat": 301.74
+        },
+        "30%": {
+          "base": {
+            "veteran_alone": 467.39,
+            "veteran_spouse": 522.39,
+            "veteran_spouse_one_parent": 566.39,
+            "veteran_spouse_two_parents": 610.39,
+            "veteran_one_parent": 511.39,
+            "veteran_two_parents": 555.39,
+            "veteran_one_child": 504.39,
+            "veteran_spouse_one_child": 563.39,
+            "veteran_spouse_one_parent_one_child": 607.39,
+            "veteran_spouse_two_parents_one_child": 651.39,
+            "veteran_one_parent_one_child": 548.39,
+            "veteran_two_parents_one_child": 592.39
+          },
+          "addons": {
+            "additional_child_under_18": 27.00,
+            "additional_child_over_18_school": 89.00,
+            "spouse_aid_and_attendance": 51.00
+          }
+        },
+        "40%": {
+          "base": {
+            "veteran_alone": 673.28,
+            "veteran_spouse": 747.28,
+            "veteran_spouse_one_parent": 806.28,
+            "veteran_spouse_two_parents": 865.28,
+            "veteran_one_parent": 732.28,
+            "veteran_two_parents": 791.28,
+            "veteran_one_child": 722.28,
+            "veteran_spouse_one_child": 801.28,
+            "veteran_spouse_one_parent_one_child": 860.28,
+            "veteran_spouse_two_parents_one_child": 919.28,
+            "veteran_one_parent_one_child": 781.28,
+            "veteran_two_parents_one_child": 840.28
+          },
+          "addons": {
+            "additional_child_under_18": 36.00,
+            "additional_child_over_18_school": 119.00,
+            "spouse_aid_and_attendance": 68.00
+          }
+        },
+        "50%": {
+          "base": {
+            "veteran_alone": 958.44,
+            "veteran_spouse": 1050.44,
+            "veteran_spouse_one_parent": 1124.44,
+            "veteran_spouse_two_parents": 1198.44,
+            "veteran_one_parent": 1032.44,
+            "veteran_two_parents": 1106.44,
+            "veteran_one_child": 1020.44,
+            "veteran_spouse_one_child": 1118.44,
+            "veteran_spouse_one_parent_one_child": 1192.44,
+            "veteran_spouse_two_parents_one_child": 1266.44,
+            "veteran_one_parent_one_child": 1094.44,
+            "veteran_two_parents_one_child": 1168.44
+          },
+          "addons": {
+            "additional_child_under_18": 46.00,
+            "additional_child_over_18_school": 149.00,
+            "spouse_aid_and_attendance": 86.00
+          }
+        },
+        "60%": {
+          "base": {
+            "veteran_alone": 1213.27,
+            "veteran_spouse": 1326.27,
+            "veteran_spouse_one_parent": 1415.27,
+            "veteran_spouse_two_parents": 1504.27,
+            "veteran_one_parent": 1302.27,
+            "veteran_two_parents": 1391.27,
+            "veteran_one_child": 1289.27,
+            "veteran_spouse_one_child": 1410.27,
+            "veteran_spouse_one_parent_one_child": 1499.27,
+            "veteran_spouse_two_parents_one_child": 1588.27,
+            "veteran_one_parent_one_child": 1378.27,
+            "veteran_two_parents_one_child": 1467.27
+          },
+          "addons": {
+            "additional_child_under_18": 55.00,
+            "additional_child_over_18_school": 178.00,
+            "spouse_aid_and_attendance": 103.00
+          }
+        },
+        "70%": {
+          "base": {
+            "veteran_alone": 1529.61,
+            "veteran_spouse": 1659.61,
+            "veteran_spouse_one_parent": 1763.61,
+            "veteran_spouse_two_parents": 1867.61,
+            "veteran_one_parent": 1633.61,
+            "veteran_two_parents": 1737.61,
+            "veteran_one_child": 1613.61,
+            "veteran_spouse_one_child": 1755.61,
+            "veteran_spouse_one_parent_one_child": 1859.61,
+            "veteran_spouse_two_parents_one_child": 1963.61,
+            "veteran_one_parent_one_child": 1717.61,
+            "veteran_two_parents_one_child": 1821.61
+          },
+          "addons": {
+            "additional_child_under_18": 64.00,
+            "additional_child_over_18_school": 207.00,
+            "spouse_aid_and_attendance": 119.00
+          }
+        },
+        "80%": {
+          "base": {
+            "veteran_alone": 1775.79,
+            "veteran_spouse": 1920.79,
+            "veteran_spouse_one_parent": 2040.79,
+            "veteran_spouse_two_parents": 2160.79,
+            "veteran_one_parent": 1895.79,
+            "veteran_two_parents": 2015.79,
+            "veteran_one_child": 1870.79,
+            "veteran_spouse_one_child": 2028.79,
+            "veteran_spouse_one_parent_one_child": 2148.79,
+            "veteran_spouse_two_parents_one_child": 2268.79,
+            "veteran_one_parent_one_child": 1990.79,
+            "veteran_two_parents_one_child": 2110.79
+          },
+          "addons": {
+            "additional_child_under_18": 73.00,
+            "additional_child_over_18_school": 237.00,
+            "spouse_aid_and_attendance": 136.00
+          }
+        },
+        "90%": {
+          "base": {
+            "veteran_alone": 1993.12,
+            "veteran_spouse": 2157.12,
+            "veteran_spouse_one_parent": 2289.12,
+            "veteran_spouse_two_parents": 2421.12,
+            "veteran_one_parent": 2125.12,
+            "veteran_two_parents": 2257.12,
+            "veteran_one_child": 2101.12,
+            "veteran_spouse_one_child": 2280.12,
+            "veteran_spouse_one_parent_one_child": 2412.12,
+            "veteran_spouse_two_parents_one_child": 2544.12,
+            "veteran_one_parent_one_child": 2233.12,
+            "veteran_two_parents_one_child": 2365.12
+          },
+          "addons": {
+            "additional_child_under_18": 82.00,
+            "additional_child_over_18_school": 266.00,
+            "spouse_aid_and_attendance": 153.00
+          }
+        },
+        "100%": {
+          "base": {
+            "veteran_alone": 3507.01,
+            "veteran_spouse": 3697.01,
+            "veteran_spouse_one_parent": 3853.01,
+            "veteran_spouse_two_parents": 4009.01,
+            "veteran_one_parent": 3663.01,
+            "veteran_two_parents": 3819.01,
+            "veteran_one_child": 3640.01,
+            "veteran_spouse_one_child": 3854.01,
+            "veteran_spouse_one_parent_one_child": 4010.01,
+            "veteran_spouse_two_parents_one_child": 4166.01,
+            "veteran_one_parent_one_child": 3796.01,
+            "veteran_two_parents_one_child": 3952.01
+          },
+          "addons": {
+            "additional_child_under_18": 91.00,
+            "additional_child_over_18_school": 294.00,
+            "spouse_aid_and_attendance": 168.00
+          }
+        }
+      }
+  },
+
+  {
+      "cola_year": "2021",
+      "effective_date": "2020-12-01",
+      "rates": {
+        "10%": {
+          "flat": 144.14
+        },
+        "20%": {
+          "flat": 284.93
+        },
+        "30%": {
+          "base": {
+            "veteran_alone": 441.35,
+            "veteran_spouse": 493.35,
+            "veteran_spouse_one_parent": 535.35,
+            "veteran_spouse_two_parents": 577.35,
+            "veteran_one_parent": 483.35,
+            "veteran_two_parents": 525.35,
+            "veteran_one_child": 476.35,
+            "veteran_spouse_one_child": 532.35,
+            "veteran_spouse_one_parent_one_child": 574.35,
+            "veteran_spouse_two_parents_one_child": 616.35,
+            "veteran_one_parent_one_child": 518.35,
+            "veteran_two_parents_one_child": 560.35
+          },
+          "addons": {
+            "additional_child_under_18": 26.00,
+            "additional_child_over_18_school": 84.00,
+            "spouse_aid_and_attendance": 48.00
+          }
+        },
+        "40%": {
+          "base": {
+            "veteran_alone": 635.77,
+            "veteran_spouse": 705.77,
+            "veteran_spouse_one_parent": 761.77,
+            "veteran_spouse_two_parents": 817.77,
+            "veteran_one_parent": 691.77,
+            "veteran_two_parents": 747.77,
+            "veteran_one_child": 681.77,
+            "veteran_spouse_one_child": 756.77,
+            "veteran_spouse_one_parent_one_child": 812.77,
+            "veteran_spouse_two_parents_one_child": 868.77,
+            "veteran_one_parent_one_child": 737.77,
+            "veteran_two_parents_one_child": 793.77
+          },
+          "addons": {
+            "additional_child_under_18": 34.00,
+            "additional_child_over_18_school": 112.00,
+            "spouse_aid_and_attendance": 64.00
+          }
+        },
+        "50%": {
+          "base": {
+            "veteran_alone": 905.04,
+            "veteran_spouse": 992.04,
+            "veteran_spouse_one_parent": 1062.04,
+            "veteran_spouse_two_parents": 1132.04,
+            "veteran_one_parent": 975.04,
+            "veteran_two_parents": 1045.04,
+            "veteran_one_child": 963.04,
+            "veteran_spouse_one_child": 1056.04,
+            "veteran_spouse_one_parent_one_child": 1126.04,
+            "veteran_spouse_two_parents_one_child": 1196.04,
+            "veteran_one_parent_one_child": 1033.04,
+            "veteran_two_parents_one_child": 1103.04
+          },
+          "addons": {
+            "additional_child_under_18": 43.00,
+            "additional_child_over_18_school": 140.00,
+            "spouse_aid_and_attendance": 81.00
+          }
+        },
+        "60%": {
+          "base": {
+            "veteran_alone": 1146.39,
+            "veteran_spouse": 1251.39,
+            "veteran_spouse_one_parent": 1335.39,
+            "veteran_spouse_two_parents": 1419.39,
+            "veteran_one_parent": 1230.39,
+            "veteran_two_parents": 1314.39,
+            "veteran_one_child": 1216.39,
+            "veteran_spouse_one_child": 1326.39,
+            "veteran_spouse_one_parent_one_child": 1410.39,
+            "veteran_spouse_two_parents_one_child": 1494.39,
+            "veteran_one_parent_one_child": 1300.39,
+            "veteran_two_parents_one_child": 1384.39
+          },
+          "addons": {
+            "additional_child_under_18": 52.00,
+            "additional_child_over_18_school": 169.00,
+            "spouse_aid_and_attendance": 97.00
+          }
+        },
+        "70%": {
+          "base": {
+            "veteran_alone": 1444.86,
+            "veteran_spouse": 1569.86,
+            "veteran_spouse_one_parent": 1668.86,
+            "veteran_spouse_two_parents": 1767.86,
+            "veteran_one_parent": 1548.86,
+            "veteran_two_parents": 1647.86,
+            "veteran_one_child": 1524.86,
+            "veteran_spouse_one_child": 1662.86,
+            "veteran_spouse_one_parent_one_child": 1761.86,
+            "veteran_spouse_two_parents_one_child": 1860.86,
+            "veteran_one_parent_one_child": 1628.86,
+            "veteran_two_parents_one_child": 1727.86
+          },
+          "addons": {
+            "additional_child_under_18": 60.00,
+            "additional_child_over_18_school": 196.00,
+            "spouse_aid_and_attendance": 112.00
+          }
+        },
+        "80%": {
+          "base": {
+            "veteran_alone": 1677.74,
+            "veteran_spouse": 1815.74,
+            "veteran_spouse_one_parent": 1930.74,
+            "veteran_spouse_two_parents": 2045.74,
+            "veteran_one_parent": 1792.74,
+            "veteran_two_parents": 1907.74,
+            "veteran_one_child": 1767.74,
+            "veteran_spouse_one_child": 1918.74,
+            "veteran_spouse_one_parent_one_child": 2033.74,
+            "veteran_spouse_two_parents_one_child": 2148.74,
+            "veteran_one_parent_one_child": 1882.74,
+            "veteran_two_parents_one_child": 1997.74
+          },
+          "addons": {
+            "additional_child_under_18": 69.00,
+            "additional_child_over_18_school": 225.00,
+            "spouse_aid_and_attendance": 129.00
+          }
+        },
+        "90%": {
+          "base": {
+            "veteran_alone": 1881.17,
+            "veteran_spouse": 2038.17,
+            "veteran_spouse_one_parent": 2165.17,
+            "veteran_spouse_two_parents": 2292.17,
+            "veteran_one_parent": 2003.17,
+            "veteran_two_parents": 2130.17,
+            "veteran_one_child": 1984.17,
+            "veteran_spouse_one_child": 2154.17,
+            "veteran_spouse_one_parent_one_child": 2281.17,
+            "veteran_spouse_two_parents_one_child": 2408.17,
+            "veteran_one_parent_one_child": 2106.17,
+            "veteran_two_parents_one_child": 2233.17
+          },
+          "addons": {
+            "additional_child_under_18": 77.00,
+            "additional_child_over_18_school": 252.00,
+            "spouse_aid_and_attendance": 144.00
+          }
+        },
+        "100%": {
+          "base": {
+            "veteran_alone": 3310.30,
+            "veteran_spouse": 3493.30,
+            "veteran_spouse_one_parent": 3642.30,
+            "veteran_spouse_two_parents": 3791.30,
+            "veteran_one_parent": 3459.30,
+            "veteran_two_parents": 3608.30,
+            "veteran_one_child": 3450.30,
+            "veteran_spouse_one_child": 3655.30,
+            "veteran_spouse_one_parent_one_child": 3804.30,
+            "veteran_spouse_two_parents_one_child": 3953.30,
+            "veteran_one_parent_one_child": 3599.30,
+            "veteran_two_parents_one_child": 3748.30
+          },
+          "addons": {
+            "additional_child_under_18": 86.00,
+            "additional_child_over_18_school": 277.00,
+            "spouse_aid_and_attendance": 158.00
+          }
+        }
+      }
+  },
+
+  {
+      "cola_year": "2020",
+      "effective_date": "2019-12-01",
+      "rates": {
+        "10%": {
+          "flat": 142.29
+        },
+        "20%": {
+          "flat": 281.27
+        },
+        "30%": {
+          "base": {
+            "veteran_alone": 435.69,
+            "veteran_spouse": 486.69,
+            "veteran_spouse_one_parent": 527.69,
+            "veteran_spouse_two_parents": 568.69,
+            "veteran_one_parent": 476.69,
+            "veteran_two_parents": 517.69,
+            "veteran_one_child": 469.69,
+            "veteran_spouse_one_child": 525.69,
+            "veteran_spouse_one_parent_one_child": 566.69,
+            "veteran_spouse_two_parents_one_child": 607.69,
+            "veteran_one_parent_one_child": 510.69,
+            "veteran_two_parents_one_child": 551.69
+          },
+          "addons": {
+            "additional_child_under_18": 25.00,
+            "additional_child_over_18_school": 83.00,
+            "spouse_aid_and_attendance": 48.00
+          }
+        },
+        "40%": {
+          "base": {
+            "veteran_alone": 627.61,
+            "veteran_spouse": 696.61,
+            "veteran_spouse_one_parent": 751.61,
+            "veteran_spouse_two_parents": 806.61,
+            "veteran_one_parent": 682.61,
+            "veteran_two_parents": 737.61,
+            "veteran_one_child": 673.61,
+            "veteran_spouse_one_child": 747.61,
+            "veteran_spouse_one_parent_one_child": 802.61,
+            "veteran_spouse_two_parents_one_child": 857.61,
+            "veteran_one_parent_one_child": 728.61,
+            "veteran_two_parents_one_child": 783.61
+          },
+          "addons": {
+            "additional_child_under_18": 34.00,
+            "additional_child_over_18_school": 111.00,
+            "spouse_aid_and_attendance": 63.00
+          }
+        },
+        "50%": {
+          "base": {
+            "veteran_alone": 893.43,
+            "veteran_spouse": 979.43,
+            "veteran_spouse_one_parent": 1048.43,
+            "veteran_spouse_two_parents": 1117.43,
+            "veteran_one_parent": 962.43,
+            "veteran_two_parents": 1031.43,
+            "veteran_one_child": 950.43,
+            "veteran_spouse_one_child": 1043.43,
+            "veteran_spouse_one_parent_one_child": 1112.43,
+            "veteran_spouse_two_parents_one_child": 1181.43,
+            "veteran_one_parent_one_child": 1019.43,
+            "veteran_two_parents_one_child": 1088.43
+          },
+          "addons": {
+            "additional_child_under_18": 43.00,
+            "additional_child_over_18_school": 138.00,
+            "spouse_aid_and_attendance": 80.00
+          }
+        },
+        "60%": {
+          "base": {
+            "veteran_alone": 1131.68,
+            "veteran_spouse": 1234.68,
+            "veteran_spouse_one_parent": 1317.68,
+            "veteran_spouse_two_parents": 1400.68,
+            "veteran_one_parent": 1214.68,
+            "veteran_two_parents": 1297.68,
+            "veteran_one_child": 1201.68,
+            "veteran_spouse_one_child": 1311.68,
+            "veteran_spouse_one_parent_one_child": 1394.68,
+            "veteran_spouse_two_parents_one_child": 1477.68,
+            "veteran_one_parent_one_child": 1284.68,
+            "veteran_two_parents_one_child": 1367.68
+          },
+          "addons": {
+            "additional_child_under_18": 51.00,
+            "additional_child_over_18_school": 166.00,
+            "spouse_aid_and_attendance": 95.00
+          }
+        },
+        "70%": {
+          "base": {
+            "veteran_alone": 1425.43,
+            "veteran_spouse": 1545.43,
+            "veteran_spouse_one_parent": 1640.43,
+            "veteran_spouse_two_parents": 1735.43,
+            "veteran_one_parent": 1525.43,
+            "veteran_two_parents": 1620.43,
+            "veteran_one_child": 1500.43,
+            "veteran_spouse_one_child": 1633.43,
+            "veteran_spouse_one_parent_one_child": 1728.43,
+            "veteran_spouse_two_parents_one_child": 1823.43,
+            "veteran_one_parent_one_child": 1600.43,
+            "veteran_two_parents_one_child": 1695.43
+          },
+          "addons": {
+            "additional_child_under_18": 59.00,
+            "additional_child_over_18_school": 192.00,
+            "spouse_aid_and_attendance": 110.00
+          }
+        },
+        "80%": {
+          "base": {
+            "veteran_alone": 1655.40,
+            "veteran_spouse": 1790.40,
+            "veteran_spouse_one_parent": 1902.40,
+            "veteran_spouse_two_parents": 2014.40,
+            "veteran_one_parent": 1767.40,
+            "veteran_two_parents": 1879.40,
+            "veteran_one_child": 1742.40,
+            "veteran_spouse_one_child": 1889.40,
+            "veteran_spouse_one_parent_one_child": 2001.40,
+            "veteran_spouse_two_parents_one_child": 2113.40,
+            "veteran_one_parent_one_child": 1854.40,
+            "veteran_two_parents_one_child": 1966.40
+          },
+          "addons": {
+            "additional_child_under_18": 68.00,
+            "additional_child_over_18_school": 221.00,
+            "spouse_aid_and_attendance": 127.00
+          }
+        },
+        "90%": {
+          "base": {
+            "veteran_alone": 1855.22,
+            "veteran_spouse": 2009.22,
+            "veteran_spouse_one_parent": 2133.22,
+            "veteran_spouse_two_parents": 2257.22,
+            "veteran_one_parent": 1974.22,
+            "veteran_two_parents": 2098.22,
+            "veteran_one_child": 1954.22,
+            "veteran_spouse_one_child": 2111.22,
+            "veteran_spouse_one_parent_one_child": 2235.22,
+            "veteran_spouse_two_parents_one_child": 2359.22,
+            "veteran_one_parent_one_child": 2073.22,
+            "veteran_two_parents_one_child": 2197.22
+          },
+          "addons": {
+            "additional_child_under_18": 76.00,
+            "additional_child_over_18_school": 248.00,
+            "spouse_aid_and_attendance": 141.00
+          }
+        },
+        "100%": {
+          "base": {
+            "veteran_alone": 3269.30,
+            "veteran_spouse": 3447.30,
+            "veteran_spouse_one_parent": 3592.30,
+            "veteran_spouse_two_parents": 3737.30,
+            "veteran_one_parent": 3414.30,
+            "veteran_two_parents": 3559.30,
+            "veteran_one_child": 3405.30,
+            "veteran_spouse_one_child": 3606.30,
+            "veteran_spouse_one_parent_one_child": 3751.30,
+            "veteran_spouse_two_parents_one_child": 3896.30,
+            "veteran_one_parent_one_child": 3550.30,
+            "veteran_two_parents_one_child": 3695.30
+          },
+          "addons": {
+            "additional_child_under_18": 85.00,
+            "additional_child_over_18_school": 273.00,
+            "spouse_aid_and_attendance": 156.00
+          }
+        }
+      }
+  }
+  
+];
