@@ -1,3 +1,5 @@
+import { CompensationRateData } from "@/utils/staticData";
+import { monthMapDecCycle } from "@/utils/staticData";
 export async function calculateBackPayWithFactors(
     factors,
     initialMonth,
@@ -72,5 +74,39 @@ export async function calculateBackPayWithFactors(
     }
   
     return parseFloat(total.toFixed(2));
+}
+
+export async function getCOLAMonthMapping(initialMonth, initialYear, finalMonth, finalYear) {
+  const startMonth = monthMapDecCycle[initialMonth];
+  const endMonth = monthMapDecCycle[finalMonth];
+
+  if (!startMonth || !endMonth) {
+    throw new Error("Invalid month name provided.");
   }
+
+  let startYear = parseInt(initialYear, 10);
+  let endYear = parseInt(finalYear, 10);
+
+  if (initialMonth === "December") startYear += 1;
+  if (finalMonth === "December") endYear += 1;
+
+  const mapping = {};
+
+  if (startYear === endYear) {
+    mapping[`${startYear}`] = endMonth - startMonth + 1;
+    return mapping;
+  }
+
+  const monthsFirstYear = 12 - startMonth + 1;
+  mapping[`${startYear}`] = monthsFirstYear;
+
+  for (let year = startYear + 1; year < endYear; year++) {
+    mapping[`${year}`] = 12;
+  }
+
+  mapping[`${endYear}`] = endMonth;
+
+  return mapping;
+}
+
   
