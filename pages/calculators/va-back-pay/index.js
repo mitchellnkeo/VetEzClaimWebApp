@@ -5,7 +5,9 @@ import Breadcrumb from '@/components/Common/Breadcrumb';
 import { useSelector } from 'react-redux';
 import { IsValidDateRange } from '@/utils/utils';
 import { calculateBackPayWithFactors } from '@/helpers/calcultorHelpers';
-import Loader from '@/components/Common/Loader';
+import Loader from '../../../components/Common/Loader';
+import { toast } from 'react-toastify';
+
 
 
 
@@ -46,16 +48,68 @@ const VaBackPayCalculator = () => {
   const [loading, setLoading] = useState(false);
 
   const onCalculate = async () => {
+    
     setLoading(true);
+    const nCUnder18Int = parseInt(childrenUnder18) || 0;
+    const nCOver18Int = parseInt(childrenOver18) || 0;
+    const nDPInt = parseInt(dependentParents) || 0;
+  
+    const commonFactors = {
+      isMarried,
+      spouseNeedsAid: spouseNeedAid,
+      hasChildren: hasDependentChildren,
+      childrenUnder18: nCUnder18Int,
+      childrenOver18: nCOver18Int,
+      hasDependentParents,
+      dependentParentsCount: nDPInt,
+    };
+
+    const factors1 = {
+      ratingPercentage,
+      ...commonFactors,
+    };
+  
+    const factors2 = {
+      ratingPercentage: receivingPercentage,
+      ...commonFactors,
+    };
+    console.log("Here we go >>> ", factors1, factors2);
+
+          
     try {
-      const payable = await calculateBackPayWithFactors(ratingPercentage, initialMonth, initialYear, finalMonth, finalYear);
-      const paid = await calculateBackPayWithFactors(receivingPercentage, initialMonth, initialYear, finalMonth, finalYear);
-      setResult(parseFloat((payable - paid).toFixed(2)));
-    } catch (err) {
+      await new Promise(resolve => setTimeout(resolve, 50));
+      const payableAmount = await calculateBackPayWithFactors(
+        factors1,
+        initialMonth,
+        initialYear,
+        finalMonth,
+        finalYear
+      );
+  
+      const paidAmount = await calculateBackPayWithFactors(
+        factors2,
+        initialMonth,
+        initialYear,
+        finalMonth,
+        finalYear
+      );
+  
+      const res = parseFloat((payableAmount - paidAmount).toFixed(2));
+      setResult(res);          
+    } catch (error) {
+      console.log("Error calculating back pay. Please try again.", error);
+      toast.error('Error calculating back pay. Please try again.');
       setResult(0);
     } finally {
       setLoading(false);
     }
+
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const onReset = () => {
@@ -73,6 +127,10 @@ const VaBackPayCalculator = () => {
     setHasDependentParents(false);
     setDependentParents("0");
     setResult(0);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // smooth scroll
+    });
   };
 
   return (
@@ -82,6 +140,7 @@ const VaBackPayCalculator = () => {
         preTitle="Calculators"
         currentTitle="VA Back Pay Calculator"
       />
+      <Loader show={loading} />
       
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">
@@ -92,26 +151,34 @@ const VaBackPayCalculator = () => {
           </div>
         </div>
       </div>
-      <div className="mx-5 my-5 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        <div className="w-full max-w-4xl mx-auto p-6">
-          <h1 className="text-2xl font-semibold text-blue-700 border-b pb-4 mb-6">
-            VA Back Pay Calculator
-          </h1>
-
-          {/* Result Box */}
-          <div className="bg-gray-800 text-white text-center rounded-lg p-6 mb-6">
-            <p className="text-lg">You Are Owed Approximately</p>
-            <p className="text-4xl font-bold">${result}</p>
-          </div>
+      <div className="w-full max-w-4xl mx-auto p-6">
+          <div
+          className={`text-center rounded-lg p-6 mb-6 ${
+            result < 0 ? "bg-red-600 text-white" : "bg-gray-800 text-white"
+          }`}
+        >
+          <p className="text-lg">
+            {result < 0 ? "You Owe VA Approximately" : "You Are Owed Approximately"}
+          </p>
+          <p className="text-4xl font-bold">
+            ${Math.abs(result).toFixed(2)}
+          </p>
+        </div>
 
           {/* Date Selection */}
           <div className="bg-gray-100 border rounded p-4 mb-6">
-            <h2 className="font-medium text-blue-700">Initial Date</h2>
+            <h2 className="font-bold  text-md">When should you have received a larger disability payment than you did?</h2>
             <div className="flex gap-4 mt-2">
               <select
                 className="border rounded p-2 flex-1"
                 value={initialMonth}
-                onChange={(e) => setInitialMonth(e.target.value)}
+                onChange={(e) => {
+                  if (IsValidDateRange(e.target.value, initialYear, finalMonth, finalYear)) {
+                    setInitialMonth(e.target.value);
+                  } else {
+                    toast.error('The intial date must be come before the stop date.');
+                  }
+                }}
               >
                 {monthData.map((m) => (
                   <option key={m}>{m}</option>
@@ -120,7 +187,13 @@ const VaBackPayCalculator = () => {
               <select
                 className="border rounded p-2 flex-1"
                 value={initialYear}
-                onChange={(e) => setInitialYear(e.target.value)}
+                onChange={(e) => {
+                  if (IsValidDateRange(initialMonth, e.target.value, finalMonth, finalYear)) {
+                    setInitialYear(e.target.value);
+                  } else {
+                    toast.error('The intial date must be come before the stop date.');
+                  }
+                }}
               >
                 {yearData.map((y) => (
                   <option key={y}>{y}</option>
@@ -130,12 +203,18 @@ const VaBackPayCalculator = () => {
           </div>
 
           <div className="bg-gray-100 border rounded p-4 mb-6">
-            <h2 className="font-medium text-blue-700">Final Date</h2>
+            <h2 className="font-bold  text-md">(Optional) Specify a stop date, or leave empty to use today's date.</h2>
             <div className="flex gap-4 mt-2">
               <select
                 className="border rounded p-2 flex-1"
                 value={finalMonth}
-                onChange={(e) => setFinalMonth(e.target.value)}
+                onChange={(e) => {
+                  if (IsValidDateRange(initialMonth, initialYear, e.target.value, finalYear)) {
+                    setFinalMonth(e.target.value);
+                  } else {
+                    toast.error('The stop date must be come after the intial date.');
+                  }
+                }}
               >
                 {monthData.map((m) => (
                   <option key={m}>{m}</option>
@@ -144,7 +223,13 @@ const VaBackPayCalculator = () => {
               <select
                 className="border rounded p-2 flex-1"
                 value={finalYear}
-                onChange={(e) => setFinalYear(e.target.value)}
+                onChange={(e) => {
+                  if (IsValidDateRange(initialMonth, initialYear, finalMonth, e.target.value)) {
+                    setFinalYear(e.target.value);
+                  } else {
+                    toast.error('The stop date must be come after the intial date.');
+                  }
+                }}
               >
                 {yearData.map((y) => (
                   <option key={y}>{y}</option>
@@ -155,9 +240,7 @@ const VaBackPayCalculator = () => {
 
           {/* Percentages */}
           <div className="bg-gray-100 border rounded p-4 mb-6">
-            <label className="block font-medium text-blue-700">
-              Rating Percentage
-            </label>
+            <label className="block font-bold  text-md"> What the benefit rate  should you have been receiving on this date? </label>
             <select
               className="border rounded p-2 w-full mt-2"
               value={ratingPercentage}
@@ -170,8 +253,8 @@ const VaBackPayCalculator = () => {
           </div>
 
           <div className="bg-gray-100 border rounded p-4 mb-6">
-            <label className="block font-medium text-blue-700">
-              Actual Receiving Percentage
+            <label className="block font-bold  text-md">
+            What was the benefit rate you were actually receiving on this date? 
             </label>
             <select
               className="border rounded p-2 w-full mt-2"
@@ -186,7 +269,7 @@ const VaBackPayCalculator = () => {
 
           {/* Marital / Children / Parents */}
           <div className="bg-gray-100 border rounded p-4 mb-6 space-y-4">
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 font-bold  text-md">
               <input
                 type="checkbox"
                 checked={isMarried}
@@ -199,7 +282,7 @@ const VaBackPayCalculator = () => {
             </label>
 
             {isMarried && (
-              <label className="flex items-center gap-2 ml-4">
+              <label className="flex items-center gap-2 ml-4 font-bold  text-md">
                 <input
                   type="checkbox"
                   checked={spouseNeedAid}
@@ -208,8 +291,10 @@ const VaBackPayCalculator = () => {
                 Does your spouse need aid and attendance?
               </label>
             )}
+          </div>
 
-            <label className="flex items-center gap-2">
+          <div className="bg-gray-100 border rounded p-4 mb-6 space-y-4">
+            <label className="flex items-center gap-2 font-bold  text-md">
               <input
                 type="checkbox"
                 checked={hasDependentChildren}
@@ -230,20 +315,44 @@ const VaBackPayCalculator = () => {
                   type="number"
                   className="border rounded p-2 w-full"
                   value={childrenUnder18}
-                  onChange={(e) => setChildrenUnder18(e.target.value)}
+                  onChange={(e) => {
+                    const text = e.target.value;
+                    const numericValue = text.replace(/[^0-9]/g, '');
+                    const number = parseInt(numericValue);
+                    if (!isNaN(number) && number >= 0 && number <= 99) {
+                        setChildrenUnder18(String(number));
+                    } else if (text === '') {
+                      setChildrenUnder18('');
+                    } else {
+                        toast.error('The number of children under 18 must be between 0 and 99.');
+                    }
+                  }}
                   placeholder="Children under 18"
                 />
                 <input
                   type="number"
                   className="border rounded p-2 w-full"
                   value={childrenOver18}
-                  onChange={(e) => setChildrenOver18(e.target.value)}
+                  onChange={(e) => {
+                    const text = e.target.value;
+                    const numericValue = text.replace(/[^0-9]/g, '');
+                    const number = parseInt(numericValue);
+                    if (!isNaN(number) && number >= 0 && number <= 99) {
+                      setChildrenOver18(String(number));
+                    } else if (text === '') {
+                      setChildrenOver18('');
+                    } else {
+                      toast.error('The number of children over 18 must be between 0 and 99.');
+                    }
+                  }}
                   placeholder="Children over 18"
                 />
               </div>
             )}
+          </div>
 
-            <label className="flex items-center gap-2">
+          <div className="bg-gray-100 border rounded p-4 mb-6 space-y-4">
+            <label className="flex items-center gap-2 font-bold  text-md">
               <input
                 type="checkbox"
                 checked={hasDependentParents}
@@ -257,7 +366,7 @@ const VaBackPayCalculator = () => {
 
             {hasDependentParents && (
               <select
-                className="border rounded p-2 ml-4"
+                className="border rounded p-2 w-full ml-4"
                 value={dependentParents}
                 onChange={(e) => setDependentParents(e.target.value)}
               >
@@ -267,6 +376,7 @@ const VaBackPayCalculator = () => {
               </select>
             )}
           </div>
+
 
           {/* Buttons */}
           <div className="flex gap-4">
@@ -279,12 +389,12 @@ const VaBackPayCalculator = () => {
             </button>
             <button
               onClick={onReset}
-              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
+              className="bg-primary text-white px-4 py-2 rounded shadow hover:bg-primaryHover"
             >
               Reset All
             </button>
           </div>
-        </div>
+       
       </div>
     </FrontLayout>
   );
@@ -293,73 +403,3 @@ const VaBackPayCalculator = () => {
 export default VaBackPayCalculator;
 
 
-/*
-
-import React, { useState } from "react";
-
-// Dummy helpers (replace with your real functions)
-import { calculateBackPayWithFactors } from "./calculatorHelpers";
-import { isValidDateRange } from "./utilities";
-
-
-
-export default function BackPayCalculator() {
-  const currentDate = new Date();
-  const currentMonth = monthData[currentDate.getMonth()];
-  const curYear = currentDate.getFullYear().toString();
-
-  const [initialMonth, setInitialMonth] = useState("January");
-  const [initialYear, setInitialYear] = useState(curYear);
-  const [finalMonth, setFinalMonth] = useState(currentMonth);
-  const [finalYear, setFinalYear] = useState(curYear);
-  const [ratingPercentage, setRatingPercentage] = useState("10%");
-  const [receivingPercentage, setReceivingPercentage] = useState("0%");
-  const [isMarried, setIsMarried] = useState(false);
-  const [spouseNeedAid, setSpouseNeedAid] = useState(false);
-  const [hasDependentChildren, setHasDependentChildren] = useState(false);
-  const [childrenUnder18, setChildrenUnder18] = useState("0");
-  const [childrenOver18, setChildrenOver18] = useState("0");
-  const [hasDependentParents, setHasDependentParents] = useState(false);
-  const [dependentParents, setDependentParents] = useState("0");
-
-  const [result, setResult] = useState(0);
-  const [loading, setLoading] = useState(false);
-
-  const onCalculate = async () => {
-    setLoading(true);
-    try {
-      // simulate
-      const payable = await calculateBackPayWithFactors(ratingPercentage, initialMonth, initialYear, finalMonth, finalYear);
-      const paid = await calculateBackPayWithFactors(receivingPercentage, initialMonth, initialYear, finalMonth, finalYear);
-      setResult(parseFloat((payable - paid).toFixed(2)));
-    } catch (err) {
-      setResult(0);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onReset = () => {
-    setInitialMonth("January");
-    setInitialYear(curYear);
-    setFinalMonth(currentMonth);
-    setFinalYear(curYear);
-    setRatingPercentage("10%");
-    setReceivingPercentage("0%");
-    setIsMarried(false);
-    setSpouseNeedAid(false);
-    setHasDependentChildren(false);
-    setChildrenUnder18("0");
-    setChildrenOver18("0");
-    setHasDependentParents(false);
-    setDependentParents("0");
-    setResult(0);
-  };
-
-  return (
-   
-  );
-}
-
-
-*/
