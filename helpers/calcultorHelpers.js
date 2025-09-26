@@ -7,6 +7,7 @@ export async function calculateBackPayWithFactors(
     finalMonth,
     finalYear
   ) {
+    console.log(factors);
     const monthMapping = await getCOLAMonthMapping(initialMonth, initialYear, finalMonth, finalYear);
     let total = 0;
   
@@ -69,8 +70,13 @@ export async function calculateBackPayWithFactors(
           }
         }
       }
+
+      let smckAmount = 0;
+      if (factors.smckAwards && yearData.rates.smc_k.amount) {
+        smckAmount = yearData.rates.smc_k.amount * factors.smckAwards;
+      }
   
-      total += monthly * months;
+      total += (monthly+smckAmount) * months;
     }
   
     return parseFloat(total.toFixed(2));
