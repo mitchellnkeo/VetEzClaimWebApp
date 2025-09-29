@@ -364,7 +364,7 @@ const VaBackPayCalculator = () => {
                     onChange={(e) => setSmcLevel(e.target.value)}
                   >
                     {smcLevelData.slice(1).map((p) => (
-                      <option key={p.smcId}>{p.smcTitle}</option>
+                      <option  key={p.smcId} value={p.smcId} >{p.smcTitle}</option>
                     ))}
                   </select>
                 </div>
@@ -378,7 +378,7 @@ const VaBackPayCalculator = () => {
                     onChange={(e) => setSmcLevelReceiving(e.target.value)}
                   >
                     {smcLevelData.map((p) => (
-                      <option key={p.smcId}>{p.smcTitle}</option>
+                      <option  key={p.smcId} value={p.smcId} >{p.smcTitle}</option>
                     ))}
                   </select>
                 </div>
