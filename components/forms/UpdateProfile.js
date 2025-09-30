@@ -300,7 +300,8 @@ const UpdateProfileForm = () => {
                   onChange={(val) => setFieldValue('signature', val)}
                   imgWidth={500}
                   imgHeight={220}
-                  style={`.m-signature-pad { border: 1px solid #ccc; }`}
+                  style={`.m-signature-pad { border: 1px solid #cc1212; }`}
+                  editMode={isLoading}
                 />
                 <div className="flex items-center justify-start">
                   <ErrorMessage name="signature" component={TextError} />
