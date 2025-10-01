@@ -4,14 +4,14 @@ const Divider = ({ title, lightTitle = false  }) => {
       {
           lightTitle ? (
             <div className="my-5">
-              <h6 className="text-md font-medium text-black-700 dark:text-black-400 border-b border-primary-300 inline-block pb-1">
+              <h6 className="text-md font-medium text-black-700 dark:text-black-400 border-b border-primary-300 inline-block pb-1 dark:border-white-light">
                 {title}
               </h6>
             </div>
           ) : (
             <div
               style={{ margin: '20px auto' }}
-              className="mb-5 flex items-center rounded bg-primary-light p-2 text-primary dark:bg-primary-dark-light"
+              className="mb-5 flex items-center rounded bg-primary-light p-2 text-primary dark:bg-primary-dark-light dark:text-white-light"
             >
               <h6 className="text-lg font-bold">{title}</h6>
             </div>

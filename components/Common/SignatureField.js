@@ -12,7 +12,7 @@ const SignatureField = ({
   const sigPadRef = useRef(null);
   const [isEditing, setIsEditing] = useState(false);
   const [signatureValue, setSignatureValue] = useState(null);
-
+1
   // Sync with parent "editMode"
   useEffect(() => {
     setIsEditing(editMode);

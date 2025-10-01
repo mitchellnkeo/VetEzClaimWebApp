@@ -12,17 +12,17 @@ export default function FormContent({
 }) {
   return (
     <div className="relative flex h-screen flex-col">
-      <div className="rounded-md bg-white">
+      <div className="rounded-md bg-white dark:bg-gray-600">
         <div className="justify-content-between  flex flex-col gap-5  pl-5 pt-5 md:flex-row md:items-center">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl">{title}</h1>
+            <h1 className="text-2xl dark:text-white-light ">{title}</h1>
           </div>
         </div>
         <div className="sticky top-0 z-10 flex justify-center gap-3 rounded-md  p-6 shadow-md">
           <button
             onClick={onViewDetails}
             className={`flex items-center gap-2 rounded-md border px-4 py-2 text-sm 
-              ${isBuddyForm ? 'text-red-600 hover:bg-red-100' : 'text-gray-700 hover:bg-gray-100'}`}
+              ${isBuddyForm ? 'text-red-600 hover:bg-red-100' : 'text-gray-700 hover:bg-gray-100 dark:bg-white-light dark:text-black dark:hover:bg-gray dark:hover:text-white-light '}`}
           >
             {isBuddyForm ? (
               <>
@@ -38,14 +38,14 @@ export default function FormContent({
 
           <button
             onClick={onSave}
-            className="flex items-center gap-2 rounded-md border bg-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-300"
+            className="flex items-center gap-2 rounded-md border bg-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-300 dark:bg-white-light dark:text-black dark:hover:bg-gray dark:hover:text-white-light"
           >
             <FaSave /> Save
           </button>
 
           <button
             onClick={onReview}
-            className="flex items-center gap-2 rounded-md border px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className="flex items-center gap-2 rounded-md border px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:bg-white-light dark:text-black dark:hover:bg-gray dark:hover:text-white-light"
           >
             <FaFilePdf /> Review PDF
           </button>

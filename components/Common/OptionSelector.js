@@ -129,15 +129,17 @@ export default function OptionSelector({
               checked={o.isSelected}
               onChange={() => handleSelect(o.option)}
               className="form-checkbox"
+
             />
-            <label>{o.option}</label>
+            <label className="dark:text-white-light">{o.option}</label>
             {((o.option === 'Other' || o.option === 'OTHER') && o.isSelected) && (
               <input
                 type="text"
                 value={otherText}
                 onChange={(e) => handleOtherText(e.target.value)}
                 placeholder="Specify Other.."
-                className="ml-5 rounded border p-1"
+                className="ml-5 rounded border p-1 form-input px-3 py-2"
+
               />
             )}
           </div>
@@ -151,14 +153,14 @@ export default function OptionSelector({
               checked={false}
               onChange={handleOtherCheck}
             />
-            <label>Other</label>
+            <label className="dark:text-white-light">Other</label>
             {otherText && (
               <input
                 type="text"
                 value={otherText}
                 onChange={(e) => handleOtherText(e.target.value)}
                 placeholder="Specify Other.."
-                className="ml-2 rounded border p-1"
+                className="ml-2 rounded border p-1 form-input px-3 py-2"
               />
             )}
           </div>
