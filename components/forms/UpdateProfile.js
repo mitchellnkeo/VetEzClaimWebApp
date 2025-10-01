@@ -108,7 +108,7 @@ const UpdateProfileForm = () => {
       <Loader show={isLoading} />
       <div className="mb-5 rounded-md border border-[#ebedf2] bg-white p-4 dark:border-[#191e3a] dark:bg-black">
         <div className="mb-5 flex items-center rounded bg-primary-light p-3.5 text-primary dark:bg-primary-dark-light">
-          <h6 className="text-lg font-bold">General Information</h6>
+          <h6 className="text-lg font-bold dark:text-white-light ">General Information</h6>
         </div>
 
         <Formik
@@ -204,7 +204,7 @@ const UpdateProfileForm = () => {
 
               {/* Mailing Address */}
               <div className="mb-5 flex items-center rounded bg-primary-light p-3.5 text-primary dark:bg-primary-dark-light">
-                <h6 className="text-lg font-bold">Mailing Address</h6>
+                <h6 className="text-lg font-bold dark:text-white-light ">Mailing Address</h6>
               </div>
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -288,7 +288,7 @@ const UpdateProfileForm = () => {
 
               {/* Mailing Address */}
               <div className="mb-5 flex items-center rounded bg-primary-light p-3.5 text-primary dark:bg-primary-dark-light">
-                <h6 className="text-lg font-bold">Signature</h6>
+                <h6 className="text-lg font-bold dark:text-white-light ">Signature</h6>
                 <small className="text-md font-semibold text-danger">
                   * required
                 </small>

@@ -21,37 +21,6 @@ const FrontLayout = ({ children, title }) => {
   const [animation, setAnimation] = useState(themeConfig.animation);
   const dispatch = useDispatch();
 
-  // const getCities = async () => {
-  //   const citiesCol = collection(db, 'profile');
-  //   const citySnapshot = await getDocs(citiesCol);
-  //   const totalCount = citySnapshot.size;
-  //   const cityList = citySnapshot.docs.map((doc) => doc.data());
-  //   const result = {
-  //     totalCount,
-  //     rows: cityList,
-  //   };
-  //   console.log(result);
-  //   return result;
-  // };
-
-  // const fetchUserData = async () => {
-  //   auth.onAuthStateChanged(async (user) => {
-  //     const docRef = doc(db, 'Users', user.uid);
-  //     const docSnap = await getDoc(docRef);
-  //     if (docSnap.exists()) {
-  //       dispatch(setUser(docSnap.data()));
-  //       console.log('FrontLayout->', docSnap.data());
-  //     } else {
-  //       console.log('User is not logged in');
-  //     }
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   // fetchUserData();
-  //   getCities();
-  // }, []);
-
   const goToTop = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;

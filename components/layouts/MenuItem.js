@@ -36,13 +36,13 @@ const MenuItem = ({
       <li
         className={`menu nav-item ${
           disabled ? 'cursor-not-allowed opacity-50' : ''
-        } ${active ? 'bg-[#005985] text-white rounded-md' : ''}`}
+        } ${active ? 'bg-[#005985] dark:bg-gray-600 text-white rounded-md' : ''}`}
       >
       {!submenu ? (
         <Link href={disabled ? '#' : path} className="group">
           <div className="flex items-center">
             {icon}
-            <span className="text-white dark:text-[#506690] dark:group-hover:text-white-dark ltr:pl-3 rtl:pr-3">
+            <span className="text-white dark:text-[#ccc] dark:group-hover:text-white-dark ltr:pl-3 rtl:pr-3">
               {t(title)}
             </span>
           </div>

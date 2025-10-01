@@ -17,7 +17,7 @@ const Footer = () => {
         {buttons.map((btn, index) => (
           <Link key={index} href={btn.path} passHref>
             <button
-              className={`${btn.disabled ? 'cursor-not-allowed opacity-50' : ''} ${btn.disabled ? 'text-gray-500 dark:text-gray-500' : 'text-primary dark:text-primaryHover'}  font-medium hover:underline hover:font-semibold transition-all duration-200`}
+              className={`${btn.disabled ? 'cursor-not-allowed opacity-50' : ''} ${btn.disabled ? 'text-gray-500 dark:text-gray-500' : 'text-primary dark:text-primaryHover'}  font-medium hover:underline hover:font-semibold transition-all duration-200 dark:text-white-light  dark:hover:text-white-light`}
               disabled={btn.disabled}
             >
               {t(btn.title)}
