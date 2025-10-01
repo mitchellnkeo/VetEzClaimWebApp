@@ -48,17 +48,17 @@ const Dashboard = () => {
   return (
     <FrontLayout title="Dashboard">
       <div className="h-[450px]">
-        <p className="mb-5 border-b-2 border-gray-200 pb-2 text-2xl">
+        <p className="mb-5 border-b-2 border-gray-200 pb-2 text-2xl dark:border-gray-600 dark:text-white-light">
           Welcome{', '}
-          <span className="font-bold">
+          <span className="font-bold dark:text-white-light">
             {user?.firstName + ' ' + user?.lastName}
           </span>
           <br />
-          <span className="text-md">{user?.email}</span>
+          <span className="text-md dark:text-white-light">{user?.email}</span>
         </p>
-        <div className="mt-5 pt-2"></div>
 
-        <div>
+
+        <div className="mt-5 pt-2">
           {profileStatus === 0 && (
             <div className="rounded-lg bg-yellow-100 p-4 text-yellow-800">
               <p className="font-semibold">Your profile is incomplete </p>
@@ -92,15 +92,14 @@ const Dashboard = () => {
           )}
 
           {profileStatus === 2 && (
-            <div className="rounded-lg bg-green-100 p-4 text-green-800">
+            <div className="rounded-lg bg-green-100 p-4 text-green-800 dark:bg-gray-600 dark:text-white-light">
               <p className="font-semibold">Profile Complete </p>
               <p className="mt-2">
                 You’re ready to proceed! Please go to the forms menu.
               </p>
               <a
                 href="/forms"
-                className="mt-3 inline-block rounded-lg px-4 py-2 text-white"
-                style={{ backgroundColor: '#035F92' }}
+                className="mt-3 inline-block rounded-lg px-4 py-2 text-white bg-primary hover:bg-primaryHover  dark:bg-gray-900  dark:hover:bg-gray-800  dark:text-white-light"
               >
                 Go to Forms Menu
               </a>

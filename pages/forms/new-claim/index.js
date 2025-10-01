@@ -1871,12 +1871,12 @@ export default function NewClaimForm() {
                     fieldCounter="(25 of 37)"
                   />
                   <div className="space-y-3 text-sm text-black">
-                    <p className="mt-3 font-bold">
+                    <p className="mt-3 font-bold dark:text-white-light">
                       IMPORTANT INFORMATION ON MILITARY RETIRED PAY (Includes
                       all Uniformed Services Retired Pay):
                     </p>
 
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       Submission of this application constitutes a waiver of
                       military retired pay in an amount equal to VA compensation
                       awarded, if you are entitled to both benefits. Your
@@ -1894,7 +1894,7 @@ export default function NewClaimForm() {
                       <span className="font-bold">Item 26</span>.
                     </p>
 
-                    <p className="font-bold">
+                    <p className="font-bold dark:text-white-light">
                       Note that if you check the box in Item 26, you will not
                       receive VA compensation, if granted. If you are currently
                       in receipt of VA compensation and you check the box in
@@ -1902,7 +1902,7 @@ export default function NewClaimForm() {
                       are also eligible for military retired pay.
                     </p>
 
-                    <p className="font-bold">
+                    <p className="font-bold dark:text-white-light">
                       IMPORTANT: VA COMPENSATION PAY IS NON-TAXABLE. THEREFORE,
                       VA COMPENSATION PAY MAY BE THE GREATER BENEFIT.
                     </p>
@@ -1916,11 +1916,11 @@ export default function NewClaimForm() {
                   />
 
                   <div className="mb-4 w-[90%] text-sm text-black">
-                    <p className="mt-3 font-bold">
+                    <p className="mt-3 font-bold dark:text-white-light">
                       IMPORTANT INFORMATION ON SEPARATION/SEVERANCE PAY:
                     </p>
 
-                    <p className="mb-4 mt-3 font-light">
+                    <p className="mb-4 mt-3 font-light dark:text-white-light">
                       VA compensation, if granted, may be withheld to recoup any
                       disability severance or separation pay such as involuntary
                       separation pay, voluntary separation pay, or special
@@ -1987,7 +1987,7 @@ export default function NewClaimForm() {
                       The Department of the Treasury requires all Federal
                       benefit payments be made by electronic funds transfer
                       (EFT), also called direct deposit.{' '}
-                      <span className="font-semibold underline">
+                      <span className="font-semibold underline dark:text-white-light">
                         To enroll in direct deposit, provide the information
                         requested below, and attach either a voided personal
                         check or a deposit slip.
@@ -2001,12 +2001,12 @@ export default function NewClaimForm() {
                       href="https://www.benefits.va.gov/benefits/banking.asp"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-2 block font-semibold text-blue-600 underline"
+                      className="mt-2 block font-semibold text-blue-600 underline dark:text-white-light"
                     >
                       https://www.benefits.va.gov/benefits/banking.asp
                     </a>
 
-                    <p className="mt-3 font-light">
+                    <p className="mt-3 font-light dark:text-white-light">
                       This website provides information about the Veterans
                       Benefits Banking Program (VBBP), and a link to banks and
                       credit unions that may fit your needs. You may also call{' '}
@@ -2019,7 +2019,7 @@ export default function NewClaimForm() {
                       any questions or concerns you may have.
                     </p>
 
-                    <p className="mb-3 mt-3 font-bold">
+                    <p className="mb-3 mt-3 font-bold dark:text-white-light">
                       IMPORTANT: VA COMPENSATION PAY IS NON-TAXABLE. THEREFORE,
                       VA COMPENSATION PAY MAY BE THE GREATER BENEFIT.
                     </p>
@@ -2069,7 +2069,7 @@ export default function NewClaimForm() {
                 <SectionTitle title="Section IX: Claim Certification & Signature" />
                 <>
                   <div className="mb-4 text-sm text-black">
-                    <p className="mt-3 font-light">
+                    <p className="mt-3 font-light dark:text-white-light">
                       I certify and authorize the release of information. I
                       certify that the statements in this document are true and
                       complete to the best of my knowledge. I authorize any
@@ -2082,7 +2082,7 @@ export default function NewClaimForm() {
                       make the information confidential and not discloseable.
                     </p>
 
-                    <p className="mt-3 font-light">
+                    <p className="mt-3 font-light dark:text-white-light ">
                       I certify I have received the notice attached to this
                       application titled,
                       <span className="font-semibold italic">
@@ -2093,7 +2093,7 @@ export default function NewClaimForm() {
                       </span>
                     </p>
 
-                    <p className="mt-3 font-light">
+                    <p className="mt-3 font-light dark:text-white-light">
                       I certify I have enclosed all the information or evidence
                       that will support my claim, to include an identification
                       of relevant records available at a Federal facility such
@@ -2148,7 +2148,7 @@ export default function NewClaimForm() {
                 />
                 <>
                   <div className="mb-4 space-y-3 text-sm text-black">
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       <span className="font-bold">NOTE:</span> An alternate
                       signer signature{' '}
                       <span className="font-bold">will not</span> be accepted
@@ -2156,7 +2156,7 @@ export default function NewClaimForm() {
                       Certification, is of record or attached to this request.
                     </p>
 
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       I certify that by signing on behalf of the claimant, that
                       I am a court-appointed representative;{' '}
                       <span className="font-bold">OR</span>, an attorney in fact
@@ -2178,7 +2178,7 @@ export default function NewClaimForm() {
                       unable to sign this form.
                     </p>
 
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       I understand that I may be asked to confirm the
                       truthfulness of the answers to the best of my knowledge
                       under penalty of perjury. I also understand that VA may
@@ -2187,7 +2187,7 @@ export default function NewClaimForm() {
                       application on behalf of the claimant if necessary.
                     </p>
 
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       Examples of evidence which VA may request include: Social
                       Security Number (SSN) or Taxpayer Identification Number
                       (TIN); a certificate or order from a court with competent
@@ -2228,7 +2228,7 @@ export default function NewClaimForm() {
                 />
                 <>
                   <div className="mb-4 space-y-3 text-sm text-black">
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       I certify that the claimant has authorized the undersigned
                       representative to file this claim on behalf of the
                       claimant and that the claimant is aware and accepts the
@@ -2239,7 +2239,7 @@ export default function NewClaimForm() {
                       of the claimant's knowledge.
                     </p>
 
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       <span className="font-bold">Note:</span> A POA's signature{' '}
                       <span className="font-bold">will not</span> be accepted
                       unless at the time of submission of this claim a valid VA
@@ -2267,7 +2267,7 @@ export default function NewClaimForm() {
                   </div>
 
                   <div className="mb-4 space-y-3 text-sm text-black">
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       <span className="font-bold">Penalty:</span> The law
                       provides severe penalties which include fine or
                       imprisonment, or both, for the willful submission of any
@@ -2276,7 +2276,7 @@ export default function NewClaimForm() {
                       which you are not entitled.
                     </p>
 
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       <span className="font-bold">Privacy Act Notice:</span>{' '}
                       This form will be used to determine your eligibility for
                       benefits (38 U.S.C. 5101). The responses you submit are
@@ -2316,7 +2316,7 @@ export default function NewClaimForm() {
                       stated above.
                     </p>
 
-                    <p className="font-light">
+                    <p className="font-light dark:text-white-light">
                       <span className="font-bold">Respondent Burden:</span> We
                       need this information to determine your eligibility for
                       compensation. Title 38, United States Code, allows us to
@@ -2330,7 +2330,7 @@ export default function NewClaimForm() {
                       the OMB Internet Page at{' '}
                       <a
                         href="https://www.reginfo.gov/public/do/PRAMain"
-                        className="font-semibold text-black underline"
+                        className="font-semibold text-black underline dark:text-white-light dark:underline-white-light"
                         target="_blank"
                         rel="noopener noreferrer"
                       >

@@ -105,15 +105,15 @@ export default function History() {
                 
                 <div
                 key={index}
-                className="mx-auto flex justify-between items-center rounded-xl border border-gray-200 bg-white p-4 shadow-sm pr-10 pl-5"
+                className="mx-auto flex justify-between items-center rounded-xl border border-gray-200 bg-white p-4 shadow-sm pr-10 pl-5 dark:bg-gray-800 dark:border-gray-700 dark:text-white-light"
               >
               
                 <div className="flex flex-col">
-                  <span className="text-lg font-semibold text-gray-900">
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white-light">
                     {item.formTitle}
                   </span>
               {item.timestamp !== '-'? (
-                <span className="text-sm font-semibold text-gray-800">
+                <span className="text-sm font-semibold text-gray-800 dark:text-white-light">
                   Date Submitted: {item.timestamp}
                 </span>
               ) : (
@@ -137,7 +137,7 @@ export default function History() {
                   }
                   className={`text-sm font-medium ${
                     item?.guid
-                      ? "text-blue-600 hover:underline"
+                      ? "text-blue-600 hover:underline dark:text-white-light"
                       : "text-gray-400 cursor-not-allowed"
                   }`}
                 >
@@ -148,7 +148,7 @@ export default function History() {
           </div>
           
         ) : (
-          <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-500 shadow-sm">
+          <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-500 shadow-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white-light">
             No history found
           </div>
         )}
@@ -160,7 +160,7 @@ export default function History() {
                 <button
                 type="button"
                 onClick={() => setShowReceipt(false)}
-                className="text-green-500 font-bold hover:text-green-700 flex items-center gap-2"
+                className="text-green-500 font-bold hover:text-green-700 flex items-center gap-2 dark:text-white-light"
                 >
                 {/* Back arrow icon */}
                 <svg
@@ -181,15 +181,15 @@ export default function History() {
                 </button>
                 </div>
             )}
-        <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-500 shadow-sm">
+        <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-500 shadow-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white-light">
         
         {receiptData.map((field, index) => (
             <div
                 key={`receipt${index}`}
-                className="flex justify-between border-b border-gray-200 py-2"
+                className="flex justify-between border-b border-gray-200 py-2 dark:text-white-light dark:border-gray-700"
             >
-                <p className="text-sm font-semibold text-gray-700">{field.label}</p>
-                <p className="text-sm text-gray-900">
+                <p className="text-sm font-semibold text-gray-700 dark:text-white-light">{field.label}</p>
+                <p className="text-sm text-gray-900 dark:text-white-light dark:text-white-light">
                 {field.value ?? "—"}
                 </p>
             </div>

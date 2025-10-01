@@ -973,7 +973,7 @@ export default function PTSDStressorForm() {
 
                 <SectionTitle title="Section IV: Certification and Signature" />
                 <> 
-                  <p className="text-sm md:text-base leading-relaxed text-gray-700 mb-5">
+                  <p className="text-sm md:text-base leading-relaxed text-gray-700 mb-5 dark:text-white-light">
     I <span className="font-bold">hereby certify that the information </span>
     I have given on this form is true and correct to the best of my knowledge and belief.
                   </p>
