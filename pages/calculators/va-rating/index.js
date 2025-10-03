@@ -125,7 +125,7 @@ const VaRatingCalculator = () => {
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl">VA Rating Calculator</h1>
+              <h1 className="text-2xl dark:text-white-light">VA Rating Calculator</h1>
             </div>
           </div>
         </div>
@@ -135,14 +135,14 @@ const VaRatingCalculator = () => {
       {/* Circle */}
       <div className="flex justify-center mb-10">
         <div className="w-48 h-48 border-4 border-gray-300 rounded-full flex flex-col items-center justify-center">
-          <p className="text-sm text-gray-600">Current Disability</p>
-          <p className="text-4xl font-bold">{calculatedValue}%</p>
+          <p className="text-sm text-gray-600 dark:text-white-light">Current Disability</p>
+          <p className="text-4xl font-bold dark:text-gray-200">{calculatedValue}%</p>
         </div>
       </div>
 
       {/* Bilateral info */}
       {(bFactor > 0 || combinedValue > 0) && (
-        <div className="text-center text-gray-700 mb-6">
+        <div className="text-center text-gray-700 mb-6 dark:text-white-light">
           {bFactor > 0 && <p>The bilateral factor of {bFactor} has been applied.</p>}
           {combinedValue > 0 && <p>Your calculated rating is {combinedValue}% which the VA rounds down.</p>}
         </div>
@@ -151,19 +151,19 @@ const VaRatingCalculator = () => {
       {/* Selected Options */}
       {selectedOptions.length > 0 && (
         <div className="mb-6">
-          <h2 className="font-semibold mb-2">Based on the following options:</h2>
+          <h2 className="font-semibold mb-2 dark:text-white-light">Based on the following options:</h2>
           <div className="space-y-2">
             {selectedOptions.map((opt, index) => (
               <div
                 key={index}
-                className="flex justify-between items-start bg-gray-100 p-3 rounded-md"
+                className="flex justify-between items-start bg-gray-100 p-3 rounded-md dark:bg-gray dark:border-gray-700"
               >
-                <div>
+                <div className="dark:text-white-light">
                   <p>
                     {opt.category} {opt.value}%
                   </p>
                   {opt.description && (
-                    <p className="text-xs text-gray-500 italic">{opt.description}</p>
+                    <p className="text-xs text-gray-500 italic dark:text-white-light">{opt.description}</p>
                   )}
                 </div>
                 <button
@@ -181,21 +181,21 @@ const VaRatingCalculator = () => {
       {/* Category Dropdowns */}
       <div className="space-y-4">
         {categories.map((cat) => (
-          <div key={cat.id} className="border rounded-md">
+          <div key={cat.id} className="border rounded-md dark:bg-gray-800 dark:border-gray-700">
             <button
               onClick={() =>
                 setOpenCategories((prev) => ({ ...prev, [cat.id]: !prev[cat.id] }))
               }
-              className="flex justify-between items-center w-full px-4 py-3 bg-gray-50"
+              className="flex justify-between items-center w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
             >
-              <span className="font-semibold">{cat.label}</span>
+              <span className="font-semibold dark:text-gray-200">{cat.label}</span>
               <span>{openCategories[cat.id] ? "▲" : "▼"}</span>
             </button>
 
             {openCategories[cat.id] && (
-              <div className="p-4 space-y-3">
+              <div className="p-4 space-y-3 dark:bg-gray-800">
                 <textarea
-                  className="w-full border rounded p-2 text-sm"
+                  className="w-full border rounded p-2 text-sm dark:bg-gray-900 dark:border-gray-400 dark:text-white-light"
                   placeholder="Enter disability description (optional)"
                   value={disabilityDescriptions[cat.label] || ""}
                   onChange={(e) =>
@@ -211,7 +211,7 @@ const VaRatingCalculator = () => {
                     <button
                       key={p}
                       onClick={() => addOption(cat.label, p)}
-                      className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm"
+                      className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm dark:bg-gray-900 dark:border-gray-100 dark:text-white-light"
                     >
                       {p}%
                     </button>
