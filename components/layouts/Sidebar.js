@@ -19,6 +19,7 @@ import {
   SubscriptionIcon,
   SideToggleCloseIcon,
   CalculatorIcon,
+  DocumentAnalyzerIcon,
 } from '../icons/SvgIcons';
 
 const Sidebar = () => {
@@ -106,6 +107,13 @@ const Sidebar = () => {
       title: 'Subscription',
       icon: <SubscriptionIcon />,
       keyID: 'Subscription',
+      disabled: buttonStatus < 2,
+    },
+    {
+      path: '/analyze',
+      title: 'Document Analyzer',
+      icon: <DocumentAnalyzerIcon />,
+      keyID: 'Document Analyzer',
       disabled: buttonStatus < 2,
     },
 
