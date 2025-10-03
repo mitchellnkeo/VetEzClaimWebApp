@@ -133,15 +133,15 @@ export default function TermsConditions() {
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
           <div className="flex flex-col gap-2">
             
-            <h1 className="text-2xl">Terms and Conditions</h1>
-            <p className="text-gray-600 mb-8">Last updated August 30, 2024</p>
+            <h1 className="text-2xl dark:text-white-light">Terms and Conditions</h1>
+            <p className="text-gray-600 mb-8 dark:text-white-light">Last updated August 30, 2024</p>
 
          </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-6 bg-white text-gray-900 mt-10 rounded-lg shadow-lg p-10">
+      <div className="max-w-4xl mx-auto p-6 bg-white text-gray-900 mt-10 rounded-lg shadow-lg p-10 dark:bg-gray-900 dark:text-white-light">
      
     
 

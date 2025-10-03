@@ -16,13 +16,13 @@ export default function Contact() {
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
             <div className="flex flex-col gap-2">
-                <h1 className="text-2xl">Contact</h1>
+                <h1 className="text-2xl dark:text-white-light">Contact</h1>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-6 bg-white text-gray-900 mt-10 rounded-lg shadow-lg p-10">
+      <div className="max-w-4xl mx-auto p-6 bg-white text-gray-900 mt-10 rounded-lg shadow-lg p-10 dark:bg-gray-900 dark:text-white-light">
         <p className="mt-5 mb-6">
         <span className="font-bold">Vet EZ Claim LLC</span><br />
         <span className="font-bold">20 N Orange Ave Suite 1100</span><br />
