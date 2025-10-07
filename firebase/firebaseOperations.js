@@ -346,7 +346,7 @@ export const updateBuddyStatementData = async (uid, data) => {
   }
 };
 
-export const recordAnalyzerData = async ({ uid, analyzerData }) => {
+export const recordAnalyzerData = async ({ uid, analyzerData, instructions }) => {
   try {
     // Reference: AnalyzerRecords/{uid}/records
     const recordsRef = collection(db, "analyzer_records", uid, "records");
@@ -355,6 +355,7 @@ export const recordAnalyzerData = async ({ uid, analyzerData }) => {
     const newDoc = await addDoc(recordsRef, {
       userId: uid,
       analyzerData,
+      instructions,
       createdAt: new Date().toISOString(),
     });
 
