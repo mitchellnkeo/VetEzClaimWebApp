@@ -1960,6 +1960,27 @@ export const SubscriptionIcon = ({
   );
 };
 
+export const DocumentAnalyzerIcon = ({
+  height = '20',
+  width = '20',
+  className = '',
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="#ffffff"
+      className={className}
+    >
+      <path d="M6 2a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6H6zM6 20V4h9v5h5v11H6z" />
+      <path d="M9 12h6v2H9zM9 15h4v2H9zM9 9h6v2H9z" />
+    </svg>
+  );
+};
+
+
 export const HistoryIcon = ({
   height = '20',
   width = '20',

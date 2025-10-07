@@ -585,7 +585,7 @@ export default function NoaForm() {
                   fieldCounter="(8 of 14)"
                 />
 
-                <div className="mb-5 mt-2 text-sm text-gray-600">
+                <div className="mb-5 mt-2 text-sm text-gray-600 dark:text-white-light">
                   (*You may electronically sign by typing "/s/" and then your
                   name in the signature block above: for example, /s/John Doe,
                   or you may sign with an electronic signature from a commercial
@@ -619,7 +619,7 @@ export default function NoaForm() {
                       fieldCounter="(11 of 14)"
                     />
 
-                    <div className="my-5 text-base text-gray-700">
+                    <div className="my-5 text-base text-gray-700 dark:text-white-light">
                       I am the appellant/petitioner. I declare by my signature
                       below that payment of the fifty dollar ($50.00) filing fee
                       referenced in Rule 3(f) and Rule 21(a) of the Court's
@@ -667,7 +667,7 @@ export default function NoaForm() {
                       fieldCounter="(14 of 14)"
                     />
 
-                    <div className="my-5 text-base text-gray-700">
+                    <div className="my-5 text-base text-gray-700 dark:text-white-light">
                       (*To be signed by Appellant/Petitioner, NOT
                       Appellant's/Petitioner's representative. You may
                       electronically sign by typing "/s/" and then your name in
@@ -681,7 +681,7 @@ export default function NoaForm() {
                 )}
 
                 <SectionTitle title="INSTRUCTIONS" />
-                <div className="my-5 text-base text-gray-700">
+                <div className="my-5 text-base text-gray-700 dark:text-white-light  ">
                   The NOA must be received by the Court, or properly addressed
                   and postmarked by the U.S. Postal Service, not later than 120
                   days after the date on which the Board mailed notice of the

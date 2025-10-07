@@ -40,25 +40,26 @@ const DropDownExtended = ({
 
 
   return (
-    <div>
+    <div className="dark:text-white-light">
       {/* Label + Counter */}
       <div className="mb-1 flex justify-between">
         {label && (
           <label
             htmlFor={props.id || name}
             style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
+            className="dark:text-white-light"
           >
             {label}
           </label>
         )}
         {fieldCounter && (
-          <span className="text-xs text-gray-500">{fieldCounter}</span>
+          <span className="text-xs text-gray-500 dark:text-white-light">{fieldCounter}</span>
         )}
       </div>
 
       {/* Input + Dropdown */}
       {readOnly ? (
-        <div className="w-full rounded-md border border-gray-200 bg-gray-50 p-2 text-sm text-gray-700">
+        <div className="w-full rounded-md border border-gray-200 bg-gray-50 p-2 text-sm text-gray-700 dark:bg-gray-600 dark:text-white-light">
           {getDisplayName(value) || "—"}
         </div>
       ) : isTextFieldEnabled ? (
@@ -70,13 +71,13 @@ const DropDownExtended = ({
             onChange={(e) => setValue(e.target.value)}
             onBlur={onBlur}
             placeholder="Enter or select"
-            className="flex-1 rounded-md border border-gray-300 p-2 text-sm"
+            className="flex-1 rounded-md border border-gray-300 p-2 text-sm dark:bg-gray-600 dark:text-white-light form-textarea py-2 px-3"
           />
 
           <select
             value=""
             onChange={(e) => handleSelect(e.target.value)}
-            className="w-24 rounded-md border border-gray-300 p-1 text-sm"
+            className="w-24 rounded-md border border-gray-300 p-1 text-sm dark:bg-gray-600 dark:text-white-light form-select py-2 px-3"
           >
             <option value="" disabled hidden>
               Select
@@ -102,7 +103,7 @@ const DropDownExtended = ({
           {...field}
           {...props}
           id={props.id || name}
-          className="w-full border-b border-gray-300 p-1 text-sm"
+          className="w-full border-b border-gray-300 p-1 text-sm dark:bg-gray-600 dark:text-white-light form-select py-2 px-3"
         >
           <option value="">Select</option>
           {data.map((item, index) => {

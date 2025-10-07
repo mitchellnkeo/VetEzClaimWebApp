@@ -178,7 +178,7 @@ const VaBackPayCalculator = () => {
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl">VA Back Pay Calculator</h1>
+              <h1 className="text-2xl dark:text-white-light">VA Back Pay Calculator</h1>
             </div>
           </div>
         </div>
@@ -186,7 +186,7 @@ const VaBackPayCalculator = () => {
       <div className="w-full max-w-4xl mx-auto p-6">
           <div
             className={`text-center rounded-lg p-6 mb-6 ${
-              result < 0 ? "bg-red-600 text-white" : "bg-gray-800 text-white"
+              result < 0 ? "bg-red-600 text-white dark:bg-red-600 dark:border-red-600 dark:text-white-light" : "bg-gray-800 text-white dark:bg-gray-800 dark:border-gray-700 dark:text-white-light"
             }`}
           >
             <p className="text-lg">
@@ -197,15 +197,15 @@ const VaBackPayCalculator = () => {
             </p>
           </div>
 
-          <div className="border rounded p-4 mb-6 pt-5">
+          <div className="border dark:border-gray rounded-lg p-4 mb-6 pt-5 dark:bg-gray-900">
 
-            <h1 className="font-bold  text-lg mb-6"> Step 1: Pick  Duration</h1>
+            <h1 className="font-bold text-lg mb-6 dark:text-white-light"> Step 1: Pick  Duration</h1>
             {/* Date Selection */}
-            <div className="bg-gray-100 border rounded p-4 mb-6">
-              <h2 className="font-bold  text-md">When should you have received a larger disability/smc payment than you did?</h2>
-              <div className="flex gap-4 mt-2">
+            <div className="bg-gray-100 border rounded p-4 mb-6 dark:bg-gray-700 dark:border-0">
+              <h2 className="font-bold  text-md dark:text-white-light">When should you have received a larger disability/smc payment than you did?</h2>
+              <div className="flex gap-4 mt-2 ">
                 <select
-                  className="border rounded p-2 flex-1"
+                  className="border rounded p-2 flex-1 dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                   value={initialMonth}
                   onChange={(e) => {
                     if (IsValidDateRange(e.target.value, initialYear, finalMonth, finalYear)) {
@@ -220,7 +220,7 @@ const VaBackPayCalculator = () => {
                   ))}
                 </select>
                 <select
-                  className="border rounded p-2 flex-1"
+                  className="border rounded p-2 flex-1 dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                   value={initialYear}
                   onChange={(e) => {
                     if (IsValidDateRange(initialMonth, e.target.value, finalMonth, finalYear)) {
@@ -237,11 +237,11 @@ const VaBackPayCalculator = () => {
               </div>
             </div>
 
-            <div className="bg-gray-100 border rounded p-4 mb-6">
-              <h2 className="font-bold  text-md">(Optional) Specify a stop date, or leave empty to use today's date.</h2>
+            <div className="bg-gray-100 border rounded p-4 mb-6 dark:bg-gray-700 dark:border-0">
+              <h2 className="font-bold  text-md dark:text-white-light">(Optional) Specify a stop date, or leave empty to use today's date.</h2>
               <div className="flex gap-4 mt-2">
                 <select
-                  className="border rounded p-2 flex-1"
+                  className="border rounded p-2 flex-1 dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                   value={finalMonth}
                   onChange={(e) => {
                     if (IsValidDateRange(initialMonth, initialYear, e.target.value, finalYear)) {
@@ -256,7 +256,7 @@ const VaBackPayCalculator = () => {
                   ))}
                 </select>
                 <select
-                  className="border rounded p-2 flex-1"
+                  className="border rounded p-2 flex-1 dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                   value={finalYear}
                   onChange={(e) => {
                     if (IsValidDateRange(initialMonth, initialYear, finalMonth, e.target.value)) {
@@ -275,15 +275,15 @@ const VaBackPayCalculator = () => {
 
           </div>
 
-          <div className="border rounded p-4 mb-6 pt-5">
-            <h1 className="font-bold  text-lg mb-6"> Step 2: Rating / SMC</h1>
+          <div className="border rounded p-4 mb-6 pt-5 dark:bg-gray-900 dark:border-0">
+            <h1 className="font-bold  text-lg mb-6 dark:text-white-light"> Step 2: Rating / SMC</h1>
 
             <div className="w-full mb-6"> 
-              <label className=" font-bold  text-md mb-2">
+              <label className=" font-bold  text-md mb-2 dark:text-white-light">
                  Total SMC-K Awards Received
               </label>
               <select
-                    className="border rounded p-2 w-full"
+                    className="border rounded p-2 w-full dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                     value={smckAwards}
                     onChange={(e) => setSmckAwards(e.target.value)}
                   >
@@ -295,11 +295,11 @@ const VaBackPayCalculator = () => {
               
 
             <div className="w-full mb-6"> 
-              <label className=" font-bold  text-md mb-2">
+              <label className=" font-bold  text-md mb-2 dark:text-white-light">
                 Select Compensation Type
               </label>
               <select
-                    className="border rounded p-2 w-full"
+                    className="border rounded p-2 w-full dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                     value={compensationType}
                     onChange={(e) => {
                       setCompensationType(e.target.value)
@@ -325,10 +325,10 @@ const VaBackPayCalculator = () => {
               
             {compensationType === "Disability Rating" && (
               <> 
-                <div className="bg-gray-100 border rounded p-4 mb-6">
+                <div className="bg-gray-100 border rounded p-4 mb-6 dark:bg-gray-700 dark:border-0">
                   <label className="block font-bold  text-md"> What the benefit rate  should you have been receiving on this date? </label>
                   <select
-                    className="border rounded p-2 w-full mt-2"
+                    className="border rounded p-2 w-full mt-2 dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                     value={ratingPercentage}
                     onChange={(e) => setRatingPercentage(e.target.value)}
                   >
@@ -337,12 +337,12 @@ const VaBackPayCalculator = () => {
                     ))}
                   </select>
                 </div>
-                <div className="bg-gray-100 border rounded p-4 mb-6">
+                <div className="bg-gray-100 border rounded p-4 mb-6 dark:bg-gray-700 dark:border-0">
                   <label className="block font-bold  text-md">
                   What was the benefit rate you were actually receiving on this date? 
                   </label>
                   <select
-                    className="border rounded p-2 w-full mt-2"
+                    className="border rounded p-2 w-full mt-2 dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                     value={receivingPercentage}
                     onChange={(e) => setReceivingPercentage(e.target.value)}
                   >
@@ -356,10 +356,10 @@ const VaBackPayCalculator = () => {
 
             {compensationType === "SMC" && (
               <> 
-                <div className="bg-gray-100 border rounded p-4 mb-6">
+                <div className="bg-gray-100 border rounded p-4 mb-6 dark:bg-gray-700 dark:border-0">
                   <label className="block font-bold  text-md"> What the SMC level should you have been receiving on this date? </label>
                   <select
-                    className="border rounded p-2 w-full mt-2"
+                    className="border rounded p-2 w-full mt-2 dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                     value={smcLevel}
                     onChange={(e) => setSmcLevel(e.target.value)}
                   >
@@ -368,12 +368,12 @@ const VaBackPayCalculator = () => {
                     ))}
                   </select>
                 </div>
-                <div className="bg-gray-100 border rounded p-4 mb-6">
+                <div className="bg-gray-100 border rounded p-4 mb-6 dark:bg-gray-700 dark:border-0 dark:text-white-light">
                   <label className="block font-bold  text-md">
                   What was the SMC level you were actually receiving on this date? 
                   </label>
                   <select
-                    className="border rounded p-2 w-full mt-2"
+                    className="border rounded p-2 w-full mt-2 dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                     value={smcLevelReceiving}
                     onChange={(e) => setSmcLevelReceiving(e.target.value)}
                   >
@@ -390,11 +390,11 @@ const VaBackPayCalculator = () => {
 
           </div>
 
-          <div className="border rounded p-4 mb-6 pt-5">
-            <h1 className="font-bold  text-lg mb-6"> Step 3: Dependents Information</h1>
+          <div className="border rounded p-4 mb-6 pt-5 dark:bg-gray-900 dark:border-0">
+            <h1 className="font-bold  text-lg mb-6 dark:text-white-light"> Step 3: Dependents Information</h1>
             {/* Marital / Children / Parents */}
-            <div className="bg-gray-100 border rounded p-4 mb-6 space-y-4">
-              <label className="flex items-center gap-2 font-bold  text-md">
+            <div className="bg-gray-100 border rounded p-4 mb-6 space-y-4 dark:bg-gray-700 dark:border-0">
+              <label className="flex items-center gap-2 font-bold  text-md dark:text-white-light">
                 <input
                   type="checkbox"
                   checked={isMarried}
@@ -402,24 +402,27 @@ const VaBackPayCalculator = () => {
                     setIsMarried(e.target.checked);
                     if (!e.target.checked) setSpouseNeedAid(false);
                   }}
+                  className="form-checkbox dark:border-white-light dark:checked:border-0 dark:checked:bg-gray-800"
                 />
                 Are you married?
               </label>
 
               {isMarried && (
-                <label className="flex items-center gap-2 ml-4 font-bold  text-md">
+                <label className="flex items-center gap-2 ml-4 font-bold  text-md dark:text-white-light">
                   <input
                     type="checkbox"
                     checked={spouseNeedAid}
                     onChange={(e) => setSpouseNeedAid(e.target.checked)}
-                  />
+                    className="form-checkbox dark:border-white-light dark:checked:border-0 dark:checked:bg-gray-800"
+
+                    />
                   Does your spouse need aid and attendance?
                 </label>
               )}
             </div>
 
-            <div className="bg-gray-100 border rounded p-4 mb-6 space-y-4">
-              <label className="flex items-center gap-2 font-bold  text-md">
+            <div className="bg-gray-100 border rounded p-4 mb-6 space-y-4 dark:bg-gray-700 dark:border-0">
+              <label className="flex items-center gap-2 font-bold  text-md dark:text-white-light">
                 <input
                   type="checkbox"
                   checked={hasDependentChildren}
@@ -430,18 +433,19 @@ const VaBackPayCalculator = () => {
                       setChildrenOver18("0");
                     }
                   }}
+                  className="form-checkbox dark:border-white-light dark:checked:border-0 dark:checked:bg-gray-800"
                 />
                 Do you have dependent children?
               </label>
 
               {hasDependentChildren && (
-                <div className="ml-4 space-y-2">
+                <div className="ml-4 space-y-2 dark:text-white-light">
                   <label className="font-bold  text-md">
                     Number of children under 18
                   </label>
                   <input
                     type="number"
-                    className="border rounded p-2 w-full"
+                    className="border rounded p-2 w-full dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                     value={childrenUnder18}
                     onChange={(e) => {
                       const text = e.target.value;
@@ -462,7 +466,7 @@ const VaBackPayCalculator = () => {
                   </label>
                   <input
                     type="number"
-                    className="border rounded p-2 w-full"
+                    className="border rounded p-2 w-full dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                     value={childrenOver18}
                     onChange={(e) => {
                       const text = e.target.value;
@@ -482,8 +486,8 @@ const VaBackPayCalculator = () => {
               )}
             </div>
 
-            <div className="bg-gray-100 border rounded p-4 mb-6 space-y-4">
-              <label className="flex items-center gap-2 font-bold  text-md">
+            <div className="bg-gray-100 border rounded p-4 mb-6 space-y-4 dark:bg-gray-700 dark:border-0">
+              <label className="flex items-center gap-2 font-bold  text-md dark:text-white-light">
                 <input
                   type="checkbox"
                   checked={hasDependentParents}
@@ -491,13 +495,14 @@ const VaBackPayCalculator = () => {
                     setHasDependentParents(e.target.checked);
                     if (!e.target.checked) setDependentParents("0");
                   }}
+                  className="form-checkbox dark:border-white-light dark:checked:border-0 dark:checked:bg-gray-800"
                 />
                 Do you have dependent parents?
               </label>
 
               {hasDependentParents && (
                 <select
-                  className="border rounded p-2 w-full ml-4"
+                  className="border rounded p-2 w-full ml-4 dark:bg-gray-900 dark:border-gray-700 dark:text-white-light"
                   value={dependentParents}
                   onChange={(e) => setDependentParents(e.target.value)}
                 >
@@ -517,13 +522,13 @@ const VaBackPayCalculator = () => {
             <button
               onClick={onCalculate}
               disabled={loading}
-              className="bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600 disabled:opacity-50"
+              className=" bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600 disabled:opacity-50 dark:bg-gray-600 dark:border-0 dark:text-white-light dark:hover:bg-gray-700"
             >
               {loading ? "Calculating..." : "Calculate"}
             </button>
             <button
               onClick={onReset}
-              className="bg-primary text-white px-4 py-2 rounded shadow hover:bg-primaryHover"
+              className="bg-primary text-white px-4 py-2 rounded shadow hover:bg-primaryHover dark:bg-primary dark:border-primary dark:text-white-light dark:hover:bg-primaryHover  dark:hover:border-primary"
             >
               Reset All
             </button>

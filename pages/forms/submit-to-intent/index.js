@@ -787,7 +787,7 @@ export default function SubmitToIntentForm() {
                   isOtherAllowed={false}
                 />
 
-                <p>
+                <p className="dark:text-white-light">
                   <strong>Important: </strong>
                   After receiving this form, VA will give you the appropriate
                   application to file for the general benefit you select above.

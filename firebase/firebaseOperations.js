@@ -7,7 +7,9 @@ import {
   collection,
   query, orderBy,
   serverTimestamp,
-  deleteDoc
+  deleteDoc,
+  addDoc,
+
 } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import { formsIdList } from '@/utils/staticData';
@@ -308,7 +310,6 @@ export const deleteBuddyRequestData = async (uid, docId) => {
   }
 };
 
-
 export const getBuddyFormData = async (uid, docId) => {
   console.log("uid:", uid);
   console.log("docId:", docId);
@@ -326,7 +327,6 @@ export const getBuddyFormData = async (uid, docId) => {
     return null;
   }
 };
-
 
 export const updateBuddyStatementData = async (uid, data) => {
   console.log("updateBuddyStatementData : >> ", data);
@@ -346,3 +346,40 @@ export const updateBuddyStatementData = async (uid, data) => {
   }
 };
 
+export const recordAnalyzerData = async ({ uid, analyzerData, instructions }) => {
+  try {
+    // Reference: AnalyzerRecords/{uid}/records
+    const recordsRef = collection(db, "analyzer_records", uid, "records");
+
+    // Create new record
+    const newDoc = await addDoc(recordsRef, {
+      userId: uid,
+      analyzerData,
+      instructions,
+      createdAt: new Date().toISOString(),
+    });
+
+    console.log(`${analyzerData} is recorded with ID: ${newDoc.id} ✅`);
+    return newDoc.id; // return record ID if needed
+  } catch (error) {
+    console.error(`Error creating ${analyzerData} record:`, error);
+    throw error;
+  }
+};
+
+export const getAnalyzerRecordsByUser = async (uid) => {
+  try {
+    const recordsRef = collection(db, "analyzer_records", uid, "records");
+    const snapshot = await getDocs(recordsRef);
+    
+    if (snapshot.empty) {
+      return []; // no records, return blank array
+    }
+
+    const records = snapshot.docs.map((doc) => doc.data().analyzerData || {});
+    return records;
+  } catch (error) {
+    console.error(`Error fetching records for user ${uid}:`, error);
+    return []; // fail-safe return blank
+  }
+};

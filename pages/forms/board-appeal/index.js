@@ -633,8 +633,8 @@ export default function BoardAppealForm() {
                   </>
 
                   <SectionTitle title="Section II: Board Review Option" />
-                  <> 
-                      <p className="text-gray-700 text-sm leading-relaxed mt-3 mb-5">
+                  <>  
+                      <p className="text-gray-700 text-sm leading-relaxed mt-3 mb-5 dark:text-white-light">
                           A Veterans Law Judge will consider your appeal in the order in which it is
                           received, depending on which of the following review options you select.{" "}
                           <span className="italic">
@@ -705,7 +705,7 @@ export default function BoardAppealForm() {
 
                   <SectionTitle title="Section III: Specific Issue(s) to be Appealed to a Veterans Law Judge at the Board" />
                   <> 
-                      <p className="text-gray-700 text-sm leading-relaxed mt-3 mb-5">
+                      <p className="text-gray-700 text-sm leading-relaxed mt-3 mb-5 dark:text-white-light">
                           Please list each issue decided by VA that you would like to appeal. Please
                           refer to your decision notice(s) for a list of adjudicated issues. For each
                           issue, please identify the date of VA's decision and the area of disagreement{" "}
@@ -824,7 +824,7 @@ export default function BoardAppealForm() {
                   <SectionTitle title="Section VI: Certification and Signature" />
                   <> 
 
-                      <p className="text-[14px] text-left font-normal text-blue-600 mt-3">
+                      <p className="text-[14px] text-left font-normal text-blue-600 mt-3 dark:text-white-light ">
                           I certify that the statements on this form are true and correct to the best of
                           my knowledge and belief.
                       </p>

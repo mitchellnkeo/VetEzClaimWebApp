@@ -85,7 +85,7 @@ const Header = () => {
       }
     >
       <div className="shadow-sm">
-        <div className="relative flex w-full items-center bg-[#006092] px-5 py-2.5 dark:bg-black">
+        <div className="relative flex w-full items-center bg-[#006092] px-5 py-2.5 dark:bg-gray">
           <div className="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
             <Link href="/" className="main-logo flex shrink-0 items-center">
               <img
@@ -125,7 +125,7 @@ const Header = () => {
                     themeConfig.theme === 'dark' &&
                     'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
                   }`}
-                  onClick={() => dispatch(toggleTheme('system'))}
+                  onClick={() => dispatch(toggleTheme('light'))}
                 >
                   <DarkThemeIcon />
                 </button>

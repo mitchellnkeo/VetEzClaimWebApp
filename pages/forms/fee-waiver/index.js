@@ -408,7 +408,7 @@ export default function FeeWaiverForm() {
                     fieldCounter="(2 of 5)"
                   />
 
-                  <div className="my-5 text-base text-gray-700">
+                  <div className="my-5 text-base text-gray-700 dark:text-white-light">
                     I am the appellant/petitioner. I declare by my signature
                     below that payment of the fifty dollar ($50.00) filing fee
                     referenced in Rule 3(f) and Rule 21(a) of the Court's Rules
@@ -455,12 +455,12 @@ export default function FeeWaiverForm() {
                     fieldCounter="(5 of 5)"
                   />
 
-                  <div className="my-5 text-base text-gray-700">
+                  <div className="my-5 text-base text-gray-700 dark:text-white-light">
                     (*To be signed by Appellant/Petitioner, NOT
                     Appellant's/Petitioner's representative. You may
                     electronically sign by typing "/s/" and then your name in
                     the signature block above: for example, /s/John Doe.{' '}
-                    <span className="font-extrabold">
+                    <span className="font-extrabold dark:text-white-light ">
                       If you are filing this form, do not pay the $50 filing
                       fee.)
                     </span>
