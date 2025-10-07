@@ -48,18 +48,21 @@ const BuddyRequestCell = ({
 
   return (
     <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: 12,
-        borderBottom: "1px solid #ccc",
-        borderRadius: 8,
-        marginBottom: 5,
-        backgroundColor: "#fff",
-      }}
+    className={`
+      flex
+      justify-between
+      items-center
+      p-3         /* 12px padding */
+      border-b
+      border-gray-300
+      rounded-md  /* 8px border radius */
+      mb-1.5      /* 5px margin-bottom */
+      bg-white
+      dark:bg-gray-800
+      dark:border-gray-700
+    `}
     >
-      <div>
+      <div className="py-2 dark:text-white-light">
         <div><strong>Name:</strong> {request.witness_first_name} {request.witness_last_name}</div>
         <div><strong>Email:</strong> {request.witness_primary_email || "N/A"}</div>
         <div style={{ color: getStatusColor(request.status) }}>

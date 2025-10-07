@@ -804,7 +804,7 @@ export default function HigherLevelReviewForm() {
 
                 <SectionTitle title="Section IV: Optional Informal Conference" />
                 <>  
-                     <h6 className='mb-5'> You or your authorized representative may request an informal
+                     <h6 className='mb-5 dark:text-white-light'> You or your authorized representative may request an informal
                      conference. (VA will only conduct one informal conference associated
                      with this request for Higher-Level Review.)</h6>
 
@@ -874,7 +874,7 @@ export default function HigherLevelReviewForm() {
                   title="Section V: Issues for Higher-Level Review"
                 />
                 <>
-                    <p className="text-gray-700 text-sm leading-relaxed">
+                    <p className="text-gray-700 text-sm leading-relaxed dark:text-white-light">
                     If you are responding to a Statement of the Case (SOC) or a Supplemental
                     Statement of the Case (SSOC): By submitting this form, you are withdrawing
                     the eligible legacy appeal issue(s) listed in 18A in their entirety, and any
@@ -883,7 +883,7 @@ export default function HigherLevelReviewForm() {
                     appeals system for the issue(s) withdrawn.
                     </p>
 
-                    <p className="text-gray-700 text-sm leading-relaxed mt-4">
+                    <p className="text-gray-700 text-sm leading-relaxed mt-4 dark:text-white-light">
                     <span className="font-semibold">IDENTIFY IN ITEM 18A</span> EACH ISSUE DECIDED
                     BY VA FOR WHICH YOU ARE REQUESTING A HIGHER-LEVEL REVIEW. Refer to your
                     decision notification letter(s) for your issue(s) VA has previously decided.
@@ -894,7 +894,7 @@ export default function HigherLevelReviewForm() {
                     your name and file number on each page attached.
                     </p>
 
-                    <p className="text-gray-700 text-sm leading-relaxed mt-4">
+                    <p className="text-gray-700 text-sm leading-relaxed mt-4 dark:text-white-light">
                     <strong>IMPORTANT:</strong> You may only list issues for the benefit type
                     selected in Item 15, Section III.
                     </p>
@@ -990,12 +990,12 @@ export default function HigherLevelReviewForm() {
 
                 <SectionTitle title="Section VII: Authorized Representative Signature" />
                 <> 
-                    <p className="text-gray-700 text-sm leading-relaxed">
+                    <p className="text-gray-700 text-sm leading-relaxed dark:text-white-light">
                     <span className="font-extrabold">I CERTIFY</span> that the statements on this
                     form are true and correct to the best of my knowledge and belief.
                     </p>
 
-                    <p className="text-gray-700 text-sm leading-relaxed mt-2">
+                    <p className="text-gray-700 text-sm leading-relaxed mt-2 dark:text-white-light">
                     <span className="font-extrabold">NOTE:</span> A representative's signature
                     will not be accepted unless at the time of submission of this request a valid
                     VA Form 21-22, Appointment of Veterans Service Organization as Claimant's

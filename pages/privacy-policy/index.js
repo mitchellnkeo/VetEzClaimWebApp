@@ -91,15 +91,15 @@ export default function PrivacyPolicy() {
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
             <div className="flex flex-col gap-2">
-                <h1 className="text-2xl">Privacy Policy</h1>
-                <p className="text-center text-gray-600 mb-8">Last updated August 30, 2024</p>
+                <h1 className="text-2xl dark:text-white-light">Privacy Policy</h1>
+                <p className="text-center text-gray-600 mb-8 dark:text-white-light">Last updated August 30, 2024</p>
 
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-6 bg-white text-gray-900 mt-10 rounded-lg shadow-lg p-10">
+      <div className="max-w-4xl mx-auto p-6 bg-white text-gray-900 mt-10 rounded-lg shadow-lg p-10 dark:bg-gray-900 dark:text-white-light">
 
       <p className="mb-6 text-justify">
         This Privacy Notice for EZ Claim LLC (<span className="font-bold">we</span>, <span className="font-bold">us</span>, or <span className="font-bold">our</span>), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services (<span className="font-bold">Services</span>), including when you:

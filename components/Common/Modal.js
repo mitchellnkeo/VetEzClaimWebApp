@@ -25,17 +25,17 @@ export default function Modal({ open, onClose, children, title }) {
       <div
         role="dialog"
         aria-modal="true"
-        className="relative z-[100000] w-full  max-w-[612px] rounded-lg bg-white p-6 shadow-2xl"
+        className="relative z-[100000] w-full  max-w-[612px] rounded-lg bg-white p-6 shadow-2xl dark:bg-[#121212]"
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
+          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 dark:text-white-light"
           aria-label="Close"
         >
           <FaTimes size={18} />
         </button>
 
-        {title && <h2 className="mb-4 text-xl font-semibold">{title}</h2>}
+        {title && <h2 className="mb-4 text-xl font-semibold dark:text-white-light">{title}</h2>}
 
         <div>{children}</div>
       </div>

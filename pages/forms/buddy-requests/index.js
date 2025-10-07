@@ -209,8 +209,8 @@ export default function BuddyRequests() {
   };
 
   const requestModal = (
-    <div> 
-        <Modal open={open} onClose={() => setOpen(false)} title="Provide Buddy's Details">
+    <div className=''> 
+        <Modal open={open} onClose={() => setOpen(false)} title="Provide Buddy's Details" >
             <div className="max-h-[90vh] overflow-y-auto">
                 <Formik 
                 initialValues={initialValues}

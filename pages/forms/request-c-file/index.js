@@ -980,7 +980,7 @@ export default function SubmitToIntentForm() {
 
 <SectionTitle title="Section IV: Willingness to pay fees" />
 
-                <p> 
+                <p className="dark:text-white-light"> 
                   19. <strong>Important :</strong> 
                   For the
             purpose of fees only, FOIA divides requesters into three categories:
@@ -1048,7 +1048,7 @@ export default function SubmitToIntentForm() {
                 <SectionTitle title="Section VI: Requester Certification and Signature"  subtitle="(Valid only if Section II has been completed and requester has an
             authorized third party)"/>
 
-<p className='mb-5'> <strong> I CERTIFY THAT </strong> I have
+<p className='mb-5 dark:text-white-light'> <strong> I CERTIFY THAT </strong> I have
             completed this FOIA/PA request and declare it is true and correct to
             the best of my knowledge and belief. </p>
 

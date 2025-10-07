@@ -121,7 +121,7 @@ export default function Subscription() {
         {isOpen && subscriptionDialog}
 
         {isSubscribedStatus && subscribedMessage }
-        <div className=" max-w-4xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
+        <div className=" max-w-4xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white-light">
             <div className="bg-primary text-white p-6 rounded-lg">
                 <h3 className="font-semibold text-lg mb-4">Includes ability to:</h3>
                 <ul className="space-y-2 list-none">
@@ -180,7 +180,7 @@ export default function Subscription() {
 
             )}
 
-            <button className="w-full py-2 mt-4 font-semibold rounded-lg border border-gray-400 bg-white transition-colors hover:border-primary hover:font-bold  hover:font-primary" onClick={handleTermsAndConditions}>
+            <button className="w-full py-2 mt-4 font-semibold rounded-lg border border-gray-400 bg-white transition-colors hover:border-primary hover:font-bold  hover:font-primary dark:bg-gray" onClick={handleTermsAndConditions}>
                 Terms and Conditions
             </button>
 

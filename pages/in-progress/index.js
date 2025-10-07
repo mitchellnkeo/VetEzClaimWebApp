@@ -84,10 +84,10 @@ export default function InProgressForms() {
           inprogressForms.map((form, index) => (
             <div
               key={index}
-              className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+              className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white-light"
             >
               <div>
-                <p className="text-base font-medium text-gray-900">
+                <p className="text-base font-medium text-gray-900 dark:text-white-light">
                   {form.formTitle}
                 </p>
               </div>
@@ -109,7 +109,7 @@ export default function InProgressForms() {
             </div>
           ))
         ) : (
-          <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-500 shadow-sm">
+          <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-500 shadow-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white-light">
             No forms found
           </div>
         )}
