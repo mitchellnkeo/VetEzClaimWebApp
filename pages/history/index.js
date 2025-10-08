@@ -88,7 +88,7 @@ export default function History() {
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
           <div className="flex flex-col gap-2">
-            <h1 className="text-2xl">{showReceipt ? "Receipt" : "History"}</h1>
+            <h1 className="text-2xl dark:text-white-light">{showReceipt ? "Receipt" : "History"}</h1>
 
          </div>
           </div>
