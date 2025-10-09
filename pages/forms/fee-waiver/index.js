@@ -428,6 +428,7 @@ export default function FeeWaiverForm() {
                     options={values.signatureOfAppeallant}
                     multiSelect={true}
                     isOtherAllowed={false}
+                    lockOption={true}
                   />
 
                   <DateSelectorExtended

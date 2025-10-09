@@ -35,7 +35,7 @@ export default function MenuPage() {
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl">{menuItem ? menuItem.title : ''}</h1>
+              <h1 className="text-2xl dark:text-white-light">{menuItem ? menuItem.title : ''}</h1>
             </div>
           </div>
         </div>
