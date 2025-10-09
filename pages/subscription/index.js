@@ -89,7 +89,11 @@ export default function Subscription() {
           <button
             onClick={() => {
               closeDialog();
-              window.location.replace('/forms');
+              setIsLoading(true);
+              setTimeout(() => {
+                setIsLoading(false);
+                window.location.replace('/forms');
+              }, 4000);
             }}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
@@ -112,7 +116,7 @@ export default function Subscription() {
             <div className="invoice-table">
             <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-2xl">Subscription</h1>
+                    <h1 className="text-2xl dark:text-white-light">Subscription</h1>
                 </div>
             </div>
             </div>

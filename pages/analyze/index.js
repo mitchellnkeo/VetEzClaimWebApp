@@ -10,6 +10,7 @@ import { docsAnalyzerService } from '@/services/DocsAnalyzerService';
 import { formsIdList } from '@/utils/staticData';
 import { recordAnalyzerData, getAnalyzerRecordsByUser } from '@/firebase/firebaseOperations';
 import { FaFilePdf, FaHistory, FaArrowRight } from 'react-icons/fa';
+import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const AnalyzeUI = () => {
   const router = useRouter();
@@ -174,6 +175,7 @@ const AnalyzeUI = () => {
         currentTitle="Document Analyzer"
       />
        <Loader show={isLoading} />
+       {!isSubscribed && <SubscriptionRequired />}
       
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">
