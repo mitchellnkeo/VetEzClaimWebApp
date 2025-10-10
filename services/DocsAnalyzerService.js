@@ -1,13 +1,11 @@
 import ApiService from '@/utils/apiService';
 
-export const docsAnalyzerService = async (base64Pdf, uid, instruction) => {
-  const formData = {
-    uid: uid,
-    base64Pdf: base64Pdf,
-    instruction: instruction,
-  }
+export const docsAnalyzerService = async (docFile, instructions) => {
+  const formData = new FormData();
+  formData.append('file', docFile);
+  formData.append('instructions', instructions);
   try {
-    const response = await ApiService.post('/agent/doc-analyze', formData, {
+    const response = await ApiService.post('/agent/analyze', formData, {
       noAuth: true,
     });
     return response;

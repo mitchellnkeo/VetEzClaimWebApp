@@ -10,23 +10,25 @@ const ApiService = axios.create({
 
 ApiService.interceptors.request.use(
   async (config) => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // Default content type
     config.headers['Content-Type'] = 'application/json';
-    // config.headers['Timezone'] = timezone;
-    if (config.file) {
+
+    // If sending FormData, override content type
+    if (config.data instanceof FormData) {
       config.headers['Content-Type'] = 'multipart/form-data';
     }
+
+    // Add auth if required
     if (!config?.noAuth) {
       const accessToken = await getAccessToken();
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
     }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 ApiService.interceptors.response.use(
