@@ -15,6 +15,7 @@ import {
 import { FaFilePdf, FaHistory, FaArrowRight } from 'react-icons/fa';
 import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 import { doc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 
 const AnalyzeUI = () => {
   const router = useRouter();
@@ -35,6 +36,13 @@ const AnalyzeUI = () => {
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
+
+    const MAX_SIZE = 10 * 1024 * 1024;
+
+    if (selectedFile.size > MAX_SIZE) {
+      toast.error('File size cannot exceed 10 MB.');
+      return;
+    }
 
     const allowedTypes = [
       'application/pdf',
