@@ -31,23 +31,23 @@ return (
             </div>
           
         </div>
-        <div>
-            {themeConfig.theme === 'light' ? (
+        <div>     {/* Theme Toggle Button */}
+            {themeConfig.theme === 'dark' ? (
                 <button
-                  className={`${
-                    themeConfig.theme === 'light' &&
-                    'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
-                  }`}
-                  onClick={() => dispatch(toggleTheme('dark'))}
-                >
-                  <ToggleThemeIcon />
-                </button>
-              ) : ( <button
                   className={`${
                     themeConfig.theme === 'dark' &&
                     'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
                   }`}
                   onClick={() => dispatch(toggleTheme('light'))}
+                >
+                  <ToggleThemeIcon />
+                </button>
+              ) : ( <button
+                  className={`${
+                    themeConfig.theme === 'light' &&
+                    'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
+                  }`}
+                  onClick={() => dispatch(toggleTheme('dark'))}
                 >
                   <DarkThemeIcon />
                 </button>
