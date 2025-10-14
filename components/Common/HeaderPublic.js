@@ -12,53 +12,11 @@ import { DarkThemeIcon, ToggleThemeIcon } from '../icons/SvgIcons';
 
 
 export default function HeaderPublic() {
-
-const { t, i18n } = useTranslation();
 const dispatch = useDispatch();
-const router = useRouter();
 
+const themeConfig = useSelector((state) => state.themeConfig);
 
-
-useEffect(() => {
-    const selector = document.querySelector(
-      'ul.horizontal-menu a[href="' + window.location.pathname + '"]'
-    );
-    if (selector) {
-      const all = document.querySelectorAll(
-        'ul.horizontal-menu .nav-link.active'
-      );
-      for (let i = 0; i < all.length; i++) {
-        all[0]?.classList.remove('active');
-      }
-
-      let allLinks = document.querySelectorAll('ul.horizontal-menu a.active');
-      for (let i = 0; i < allLinks.length; i++) {
-        const element = allLinks[i];
-        element?.classList.remove('active');
-      }
-      selector?.classList.add('active');
-
-      const ul = selector.closest('ul.sub-menu');
-      if (ul) {
-        let ele = ul.closest('li.menu').querySelectorAll('.nav-link');
-        if (ele) {
-          ele = ele[0];
-          setTimeout(() => {
-            ele?.classList.add('active');
-          });
-        }
-      }
-    }
-  }, [router.pathname]);
-  const isRtl =
-    useSelector((state) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-  const themeConfig = useSelector((state) => state.themeConfig);
-  const [flag, setFlag] = useState('');
-  useEffect(() => {
-    setFlag(localStorage.getItem('i18nextLng') || themeConfig.locale);
-  });
-
-    return (
+return (
         <header className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-primary dark:bg-gray-800 shadow-sm">
         <div className="flex items-center space-x-2">
             <div className="w-24 h-8 flex items-center justify-center">
@@ -96,5 +54,5 @@ useEffect(() => {
               )}
         </div>
       </header>
-    )
+)
 }
