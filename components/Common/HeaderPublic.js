@@ -1,15 +1,62 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import {
+  toggleLocale,
+  toggleSidebar,
+  toggleTheme,
+} from '@/store/slices/themeConfigSlice';
+import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import { DarkThemeIcon, ToggleThemeIcon } from '../icons/SvgIcons';
 
 
 export default function HeaderPublic() {
-const [darkMode, setDarkMode] = useState(false);
+
+const { t, i18n } = useTranslation();
+const dispatch = useDispatch();
+const router = useRouter();
+
+
 
 useEffect(() => {
-    if (darkMode) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
-}, [darkMode]); 
+    const selector = document.querySelector(
+      'ul.horizontal-menu a[href="' + window.location.pathname + '"]'
+    );
+    if (selector) {
+      const all = document.querySelectorAll(
+        'ul.horizontal-menu .nav-link.active'
+      );
+      for (let i = 0; i < all.length; i++) {
+        all[0]?.classList.remove('active');
+      }
+
+      let allLinks = document.querySelectorAll('ul.horizontal-menu a.active');
+      for (let i = 0; i < allLinks.length; i++) {
+        const element = allLinks[i];
+        element?.classList.remove('active');
+      }
+      selector?.classList.add('active');
+
+      const ul = selector.closest('ul.sub-menu');
+      if (ul) {
+        let ele = ul.closest('li.menu').querySelectorAll('.nav-link');
+        if (ele) {
+          ele = ele[0];
+          setTimeout(() => {
+            ele?.classList.add('active');
+          });
+        }
+      }
+    }
+  }, [router.pathname]);
+  const isRtl =
+    useSelector((state) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
+  const themeConfig = useSelector((state) => state.themeConfig);
+  const [flag, setFlag] = useState('');
+  useEffect(() => {
+    setFlag(localStorage.getItem('i18nextLng') || themeConfig.locale);
+  });
 
     return (
         <header className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-primary dark:bg-gray-800 shadow-sm">
@@ -27,22 +74,22 @@ useEffect(() => {
           
         </div>
         <div>
-              {darkMode ? (
+            {themeConfig.theme === 'light' ? (
                 <button
                   className={`${
-                    darkMode  &&
+                    themeConfig.theme === 'light' &&
                     'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
                   }`}
-                  onClick={() => setDarkMode(false)}
+                  onClick={() => dispatch(toggleTheme('dark'))}
                 >
                   <ToggleThemeIcon />
                 </button>
               ) : ( <button
                   className={`${
-                    !darkMode  &&
+                    themeConfig.theme === 'dark' &&
                     'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
                   }`}
-                  onClick={() => setDarkMode(true)}
+                  onClick={() => dispatch(toggleTheme('light'))}
                 >
                   <DarkThemeIcon />
                 </button>
