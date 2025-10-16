@@ -60,16 +60,20 @@ export const updateSubscriptionStatus = createAsyncThunk(
 export const getSubscriptionStatus = createAsyncThunk(
   'revenueCat/getSubscriptionStatus',
   async (uid, { rejectWithValue }) => { 
-    console.log('>> getSubscriptionStatus:', uid);
     try {
       const docRef = doc(db, 'profile', uid);
       const docSnap = await getDoc(docRef);
-      return docSnap.data().subscriptionStatus || false;
+      if (!docSnap.exists()) {
+        return false; // or null if you prefer
+      }
+      const data = docSnap.data();
+      return data.subscriptionStatus || false;
     } catch (error) {
-      return rejectWithValue(error.message || 'subscription status retrieval failed');
+      return rejectWithValue(error.message || 'Subscription status retrieval failed');
     }   
   }
 );
+
 
 const revenueCatSlice = createSlice({
   name: 'revenueCat',
