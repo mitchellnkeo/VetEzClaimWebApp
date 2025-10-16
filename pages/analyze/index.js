@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import FrontLayout from '@/components/layouts/FrontLayout';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Loader from '@/components/Common/Loader';
 import { docsAnalyzerService } from '@/services/DocsAnalyzerService';

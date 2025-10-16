@@ -19,7 +19,7 @@ const monthData = [
 const currentYear = new Date().getFullYear();
 const yearData = Array.from({ length: 6 }, (_, i) => (currentYear - i).toString());
 const ratingPercentageData = ["0%","10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
-const dependentParentsData = ["1", "2"];
+const dependentParentsData = ["0", "1", "2"];
 const compensationTypeData = ["Select", "Disability Rating", "SMC"];
 const smckAwardsData = [0,1,2,3]
 
