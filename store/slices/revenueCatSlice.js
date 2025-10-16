@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { revenueCatManager } from '@/services/subscriptionService';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 
 export const initializeRevenueCat = createAsyncThunk(
@@ -57,6 +57,20 @@ export const updateSubscriptionStatus = createAsyncThunk(
   }
 );
 
+export const getSubscriptionStatus = createAsyncThunk(
+  'revenueCat/getSubscriptionStatus',
+  async (uid, { rejectWithValue }) => { 
+    console.log('>> getSubscriptionStatus:', uid);
+    try {
+      const docRef = doc(db, 'profile', uid);
+      const docSnap = await getDoc(docRef);
+      return docSnap.data().subscriptionStatus || false;
+    } catch (error) {
+      return rejectWithValue(error.message || 'subscription status retrieval failed');
+    }   
+  }
+);
+
 const revenueCatSlice = createSlice({
   name: 'revenueCat',
   initialState: {
@@ -92,6 +106,13 @@ const revenueCatSlice = createSlice({
         state.error = null;
       })
       .addCase(updateSubscriptionStatus.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(getSubscriptionStatus.fulfilled, (state, action) => {
+        state.isSubscribed = action.payload;
+        state.error = null;
+      })
+      .addCase(getSubscriptionStatus.rejected, (state, action) => {
         state.error = action.payload;
       })
   },

@@ -6,7 +6,7 @@ import { initializeRevenueCat } from '../store/slices/revenueCatSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAccessToken } from '../helpers/sessionHelper';
 import { revenueCatManager } from '../services/subscriptionService';
-import { updateSubscriptionStatus } from '../store/slices/revenueCatSlice';
+import { getSubscriptionStatus } from '../store/slices/revenueCatSlice';
 import { subscribeToMessages } from '../firebase/firebaseNotifications';
 import { toast } from 'react-toastify';
 import { appWithI18Next } from 'ni18n';
@@ -26,15 +26,8 @@ const RevenueCatInitializer = ({ children }) => {
   const startSubscriptionPolling = (interval = 5000) => {
     setInterval(async () => {
       try {
-        const status = revenueCatManager.getCurrentStatus(); // should return { isPremium: boolean }
-        const statusIsPremium = Boolean(status?.isPremium);
-  
-        console.log('>> Polling statu :', isSubscribed, 'isPremium:', statusIsPremium);
-  
-        if (isSubscribed !== statusIsPremium) {
-          const statusIsPremiumStr = statusIsPremium ? "true" : "false";
-          await dispatch(updateSubscriptionStatus({ uid: uid, currentStatus: statusIsPremiumStr })).unwrap();
-        }
+        const status = await dispatch(getSubscriptionStatus(uid)).unwrap();
+        console.log('>> Polling status:', status);
       } catch (error) {
         console.error('Error polling subscription status:', error);
       }

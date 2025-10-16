@@ -7,12 +7,10 @@ import Breadcrumb from '@/components/Common/Breadcrumb';
 import { revenueCatManager } from '@/services/subscriptionService';
 import { PurchasesError, ErrorCode } from "@revenuecat/purchases-js";
 import { toast } from 'react-toastify';
-import { updateSubscriptionStatus } from '@/store/slices/revenueCatSlice';
 
 
 export default function Subscription() {
   const router = useRouter();
-  const dispatch = useDispatch();
   const { user, uid } = useSelector((state) => state.auth);
   const [isloading, setIsLoading] = useState(false);
   const { isSubscribed } = useSelector((state) => state.revenueCat);
@@ -39,7 +37,6 @@ export default function Subscription() {
       // Call the singleton purchase function
       await revenueCatManager.handleSubscribe();
       setIsSubscribedStatus(true);
-      dispatch(updateSubscriptionStatus({ uid: uid, currentStatus: 'true' })).unwrap();
       openDialog()
     } catch (err) {    
       console.error('>> err:', err);
