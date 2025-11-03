@@ -8,10 +8,7 @@ import Sidebar from './Sidebar';
 import Portals from '../Portals';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-// import { doc, getDoc, collection } from 'firebase/firestore';
-import { collection, getDocs } from 'firebase/firestore/lite';
-import { auth, db } from '@/firebase/firebase';
-import { setUser } from '@/store/slices/authSlice';
+import FloatingChat from '../Common/ChatHead';
 
 const FrontLayout = ({ children, title }) => {
   const router = useRouter();
@@ -159,6 +156,7 @@ const FrontLayout = ({ children, title }) => {
               <Footer />
               {/* END FOOTER */}
             </div>
+            <FloatingChat />
             <Portals />
           </div>
           {/* END CONTENT AREA */}
