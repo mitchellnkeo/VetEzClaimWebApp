@@ -1980,7 +1980,6 @@ export const DocumentAnalyzerIcon = ({
   );
 };
 
-
 export const HistoryIcon = ({
   height = '20',
   width = '20',
@@ -2019,11 +2018,86 @@ export const InProgressIcon = ({
   );
 };
 
-export const CalculatorIcon = ({ height = '20', width = '20', className = '' }) => {
+export const CalculatorIcon = ({
+  height = '20',
+  width = '20',
+  className = '',
+}) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 24 24" className={className}>
-      <path fill="white" d="M19 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM16 6H8a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2zM7.5 11.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM7.5 14.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM7 18h10v1H7v-1z"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      className={className}
+    >
+      <path
+        fill="white"
+        d="M19 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM16 6H8a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2zM7.5 11.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM7.5 14.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.5 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM7 18h10v1H7v-1z"
+      />
     </svg>
-    
+  );
+};
+
+export const ChatHeadIcon = ({
+  height = '24',
+  width = '24',
+  className = '',
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-7 w-7"
+      fill="none"
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.3 9.3 0 01-3.83-.8L3 20l1.39-3.36A8.96 8.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+      />
+    </svg>
+  );
+};
+
+export const PlusIcon = ({ height = 20, width = 20 }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+    </svg>
+  );
+};
+
+export const SendIcon = ({
+  height = 20,
+  width = 20,
+  color = 'currentColor',
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height={height}
+      width={width}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M22 2L11 13" />
+      <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+    </svg>
   );
 };
