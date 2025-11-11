@@ -225,6 +225,7 @@ export const authSlice = createSlice({
     isLoggedIn: false,
     user: {},
     uid: null,
+    sessionId: null,
     accessToken: null,
     isLoading: false,
     error: {},
@@ -233,6 +234,7 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.user = {};
       state.uid = null;
+      state.sessionId = null;
       state.accessToken = null;
       state.isLoggedIn = false;
       deltCookie();
@@ -247,10 +249,12 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.uid = action.payload.uid;
       state.user = action.payload.profileData;
+      state.sessionId = action.payload.sessionId;
       state.error = {};
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.isLoading = false;
+      state.sessionId = null;
       state.error = action.payload;
     });
 
@@ -273,6 +277,7 @@ export const authSlice = createSlice({
     // google login
     builder.addCase(googleLogin.pending, (state) => {
       state.isLoading = true;
+      state.sessionId = null;
       state.error = null;
     });
     builder.addCase(googleLogin.fulfilled, (state, action) => {
@@ -281,27 +286,32 @@ export const authSlice = createSlice({
       state.uid = action.payload.uid;
       state.user = action.payload.profileData;
       state.accessToken = action.payload.accessToken;
+      state.sessionId = action.payload.sessionId;
       state.error = null;
     });
     builder.addCase(googleLogin.rejected, (state, action) => {
       state.isLoading = false;
       state.isLoggedIn = false;
+      state.sessionId = null;
       state.error = action.payload || 'Login failed';
     });
 
     // update profile
     builder.addCase(updateProfile.pending, (state) => {
       state.isLoading = true;
+      state.sessionId = null;
       state.error = null;
     });
     builder.addCase(updateProfile.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
+      state.sessionId = action.payload.sessionId;
       state.error = null;
     });
     builder.addCase(updateProfile.rejected, (state, action) => {
       state.isLoading = false;
       state.error = 'Update failed';
+      state.sessionId = null;
     });
   },
 });
