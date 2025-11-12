@@ -219,6 +219,21 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+export const updateSessionId = createAsyncThunk(
+  'auth/updateSessionId ',
+  async ({ uid, sessionId }, { rejectWithValue }) => {
+    try {
+      const docRef = doc(db, 'profile', uid);
+      await updateDoc(docRef, { sessionId: sessionId });
+
+      return sessionId; // this will be used to update state.user
+    } catch (error) {
+      // console.error('error while updating profile', error);
+      return rejectWithValue(error.message || 'Session ID update failed');
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -312,6 +327,21 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.error = 'Update failed';
       state.sessionId = null;
+    });
+    // update session id
+    builder.addCase(updateSessionId.pending, (state) => {
+      state.isLoading = true;
+      state.sessionId = null;
+      state.error = null;
+    });
+    builder.addCase(updateSessionId.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.sessionId = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateSessionId.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = 'Session ID update failed';
     });
   },
 });
