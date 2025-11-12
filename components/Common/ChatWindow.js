@@ -75,26 +75,26 @@ export default function ChatWindow({ open, setOpen }) {
     fetchMessages();
   }, []); // empty dependency array ensures it runs once
 
-  useEffect(() => {
-    if (chat.length === 0) return;
+  // useEffect(() => {
+  //   if (chat.length === 0) return;
 
-    const lastMsg = chat[chat.length - 1];
+  //   const lastMsg = chat[chat.length - 1];
 
-    // Only stream the last assistant message
-    if (lastMsg.role === "assistant" && !lastMsg.hasFile) {
-      let i = 0;
-      setDisplayedText(""); // reset before streaming
+  //   // Only stream the last assistant message
+  //   if (lastMsg.role === "assistant" && !lastMsg.hasFile) {
+  //     let i = 0;
+  //     setDisplayedText(""); // reset before streaming
 
-      const interval = setInterval(() => {
-        setDisplayedText((prev) => prev + lastMsg.content.charAt(i));
-        i++;
-        scrollToBottom();
-        if (i >= lastMsg.content.length) clearInterval(interval);
-      }, 20); // adjust speed here (ms per character)
+  //     const interval = setInterval(() => {
+  //       setDisplayedText((prev) => prev + lastMsg.content.charAt(i));
+  //       i++;
+  //       scrollToBottom();
+  //       if (i >= lastMsg.content.length) clearInterval(interval);
+  //     }, 20); // adjust speed here (ms per character)
 
-      return () => clearInterval(interval);
-    }
-  }, [chat]); // runs when a new message is added
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [chat]); // runs when a new message is added
 
   const scrollToBottom = () => {
     if (bodyRef.current) {
@@ -391,7 +391,7 @@ export default function ChatWindow({ open, setOpen }) {
                           </>
                         ) : (
                           <div className="p-2">
-                            <ReactMarkdown>{isLast && msg.role === 'assistant' ? displayedText : msg.content}</ReactMarkdown>
+                            <ReactMarkdown>{ msg.content}</ReactMarkdown>
                           </div>
                         )}
                       </>
