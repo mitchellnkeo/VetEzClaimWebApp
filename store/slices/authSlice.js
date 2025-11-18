@@ -264,7 +264,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.uid = action.payload.uid;
       state.user = action.payload.profileData;
-      state.sessionId = action.payload.sessionId;
+      state.sessionId = action.payload.profileData.sessionId;
       state.error = {};
     });
     builder.addCase(loginUser.rejected, (state, action) => {
@@ -301,7 +301,7 @@ export const authSlice = createSlice({
       state.uid = action.payload.uid;
       state.user = action.payload.profileData;
       state.accessToken = action.payload.accessToken;
-      state.sessionId = action.payload.sessionId;
+      state.sessionId = action.payload.profileData.sessionId;
       state.error = null;
     });
     builder.addCase(googleLogin.rejected, (state, action) => {
@@ -320,7 +320,7 @@ export const authSlice = createSlice({
     builder.addCase(updateProfile.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
-      state.sessionId = action.payload.sessionId;
+      state.sessionId = action.payload.profileData.sessionId;
       state.error = null;
     });
     builder.addCase(updateProfile.rejected, (state, action) => {
