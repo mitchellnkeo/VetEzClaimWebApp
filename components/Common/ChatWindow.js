@@ -20,6 +20,8 @@ export default function ChatWindow({ open, setOpen }) {
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
+  const [loadingText, setLoadingText] = useState('Processing...');
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const dispatch = useDispatch();
   const didFetchMessages = useRef(false);
@@ -45,6 +47,8 @@ export default function ChatWindow({ open, setOpen }) {
       if (!uid || !sessionId) return;
       if (didFetchMessages.current) return; // ensure called only once
       didFetchMessages.current = true;
+      setIsLoading(true);
+      setLoadingText('Fetching chat history...');
   
       try {
         const userId = uid;
@@ -69,7 +73,10 @@ export default function ChatWindow({ open, setOpen }) {
         });
       } catch (error) {
         console.error('Error fetching messages:', error);
-      } 
+      } finally {
+        setIsLoading(false);
+        setLoadingText('Processing...');
+      }
     };
   
     fetchMessages();
@@ -133,12 +140,30 @@ export default function ChatWindow({ open, setOpen }) {
   };
 
   const startNewChat = async () => {
+    setIsLoading(true);
+    setLoadingText('Starting new chat...');
     await dispatch(updateSessionId({ uid, sessionId: null })).unwrap();
     setChat([]);
-    setIsThinking(false);
+    setIsLoading(false);
+    setLoadingText('Processing...');
     setMessage('');
     setSelectedFile(null);
   };
+
+
+  const Loader = ({ loading = false, text = "Loading..." }) => {
+    if (!loading) return null; // Don't render anything if not loading
+  
+    return (
+      <div className="absolute inset-0 flex flex-col items-center justify-center bg-transparent">
+        {/* Spinner */}
+        <div className="w-12 h-12 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-2"></div>
+        {/* Text */}
+        <span className="text-gray-700 font-medium dark:text-white">{text}</span>
+      </div>
+    );
+  };
+  
 
 
   return (
@@ -184,6 +209,7 @@ export default function ChatWindow({ open, setOpen }) {
         </div>
       </div>
 
+      <Loader loading={isLoading} text={loadingText} />
       {/* Body */}
       <div
         ref={bodyRef}
