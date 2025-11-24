@@ -10,7 +10,8 @@ export const docsAnalyzerService = async (docFile, instructions) => {
     });
     return response;
   } catch (error) {
-    console.error('Docs Analyzer API Error:', error);
+    process.env.NODE_ENV === 'development' &&
+      console.error('Docs Analyzer API Error:', error);
     throw error;
   }
 };

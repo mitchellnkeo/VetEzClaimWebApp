@@ -12,17 +12,19 @@ export const initializeRevenueCat = createAsyncThunk(
       if (state.revenueCat.isInitialized) {
         return true;
       }
-    
+
       await revenueCatManager.initialize(userId);
-      
+
       // Get initial subscription status
       const status = revenueCatManager.getCurrentStatus();
-      console.log('RevenueCat status:', status);
+      process.env.NODE_ENV === 'development' &&
+        console.log('RevenueCat status:', status);
       return {
         isSubscribed: Boolean(status?.isPremium),
       };
     } catch (error) {
-      console.error('RevenueCat initialization failed:', error);
+      process.env.NODE_ENV === 'development' &&
+        console.error('RevenueCat initialization failed:', error);
       return rejectWithValue(error.message);
     }
   }
@@ -33,9 +35,9 @@ export const logoutRevenueCat = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       await revenueCatManager.logout();
-    }
-    catch (error) {
-      console.error('RevenueCat logout failed:', error);
+    } catch (error) {
+      process.env.NODE_ENV === 'development' &&
+        console.error('RevenueCat logout failed:', error);
       return rejectWithValue(error.message);
     }
   }
@@ -44,11 +46,12 @@ export const logoutRevenueCat = createAsyncThunk(
 export const updateSubscriptionStatus = createAsyncThunk(
   'revenueCat/updateSubscriptionStatus',
   async (uidAndCurrentStatus, { rejectWithValue }) => {
-    console.log('>> updateSubscriptionStatus:', uidAndCurrentStatus);
+    process.env.NODE_ENV === 'development' &&
+      console.log('>> updateSubscriptionStatus:', uidAndCurrentStatus);
     const { uid, currentStatus } = uidAndCurrentStatus;
     try {
       const docRef = doc(db, 'profile', uid);
-      await updateDoc(docRef, {subscriptionStatus: currentStatus});
+      await updateDoc(docRef, { subscriptionStatus: currentStatus });
       const isSubscribed = currentStatus === 'true' ? true : false;
       return isSubscribed;
     } catch (error) {
@@ -59,7 +62,7 @@ export const updateSubscriptionStatus = createAsyncThunk(
 
 export const getSubscriptionStatus = createAsyncThunk(
   'revenueCat/getSubscriptionStatus',
-  async (uid, { rejectWithValue }) => { 
+  async (uid, { rejectWithValue }) => {
     try {
       const docRef = doc(db, 'profile', uid);
       const docSnap = await getDoc(docRef);
@@ -69,11 +72,12 @@ export const getSubscriptionStatus = createAsyncThunk(
       const data = docSnap.data();
       return data.subscriptionStatus || false;
     } catch (error) {
-      return rejectWithValue(error.message || 'Subscription status retrieval failed');
-    }   
+      return rejectWithValue(
+        error.message || 'Subscription status retrieval failed'
+      );
+    }
   }
 );
-
 
 const revenueCatSlice = createSlice({
   name: 'revenueCat',
@@ -92,7 +96,11 @@ const revenueCatSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(initializeRevenueCat.fulfilled, (state, action) => {
-        console.log('>> initializeRevenueCat.fulfilled:', action.payload.isSubscribed);
+        process.env.NODE_ENV === 'development' &&
+          console.log(
+            '>> initializeRevenueCat.fulfilled:',
+            action.payload.isSubscribed
+          );
         state.isInitialized = true;
         state.isSubscribed = action.payload.isSubscribed || false;
         state.error = null;
@@ -118,7 +126,7 @@ const revenueCatSlice = createSlice({
       })
       .addCase(getSubscriptionStatus.rejected, (state, action) => {
         state.error = action.payload;
-      })
+      });
   },
 });
 

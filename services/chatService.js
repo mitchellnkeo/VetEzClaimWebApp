@@ -19,23 +19,28 @@ export const sendChatMessage = async ({ message, userId, sessionId, file }) => {
     });
     return response;
   } catch (error) {
-    console.error('Chatbot API Error:', error);
+    process.env.NODE_ENV === 'development' &&
+      console.error('Chatbot API Error:', error);
     throw error;
   }
 };
 
 export const getChatMessages = async ({ userId, sessionId }) => {
   if (!userId || !sessionId) {
-    throw new Error("userId and sessionId are required-Local");
+    throw new Error('userId and sessionId are required-Local');
   }
 
   try {
-    const response = await ApiService.get(`/chatbot/messages/${userId}/${sessionId}`, {
-      noAuth: true,
-    });
+    const response = await ApiService.get(
+      `/chatbot/messages/${userId}/${sessionId}`,
+      {
+        noAuth: true,
+      }
+    );
     return response;
   } catch (error) {
-    console.error("Chatbot getMessages API Error:", error);
+    process.env.NODE_ENV === 'development' &&
+      console.error('Chatbot getMessages API Error:', error);
     throw error;
   }
 };

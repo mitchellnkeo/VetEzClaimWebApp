@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { signInWithEmailAndPassword, deleteUser, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  deleteUser,
+  updatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+} from 'firebase/auth';
 import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { auth, db, provider } from '@/firebase/firebase';
 import { sendOtp, verifyOtp } from '@/services/auth';
@@ -51,7 +57,8 @@ export const loginUser = createAsyncThunk(
       }
       return { uid, profileData };
     } catch (error) {
-      console.log('Login Error : >> ', error);
+      process.env.NODE_ENV === 'development' &&
+        console.log('Login Error : >> ', error);
       let errorMsg = error.message;
       if (
         error.message === 'Invalid email or password.' ||
@@ -130,7 +137,7 @@ export const googleLogin = createAsyncThunk(
         accessToken: user.uid,
       };
     } catch (error) {
-      console.log('err >> ', error);
+      process.env.NODE_ENV === 'development' && console.log('err >> ', error);
       let errorMsg = error.message;
       if (
         error.message === 'Invalid email or password.' ||
@@ -213,7 +220,7 @@ export const updateProfile = createAsyncThunk(
 
       return profileData; // this will be used to update state.user
     } catch (error) {
-      // console.error('error while updating profile', error);
+      // process.env.NODE_ENV === 'development' && console.error('error while updating profile', error);
       return rejectWithValue(error.message || 'Profile update failed');
     }
   }
@@ -228,7 +235,7 @@ export const updateSessionId = createAsyncThunk(
 
       return sessionId; // this will be used to update state.user
     } catch (error) {
-      // console.error('error while updating profile', error);
+      // process.env.NODE_ENV === 'development' && console.error('error while updating profile', error);
       return rejectWithValue(error.message || 'Session ID update failed');
     }
   }
@@ -347,23 +354,26 @@ export const authSlice = createSlice({
 });
 
 export const changePassword = createAsyncThunk(
-  "auth/changePassword",
+  'auth/changePassword',
   async ({ currentPassword, newPassword }, { rejectWithValue }) => {
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error("No authenticated user");
+      if (!user) throw new Error('No authenticated user');
 
       // Re-authenticate
-      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        currentPassword
+      );
       await reauthenticateWithCredential(user, credential);
 
       // Now update password
       await updatePassword(user, newPassword);
-      return "Password updated successfully";
+      return 'Password updated successfully';
     } catch (error) {
-      console.log("error", error);
+      process.env.NODE_ENV === 'development' && console.log('error', error);
       return rejectWithValue({ code: error.code, message: error.message });
-    } 
+    }
   }
 );
 

@@ -8,9 +8,9 @@ import ReactMarkdown from 'react-markdown';
 import { AiOutlineFile } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { formsIdList } from '@/utils/staticData';
-import { FaRobot } from 'react-icons/fa'; 
-import { RiChatNewLine } from "react-icons/ri";
-import { RxCross2 } from "react-icons/rx";
+import { FaRobot } from 'react-icons/fa';
+import { RiChatNewLine } from 'react-icons/ri';
+import { RxCross2 } from 'react-icons/rx';
 
 export default function ChatWindow({ open, setOpen }) {
   const winRef = useRef(null);
@@ -26,7 +26,6 @@ export default function ChatWindow({ open, setOpen }) {
   const dispatch = useDispatch();
   const didFetchMessages = useRef(false);
   const [displayedText, setDisplayedText] = useState('');
-
 
   useEffect(() => {
     const onDocClick = (e) => {
@@ -49,39 +48,46 @@ export default function ChatWindow({ open, setOpen }) {
       didFetchMessages.current = true;
       setIsLoading(true);
       setLoadingText('Fetching chat history...');
-  
+
       try {
         const userId = uid;
         const response = await getChatMessages({ userId, sessionId });
-        const messages = response.data; 
-  
+        const messages = response.data;
+
         messages.forEach((message) => {
           if (message.role === 'user') {
-            const hasFile = message.text && message.text !== "";
-            const userMessage = { role: 'user', content: message.content, hasFile, fileName: '' };
-            setChat(prev => [...prev, userMessage]);
-          } else {
-            const hasAnalysis = message.text && message.text === "analysis";
-            const aiMessage = { 
-              role: 'assistant', 
-              content: hasAnalysis ? message.content.va_analysis_json : message.content, 
-              hasFile: hasAnalysis, 
-              fileName: '' 
+            const hasFile = message.text && message.text !== '';
+            const userMessage = {
+              role: 'user',
+              content: message.content,
+              hasFile,
+              fileName: '',
             };
-            setChat(prev => [...prev, aiMessage]);
+            setChat((prev) => [...prev, userMessage]);
+          } else {
+            const hasAnalysis = message.text && message.text === 'analysis';
+            const aiMessage = {
+              role: 'assistant',
+              content: hasAnalysis
+                ? message.content.va_analysis_json
+                : message.content,
+              hasFile: hasAnalysis,
+              fileName: '',
+            };
+            setChat((prev) => [...prev, aiMessage]);
           }
         });
       } catch (error) {
-        console.error('Error fetching messages:', error);
+        process.env.NODE_ENV === 'development' &&
+          console.error('Error fetching messages:', error);
       } finally {
         setIsLoading(false);
         setLoadingText('Processing...');
       }
     };
-  
+
     fetchMessages();
   }, []); // empty dependency array ensures it runs once
-
 
   const scrollToBottom = () => {
     if (bodyRef.current) {
@@ -94,7 +100,12 @@ export default function ChatWindow({ open, setOpen }) {
     const hasFile = selectedFile ? true : false;
     const fileName = selectedFile ? selectedFile.name : null;
     try {
-      const userMessage = { role: 'user', content: message.trim(), hasFile: hasFile, fileName: fileName };
+      const userMessage = {
+        role: 'user',
+        content: message.trim(),
+        hasFile: hasFile,
+        fileName: fileName,
+      };
       setChat((prev) => [...prev, userMessage]);
       setMessage('');
       setIsThinking(true);
@@ -107,24 +118,36 @@ export default function ChatWindow({ open, setOpen }) {
         sessionId: sessionId,
         file: fileContent,
       });
-      await dispatch(updateSessionId({ uid, sessionId: response.data.sessionId })).unwrap();
-      if( response.data.response.type === 'chat') {
-        const aiMessage = { role: 'assistant', content: response.data.response.message, hasFile: false, fileName: fileName };
+      await dispatch(
+        updateSessionId({ uid, sessionId: response.data.sessionId })
+      ).unwrap();
+      if (response.data.response.type === 'chat') {
+        const aiMessage = {
+          role: 'assistant',
+          content: response.data.response.message,
+          hasFile: false,
+          fileName: fileName,
+        };
         setChat((prev) => [...prev, aiMessage]);
-      }else {
-        const aiMessage = { 
-          role: 'assistant', 
-          content: response.data.response.data.va_analysis_json, 
-          hasFile: true, 
-          fileName: fileName };
+      } else {
+        const aiMessage = {
+          role: 'assistant',
+          content: response.data.response.data.va_analysis_json,
+          hasFile: true,
+          fileName: fileName,
+        };
         setChat((prev) => [...prev, aiMessage]);
       }
-    
 
       scrollToBottom();
     } catch (err) {
-      console.error(err);
-      const aiMessage = { role: 'assistant', content: 'Something went wrong, please try again.', hasFile: false, fileName: '' };
+      process.env.NODE_ENV === 'development' && console.error(err);
+      const aiMessage = {
+        role: 'assistant',
+        content: 'Something went wrong, please try again.',
+        hasFile: false,
+        fileName: '',
+      };
       setChat((prev) => [...prev, aiMessage]);
       toast.error(err.message);
     } finally {
@@ -150,21 +173,20 @@ export default function ChatWindow({ open, setOpen }) {
     setSelectedFile(null);
   };
 
-
-  const Loader = ({ loading = false, text = "Loading..." }) => {
+  const Loader = ({ loading = false, text = 'Loading...' }) => {
     if (!loading) return null; // Don't render anything if not loading
-  
+
     return (
       <div className="absolute inset-0 flex flex-col items-center justify-center bg-transparent">
         {/* Spinner */}
-        <div className="w-12 h-12 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-2"></div>
+        <div className="mb-2 h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-black"></div>
         {/* Text */}
-        <span className="text-gray-700 font-medium dark:text-white">{text}</span>
+        <span className="font-medium text-gray-700 dark:text-white">
+          {text}
+        </span>
       </div>
     );
   };
-  
-
 
   return (
     <div
@@ -234,14 +256,15 @@ export default function ChatWindow({ open, setOpen }) {
           </div>
         ) : (
           <>
-
             {chat.map((msg, idx) => {
-             const isLast = idx === chat.length - 1;
+              const isLast = idx === chat.length - 1;
 
               return (
                 <div
                   key={idx}
-                  className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex w-full ${
+                    msg.role === 'user' ? 'justify-end' : 'justify-start'
+                  }`}
                 >
                   <div
                     className={`max-w-[75%] break-words rounded-lg px-1 py-2 text-sm leading-relaxed ${
@@ -253,7 +276,9 @@ export default function ChatWindow({ open, setOpen }) {
                     {msg.role === 'user' ? (
                       <div className="flex items-center gap-2 p-2">
                         <span>{msg.content}</span>
-                        {msg.hasFile && <AiOutlineFile className="text-2xl text-gray-600 dark:text-white" />}
+                        {msg.hasFile && (
+                          <AiOutlineFile className="text-2xl text-gray-600 dark:text-white" />
+                        )}
                       </div>
                     ) : (
                       <>
@@ -269,29 +294,37 @@ export default function ChatWindow({ open, setOpen }) {
                                     </h2>
                                     <div className="space-y-2 text-gray-700 dark:text-gray-300">
                                       <p>
-                                        <span className="font-bold">Decision Type:</span>{" "}
-                                        {msg.content.general_info.decision_type || "N/A"}
+                                        <span className="font-bold">
+                                          Decision Type:
+                                        </span>{' '}
+                                        {msg.content.general_info
+                                          .decision_type || 'N/A'}
                                       </p>
                                       <p>
-                                        <span className="font-bold">Date:</span>{" "}
-                                        {msg.content.general_info.date || "N/A"}
+                                        <span className="font-bold">Date:</span>{' '}
+                                        {msg.content.general_info.date || 'N/A'}
                                       </p>
                                       <p>
-                                        <span className="font-bold">Issuing Authority:</span>{" "}
-                                        {msg.content.general_info.issuing_authority || "N/A"}
+                                        <span className="font-bold">
+                                          Issuing Authority:
+                                        </span>{' '}
+                                        {msg.content.general_info
+                                          .issuing_authority || 'N/A'}
                                       </p>
                                       {msg.content.general_info.summary && (
-                                        <p className="mt-4">{msg.content.general_info.summary}</p>
+                                        <p className="mt-4">
+                                          {msg.content.general_info.summary}
+                                        </p>
                                       )}
                                     </div>
                                   </div>
                                 )}
 
                                 {/* Issues */}
-                                  {Array.isArray(msg.content.issues) &&
+                                {Array.isArray(msg.content.issues) &&
                                   msg.content.issues.length > 0 && (
                                     <div className="space-y-5 rounded-xl border border-gray-200 bg-white p-1 shadow-md dark:border-gray-700 dark:bg-gray-800">
-                                      <h2 className="text-xl font-semibold text-gray-800 dark:text-white p-2">
+                                      <h2 className="p-2 text-xl font-semibold text-gray-800 dark:text-white">
                                         Issues
                                       </h2>
 
@@ -302,20 +335,22 @@ export default function ChatWindow({ open, setOpen }) {
                                         >
                                           <div className="mb-2">
                                             <h3 className="mb-2 text-lg font-semibold text-primary dark:text-blue-400">
-                                              {issue.condition || "Unnamed Condition"}
+                                              {issue.condition ||
+                                                'Unnamed Condition'}
                                             </h3>
                                             <p
                                               className={`my-2 inline-block rounded-md px-2 py-1 text-sm font-medium italic ${
-                                                issue.status === "Granted"
-                                                  ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
-                                                  : issue.status === "Denied"
-                                                  ? "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
-                                                  : issue.status === "Deferred"
-                                                  ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300"
-                                                  : "bg-gray-100 text-gray-600 dark:bg-gray-800/40 dark:text-gray-300"
+                                                issue.status === 'Granted'
+                                                  ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
+                                                  : issue.status === 'Denied'
+                                                  ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
+                                                  : issue.status === 'Deferred'
+                                                  ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300'
+                                                  : 'bg-gray-100 text-gray-600 dark:bg-gray-800/40 dark:text-gray-300'
                                               }`}
                                             >
-                                              Status: {issue.status || "Unknown"}
+                                              Status:{' '}
+                                              {issue.status || 'Unknown'}
                                             </p>
                                           </div>
 
@@ -329,43 +364,57 @@ export default function ChatWindow({ open, setOpen }) {
                                           {/* Evidence Considered */}
                                           {issue.evidence_considered && (
                                             <div className="mb-3 rounded-md bg-gray-100 p-3 text-sm dark:bg-gray-700">
-                                              <span className="font-semibold">Evidence Considered:</span>
-                                              <p className="whitespace-pre-line">{issue.evidence_considered}</p>
+                                              <span className="font-semibold">
+                                                Evidence Considered:
+                                              </span>
+                                              <p className="whitespace-pre-line">
+                                                {issue.evidence_considered}
+                                              </p>
                                             </div>
                                           )}
 
                                           {/* Recommendations */}
-                                          {Array.isArray(issue.recommendations) &&
-                                            issue.recommendations.length > 0 && (
+                                          {Array.isArray(
+                                            issue.recommendations
+                                          ) &&
+                                            issue.recommendations.length >
+                                              0 && (
                                               <div className="flex flex-wrap gap-3">
-                                                {issue.recommendations.map((rec, recIdx) => {
-                                                  const matchedForm = formsIdList.find(
-                                                    (f) => f.formId === rec.formId
-                                                  );
-                                                  return (
-                                                    <button
-                                                      key={recIdx}
-                                                      onClick={() => {
-                                                        if (matchedForm?.formUrl) {
-                                                          window.open(
-                                                            `${window.location.origin}${matchedForm.formUrl}`,
-                                                            "_blank"
-                                                          );
-                                                        } else {
-                                                          toast.warning(
-                                                            rec.explanation ||
-                                                              "Form route not found for this action."
-                                                          );
-                                                        }
-                                                      }}
-                                                      className="rounded-lg bg-primary px-4 py-2 text-white transition hover:bg-primaryHover"
-                                                    >
-                                                      {rec.formTitle ||
-                                                        matchedForm?.formTitle ||
-                                                        `Form ${rec.formId}`}
-                                                    </button>
-                                                  );
-                                                })}
+                                                {issue.recommendations.map(
+                                                  (rec, recIdx) => {
+                                                    const matchedForm =
+                                                      formsIdList.find(
+                                                        (f) =>
+                                                          f.formId ===
+                                                          rec.formId
+                                                      );
+                                                    return (
+                                                      <button
+                                                        key={recIdx}
+                                                        onClick={() => {
+                                                          if (
+                                                            matchedForm?.formUrl
+                                                          ) {
+                                                            window.open(
+                                                              `${window.location.origin}${matchedForm.formUrl}`,
+                                                              '_blank'
+                                                            );
+                                                          } else {
+                                                            toast.warning(
+                                                              rec.explanation ||
+                                                                'Form route not found for this action.'
+                                                            );
+                                                          }
+                                                        }}
+                                                        className="rounded-lg bg-primary px-4 py-2 text-white transition hover:bg-primaryHover"
+                                                      >
+                                                        {rec.formTitle ||
+                                                          matchedForm?.formTitle ||
+                                                          `Form ${rec.formId}`}
+                                                      </button>
+                                                    );
+                                                  }
+                                                )}
                                               </div>
                                             )}
                                         </div>
@@ -381,34 +430,37 @@ export default function ChatWindow({ open, setOpen }) {
                                         Important Dates
                                       </h2>
                                       <ul className="list-inside list-disc text-gray-700 dark:text-gray-300">
-                                        {msg.content.important_dates.map((d, idx3) => (
-                                          <li key={idx3}>
-                                            <span className="font-semibold">{d.date || "Unknown"}:</span>{" "}
-                                            {d.description || ""}
-                                          </li>
-                                        ))}
+                                        {msg.content.important_dates.map(
+                                          (d, idx3) => (
+                                            <li key={idx3}>
+                                              <span className="font-semibold">
+                                                {d.date || 'Unknown'}:
+                                              </span>{' '}
+                                              {d.description || ''}
+                                            </li>
+                                          )
+                                        )}
                                       </ul>
                                     </div>
                                   )}
                               </div>
                             ) : (
-                              <div className="mt-2 space-y-6">Something went wrong</div>
+                              <div className="mt-2 space-y-6">
+                                Something went wrong
+                              </div>
                             )}
                           </>
                         ) : (
                           <div className="p-2">
-                            <ReactMarkdown>{ msg.content}</ReactMarkdown>
+                            <ReactMarkdown>{msg.content}</ReactMarkdown>
                           </div>
                         )}
                       </>
                     )}
                   </div>
                 </div>
-              )
-            }
-              
-            )}
-
+              );
+            })}
 
             {isThinking && (
               <div className="flex w-full justify-start">
@@ -461,7 +513,7 @@ export default function ChatWindow({ open, setOpen }) {
                     fileInputRef.current.value = null;
                   }
                 }
-              }} 
+              }}
             />
           </label>
 

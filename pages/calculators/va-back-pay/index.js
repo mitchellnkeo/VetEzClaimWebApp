@@ -129,7 +129,8 @@ const VaBackPayCalculator = () => {
       ...commonFactors,
     };
 
-    console.log('Here we go >>> ', factors1, factors2);
+    process.env.NODE_ENV === 'development' &&
+      console.log('Here we go >>> ', factors1, factors2);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 50));
@@ -152,7 +153,8 @@ const VaBackPayCalculator = () => {
       const res = parseFloat((payableAmount - paidAmount).toFixed(2));
       setResult(res);
     } catch (error) {
-      console.log('Error calculating back pay. Please try again.', error);
+      process.env.NODE_ENV === 'development' &&
+        console.log('Error calculating back pay. Please try again.', error);
       toast.error('Error calculating back pay. Please try again.');
       setResult(0);
     } finally {

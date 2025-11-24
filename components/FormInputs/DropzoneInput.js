@@ -46,7 +46,8 @@ const DropzoneInput = ({ setFieldValue, name, placeholer }) => {
       ? 'border-red-600 bg-red-100 text-red-600'
       : 'border-gray-600 hover:border-blue-600 hover:bg-blue-100 hover:text-blue-600',
   ].join(' ');
-  console.log('dropZoneClasses:', dropZoneClasses);
+  process.env.NODE_ENV === 'development' &&
+    console.log('dropZoneClasses:', dropZoneClasses);
 
   return (
     <div {...getRootProps()} className={dropZoneClasses}>

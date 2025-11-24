@@ -13,7 +13,10 @@ import {
 } from './store/slices/themeConfigSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { requestNotificationPermission, onMessageListener } from './firebase/firebaseNotifications';
+import {
+  requestNotificationPermission,
+  onMessageListener,
+} from './firebase/firebaseNotifications';
 
 function App({ children }) {
   const themeConfig = useSelector((state) => state.themeConfig);
@@ -55,7 +58,6 @@ function App({ children }) {
     themeConfig.locale,
     themeConfig.semidark,
   ]);
-
 
   useEffect(() => {
     requestNotificationPermission()

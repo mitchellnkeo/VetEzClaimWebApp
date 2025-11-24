@@ -39,7 +39,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    console.log('user Info: ', user);
+    process.env.NODE_ENV === 'development' && console.log('user Info: ', user);
     if (user) {
       isProfileComplete();
     }
@@ -56,7 +56,6 @@ const Dashboard = () => {
           <br />
           <span className="text-md dark:text-white-light">{user?.email}</span>
         </p>
-
 
         <div className="mt-5 pt-2">
           {profileStatus === 0 && (
@@ -99,7 +98,7 @@ const Dashboard = () => {
               </p>
               <a
                 href="/forms"
-                className="mt-3 inline-block rounded-lg px-4 py-2 text-white bg-primary hover:bg-primaryHover  dark:bg-gray-900  dark:hover:bg-gray-800  dark:text-white-light"
+                className="mt-3 inline-block rounded-lg bg-primary px-4 py-2 text-white hover:bg-primaryHover  dark:bg-gray-900  dark:text-white-light  dark:hover:bg-gray-800"
               >
                 Go to Forms Menu
               </a>

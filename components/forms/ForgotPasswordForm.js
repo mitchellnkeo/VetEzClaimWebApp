@@ -32,7 +32,8 @@ const ForgotPasswordForm = () => {
 
       toast.success(`Reset link sent to: ${email}`);
     } catch (error) {
-      console.log('Reset password error =>', error);
+      process.env.NODE_ENV === 'development' &&
+        console.log('Reset password error =>', error);
       if (error.code === 'auth/user-not-found') {
         toast.error(`No user found with this email`);
       } else if (error.code === 'auth/invalid-email') {
