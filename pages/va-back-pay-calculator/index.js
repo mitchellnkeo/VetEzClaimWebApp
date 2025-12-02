@@ -374,10 +374,10 @@ export default function VABackPayCalculator() {
           <div className="mb-6 rounded-lg border p-4 pt-5 dark:border-gray dark:bg-gray-900">
             <h1 className="mb-6  text-lg font-bold dark:text-white-light">
               {' '}
-              Step 2: Rating / SMC
+              Step 2: Benefit Details
             </h1>
 
-            <div className="mb-6 w-full">
+            <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700 dark:text-white-light">
               <label className=" text-md  mb-2 font-bold dark:text-white-light">
                 Total SMC-K Awards Received
               </label>
