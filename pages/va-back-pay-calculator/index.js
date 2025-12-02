@@ -47,6 +47,16 @@ const smckAwardsData = [0, 1, 2, 3];
 
 export const smcLevelData = [
   { smcId: '', smcTitle: 'none' },
+  { smcId: '10%', smcTitle: '10%' },
+  { smcId: '20%', smcTitle: '20%' },
+  { smcId: '30%', smcTitle: '30%' },
+  { smcId: '40%', smcTitle: '40%' },
+  { smcId: '50%', smcTitle: '50%' },
+  { smcId: '60%', smcTitle: '60%' },
+  { smcId: '70%', smcTitle: '70%' },
+  { smcId: '80%', smcTitle: '80%' },
+  { smcId: '90%', smcTitle: '90%' },
+  { smcId: '100%', smcTitle: '100%' },
   { smcId: 'smc_l', smcTitle: 'SMC-L' },
   { smcId: 'smc_l_half', smcTitle: 'SMC-L 1/2' },
   { smcId: 'smc_m', smcTitle: 'SMC-M' },
@@ -72,7 +82,7 @@ export default function VABackPayCalculator() {
   const [ratingPercentage, setRatingPercentage] = useState('10%');
   const [receivingPercentage, setReceivingPercentage] = useState('0%');
 
-  const [smcLevel, setSmcLevel] = useState('smc_l');
+  const [smcLevel, setSmcLevel] = useState('10%');
   const [smcLevelReceiving, setSmcLevelReceiving] = useState('');
 
   const [isMarried, setIsMarried] = useState(false);
@@ -95,12 +105,12 @@ export default function VABackPayCalculator() {
   const onCalculate = async () => {
     process.env.NODE_ENV === 'development' &&
       console.log('onCalculate >>> ', compensationType);
-    if (compensationType === 'Select') {
-      process.env.NODE_ENV === 'development' &&
-        console.log('Please select a compensation type.');
-      toast.error('Please select a compensation type.');
-      return;
-    }
+    // if (compensationType === 'Select') {
+    //   process.env.NODE_ENV === 'development' &&
+    //     console.log('Please select a compensation type.');
+    //   toast.error('Please select a compensation type.');
+    //   return;
+    // }
 
     setLoading(true);
     const nCUnder18Int = parseInt(childrenUnder18) || 0;
@@ -120,19 +130,21 @@ export default function VABackPayCalculator() {
     };
 
     const factors1 = {
-      ...(compensationType === 'Disability Rating' && {
-        ratingPercentage: ratingPercentage,
-      }),
-      ...(compensationType === 'SMC' && { ratingPercentage: smcLevel }),
+      // ...(compensationType === 'Disability Rating' && {
+      //   ratingPercentage: ratingPercentage,
+      // }),
+      // ...(compensationType === 'SMC' && { ratingPercentage: smcLevel }),
+      ratingPercentage: smcLevel ,
       ...commonFactors,
     };
     const factors2 = {
-      ...(compensationType === 'Disability Rating' && {
-        ratingPercentage: receivingPercentage,
-      }),
-      ...(compensationType === 'SMC' && {
-        ratingPercentage: smcLevelReceiving,
-      }),
+      // ...(compensationType === 'Disability Rating' && {
+      //   ratingPercentage: receivingPercentage,
+      // }),
+      // ...(compensationType === 'SMC' && {
+      //   ratingPercentage: smcLevelReceiving,
+      // }),
+      ratingPercentage: smcLevelReceiving,
       ...commonFactors,
     };
 
@@ -189,7 +201,7 @@ export default function VABackPayCalculator() {
     setHasDependentParents(false);
     setDependentParents('0');
     setSmckAwards(0);
-    setSmcLevel('smc_l');
+    setSmcLevel('10%');
     setSmcLevelReceiving('');
     setResult(0);
     setCompensationType('Select');
@@ -379,7 +391,7 @@ export default function VABackPayCalculator() {
                 ))}
               </select>
             </div>
-
+{/* 
             <div className="mb-6 w-full">
               <label className=" text-md  mb-2 font-bold dark:text-white-light">
                 Select Compensation Type
@@ -407,9 +419,9 @@ export default function VABackPayCalculator() {
                   <option key={p}>{p}</option>
                 ))}
               </select>
-            </div>
+            </div> */}
 
-            {compensationType === 'Disability Rating' && (
+            {/* {compensationType === 'Disability Rating' && (
               <>
                 <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700">
                   <label className="text-md block  font-bold">
@@ -443,9 +455,9 @@ export default function VABackPayCalculator() {
                   </select>
                 </div>
               </>
-            )}
+            )} */}
 
-            {compensationType === 'SMC' && (
+            {/* {compensationType === 'SMC' && ( */}
               <>
                 <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700">
                   <label className="text-md block  font-bold">
@@ -483,7 +495,7 @@ export default function VABackPayCalculator() {
                   </select>
                 </div>
               </>
-            )}
+            {/* )} */}
           </div>
 
           <div className="mb-6 rounded-lg border p-4 pt-5 dark:border-gray dark:bg-gray-900">
