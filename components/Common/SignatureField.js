@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect } from "react";
-import SignatureScreen from "react-signature-canvas";
-import { Trash2, ArrowLeft, Pen } from "lucide-react";
-  
+import React, { useRef, useState, useEffect } from 'react';
+import SignatureScreen from 'react-signature-canvas';
+import { Trash2, ArrowLeft, Pen } from 'lucide-react';
+
 const SignatureField = ({
   value,
   onChange,
@@ -12,7 +12,7 @@ const SignatureField = ({
   const sigPadRef = useRef(null);
   const [isEditing, setIsEditing] = useState(false);
   const [signatureValue, setSignatureValue] = useState(null);
-1
+  1;
   // Sync with parent "editMode"
   useEffect(() => {
     setIsEditing(editMode);
@@ -21,19 +21,19 @@ const SignatureField = ({
   const handleClear = () => {
     if (!sigPadRef.current) return;
     sigPadRef.current.clear();
-    onChange("");
+    onChange('');
   };
 
   const handleEnd = () => {
     if (!sigPadRef.current) return;
-    const dataURL = sigPadRef.current.toDataURL("image/png"); // better than svg
-    console.log('dataURL: ', dataURL);
+    const dataURL = sigPadRef.current.toDataURL('image/png'); // better than svg
+    process.env.NODE_ENV === 'development' && console.log('dataURL: ', dataURL);
     onChange(dataURL);
   };
 
   const handleAddNew = () => {
     setIsEditing(true);
-    onChange(""); // start blank
+    onChange(''); // start blank
     if (sigPadRef.current) sigPadRef.current.clear();
   };
 
@@ -60,7 +60,7 @@ const SignatureField = ({
     <div className="relative flex w-full flex-col items-center justify-center">
       {/* Signature box */}
       <div
-        className="relative rounded-md border border-gray-300 flex items-center justify-center bg-white"
+        className="relative flex items-center justify-center rounded-md border border-gray-300 bg-white"
         style={{ width: imgWidth, height: imgHeight }}
       >
         {isEditing ? (
@@ -71,13 +71,13 @@ const SignatureField = ({
               canvasProps={{
                 width: imgWidth,
                 height: imgHeight,
-                className: "rounded-md",
+                className: 'rounded-md',
               }}
               onEnd={handleEnd}
             />
 
             {/* Buttons in edit mode */}
-            <div className="absolute top-2 right-2 flex gap-2">
+            <div className="absolute right-2 top-2 flex gap-2">
               <button
                 type="button"
                 onClick={handleClear}
@@ -99,15 +99,15 @@ const SignatureField = ({
         ) : (
           <>
             {value ? (
-               <div className="w-full border border-gray-300 rounded-lg bg-gray-50 shadow-sm">
-                  <img
+              <div className="w-full rounded-lg border border-gray-300 bg-gray-50 shadow-sm">
+                <img
                   src={value}
                   alt="Signature"
-                  className="w-full h-auto bg-white rounded-lg object-contain"
-                  />
+                  className="h-auto w-full rounded-lg bg-white object-contain"
+                />
               </div>
             ) : (
-              <span className="text-gray-400 text-sm">
+              <span className="text-sm text-gray-400">
                 No signature found… Add One
               </span>
             )}
@@ -116,7 +116,7 @@ const SignatureField = ({
             <button
               type="button"
               onClick={handleAddNew}
-              className="absolute top-2 right-2 rounded bg-primary p-2 text-white hover:bg-primaryHover"
+              className="absolute right-2 top-2 rounded bg-primary p-2 text-white hover:bg-primaryHover"
               aria-label="Add new signature"
             >
               {/* <Plus className="h-5 w-5" /> */}

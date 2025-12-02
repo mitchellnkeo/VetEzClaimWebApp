@@ -25,25 +25,24 @@ import Divider from '@/components/Common/Divider';
 import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const checkOptionsData = [
-  "Killed in action",
-  "Wounded in action",
-  "Killed non-battle",
-  "Injured non-battle",
-  "Other",
+  'Killed in action',
+  'Wounded in action',
+  'Killed non-battle',
+  'Injured non-battle',
+  'Other',
 ];
 
 const signatureOption = [
   {
-    option: 'Veteran/Claimant\'s Signature (Required)',
+    option: "Veteran/Claimant's Signature (Required)",
     isSelected: true,
   },
 ];
 
 export default function PTSDStressorForm() {
-  const formTitle       = 'PTSD Stressor Statement (Form 21-0781)';
-  const formId          = 'ptsdform';
-  const formName        = '21-0781';
-
+  const formTitle = 'PTSD Stressor Statement (Form 21-0781)';
+  const formId = 'ptsdform';
+  const formName = '21-0781';
 
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
@@ -58,7 +57,7 @@ export default function PTSDStressorForm() {
   const router = useRouter();
   const { ['in-progress']: inProgress } = router.query;
 
-  // console.log('>> Reloaded :: ', router.query, inProgress);
+  // process.env.NODE_ENV === 'development' && console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
     // section I
@@ -86,19 +85,17 @@ export default function PTSDStressorForm() {
     person1LastName: '',
     person1Rank: '', // optional
     injuryDate1: '',
-    checkOptions1: '', 
-    checkOptionsOther1: '', 
+    checkOptions1: '',
+    checkOptionsOther1: '',
     unitAssignmentDuringIncident1: '',
 
     person2FirstName: '',
     person2LastName: '',
     person2Rank: '', // optional
     injuryDate2: '',
-    checkOptions2: '', 
-    checkOptionsOther2: '', 
+    checkOptions2: '',
+    checkOptionsOther2: '',
     unitAssignmentDuringIncident2: '',
-
-
 
     incidentDate2: '', // optional
     dateOfAssignmentFrom2: '', // optional
@@ -108,7 +105,6 @@ export default function PTSDStressorForm() {
     descriptionOfIncident2: '', // optional
     medalReceived2: '', // optional
 
-
     person3FirstName: '', // optional
     person3LastName: '', // optional
     person3Rank: '', // optional
@@ -116,14 +112,13 @@ export default function PTSDStressorForm() {
     checkOptions3: '', // optional
     checkOptionsOther3: '', // optional
     unitAssignmentDuringIncident4: '', // optional
-    
 
     person4FirstName: '', // optional
     person4LastName: '',
     person4Rank: '', // optional
-    injuryDate4: '',  
-    checkOptions4: '', 
-    checkOptionsOther4: '', 
+    injuryDate4: '',
+    checkOptions4: '',
+    checkOptionsOther4: '',
     unitAssignmentDuringIncident5: '',
 
     remarks: '', // optional
@@ -153,18 +148,18 @@ export default function PTSDStressorForm() {
           setTouched,
           validateForm,
         }) => {
-
           const loadDataFromLocalStorage = async () => {
-            console.log('loading data from local storage : ', user);
+            process.env.NODE_ENV === 'development' &&
+              console.log('loading data from local storage : ', user);
             await setValues({
-                ...values,
-                firstName: user.firstName ? user.firstName : '',
-                lastName: user.lastName ? user.lastName : '',
-                ssn: user.ssn ? user.ssn : '',
-                birthday: user.dob ? user.dob : '',
-                phone: user.phone ? user.phone : '',
-                email: user.email ? user.email : '',
-                signature: user.signature ? user.signature : ''
+              ...values,
+              firstName: user.firstName ? user.firstName : '',
+              lastName: user.lastName ? user.lastName : '',
+              ssn: user.ssn ? user.ssn : '',
+              birthday: user.dob ? user.dob : '',
+              phone: user.phone ? user.phone : '',
+              email: user.email ? user.email : '',
+              signature: user.signature ? user.signature : '',
             });
           };
 
@@ -174,7 +169,7 @@ export default function PTSDStressorForm() {
             };
             setValues(dataBody);
           };
-          
+
           const loadData = async () => {
             setIsLoading(true);
             const data = await getFormData({
@@ -190,8 +185,10 @@ export default function PTSDStressorForm() {
               setTimestamp(data?.timestamp === undefined ? '' : data.timestamp);
               setCount(data?.count === undefined ? 0 : data.count);
               const isUploaded = data?.isUploadedAlready || false;
-              console.log('Form data from Firebase:', data);
-              console.log('inProgress : ', inProgress);
+              process.env.NODE_ENV === 'development' &&
+                console.log('Form data from Firebase:', data);
+              process.env.NODE_ENV === 'development' &&
+                console.log('inProgress : ', inProgress);
 
               if (inProgress === 'true') {
                 await loadDataFromFirebase(data);
@@ -220,7 +217,8 @@ export default function PTSDStressorForm() {
               }
             } else {
               await loadDataFromLocalStorage();
-              console.log('No data found');
+              process.env.NODE_ENV === 'development' &&
+                console.log('No data found');
             }
             setIsLoading(false);
           };
@@ -238,10 +236,12 @@ export default function PTSDStressorForm() {
           };
 
           const saveData = async (fields, isFromSaveData = false) => {
-            console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
             var formData = await transformFormValues(values);
             formData = { ...formData, ...fields };
-            console.log('>> save Data : ', formData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data : ', formData);
             try {
               await postFormData({
                 docName: formId,
@@ -249,7 +249,7 @@ export default function PTSDStressorForm() {
                 formId: formName,
                 recordExists: recordExists,
                 formData: formData,
-              });   
+              });
               return true;
             } catch (error) {
               if (isFromSaveData) {
@@ -271,7 +271,7 @@ export default function PTSDStressorForm() {
           const generatePdf = async (formValues, isFromGeneratePdf = false) => {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
-            const pdfObject = await  generatePTSDStressorPdfObject(formData);
+            const pdfObject = await generatePTSDStressorPdfObject(formData);
             await generatePdfService(pdfObject, 'generatepdf14')
               .then(async (res) => {
                 if (isFromGeneratePdf) {
@@ -281,7 +281,8 @@ export default function PTSDStressorForm() {
                 window.open(res?.download_url, '_blank');
               })
               .catch((err) => {
-                console.log('error', err);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('error', err);
                 toast.error('Error generating PDF. Please try again.');
               })
               .finally(() => {
@@ -379,26 +380,28 @@ export default function PTSDStressorForm() {
             } else {
               setIsLoading(true);
               const formData = await transformFormValues(values);
-              console.log('1  faxData >> ', formData);
+              process.env.NODE_ENV === 'development' &&
+                console.log('1  faxData >> ', formData);
               const pdfObject = await generatePTSDStressorPdfObject(formData);
-              console.log('2  faxData >> ', pdfObject);
+              process.env.NODE_ENV === 'development' &&
+                console.log('2  faxData >> ', pdfObject);
 
               await generatePdfService(pdfObject, 'generatepdf14')
                 .then(async (res) => {
-                  console.log(res.download_url);
-                  const faxBody = await getFaxBodyData(
-                    'ptsdform.pdf',
-                    false
-                  );
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(res.download_url);
+                  const faxBody = await getFaxBodyData('ptsdform.pdf', false);
                   const faxData = {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
                   };
-                  console.log(' faxData >> ', faxData);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(' faxData >> ', faxData);
 
                   const faxResponse = await sendViaSRFax(faxData);
 
-                  console.log('faxReponse >> ', faxResponse);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('faxReponse >> ', faxResponse);
 
                   if (faxResponse.Status === 'Success') {
                     const url =
@@ -447,7 +450,8 @@ export default function PTSDStressorForm() {
                   setIsLoading(false);
                 })
                 .catch((err) => {
-                  console.log('error', err);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('error', err);
                   toast.error('Error uploading to VA. Try again later-2.');
                 })
                 .finally(() => {
@@ -467,7 +471,6 @@ export default function PTSDStressorForm() {
               <Loader show={isLoading} />
 
               <Form>
-
                 <ToastModal
                   {...toastConfig}
                   isOpen={toastOpen}
@@ -475,78 +478,78 @@ export default function PTSDStressorForm() {
                 />
 
                 <SectionTitle title="Section I:  Veteran's Identification Information" />
-                <> 
-                    <TextInput
-                        label={`Veteran's First Name`}
-                        name="firstName"
-                        placeholder="Enter first name"
-                        fieldCounter="(1 of 16)"
-                        limit={12}
-                    />
-                    <TextInput
-                        label="Veteran's Last Name"
-                        name="lastName"
-                        placeholder="Enter file number"
-                        fieldCounter="(1-2 of 16)"
-                        limit={18}
-                    />
-                    <TextInput
-                        label="Veteran's Social Security Number"
-                        name="ssn"
-                        placeholder="Enter ssn"
-                        fieldCounter="(2 of 16)"
-                        limit={9}
-                    />
-                    <TextInput
-                        label="VA File Number"
-                        name="currentVa"
-                        placeholder="Enter va file number"
-                        fieldCounter="(3 of 16)"
-                        limit={9}
-                        hasCounter
-                    />
-                    <DateSelectorExtended
-                        label="Veteran's Date of Birth"
-                        name="birthday"
-                        value={values.birthday}
-                        placeholder="Select Date"
-                        onChange={(val) => setFieldValue('birthday', val)}
-                        isDOB
-                        fieldCounter="(4 of 16)"  
-                    />
+                <>
+                  <TextInput
+                    label={`Veteran's First Name`}
+                    name="firstName"
+                    placeholder="Enter first name"
+                    fieldCounter="(1 of 16)"
+                    limit={12}
+                  />
+                  <TextInput
+                    label="Veteran's Last Name"
+                    name="lastName"
+                    placeholder="Enter file number"
+                    fieldCounter="(1-2 of 16)"
+                    limit={18}
+                  />
+                  <TextInput
+                    label="Veteran's Social Security Number"
+                    name="ssn"
+                    placeholder="Enter ssn"
+                    fieldCounter="(2 of 16)"
+                    limit={9}
+                  />
+                  <TextInput
+                    label="VA File Number"
+                    name="currentVa"
+                    placeholder="Enter va file number"
+                    fieldCounter="(3 of 16)"
+                    limit={9}
+                    hasCounter
+                  />
+                  <DateSelectorExtended
+                    label="Veteran's Date of Birth"
+                    name="birthday"
+                    value={values.birthday}
+                    placeholder="Select Date"
+                    onChange={(val) => setFieldValue('birthday', val)}
+                    isDOB
+                    fieldCounter="(4 of 16)"
+                  />
 
-                    <TextInput
-                        label="Veteran's Service Number"
-                        name="serviceNumber"
-                        placeholder="Enter service number"
-                        fieldCounter="(5 of 16)"
-                        limit={9}
-                        hasCounter
-                    />
+                  <TextInput
+                    label="Veteran's Service Number"
+                    name="serviceNumber"
+                    placeholder="Enter service number"
+                    fieldCounter="(5 of 16)"
+                    limit={9}
+                    hasCounter
+                  />
 
-                    <TextInput
-                        label="Telephone Number"
-                        name="phone"
-                        placeholder="Enter telephone number"
-                        fieldCounter="(6 of 16)"
-                        limit={12}
-                        hasCounter
-                    />
+                  <TextInput
+                    label="Telephone Number"
+                    name="phone"
+                    placeholder="Enter telephone number"
+                    fieldCounter="(6 of 16)"
+                    limit={12}
+                    hasCounter
+                  />
 
-                    <TextInput
-                        label="International Telephone Number"
-                        name="phoneI"
-                        placeholder="Enter international telephone number"
-                        fieldCounter="(6-2 of 16)"
-                        limit={15}
-                        hasCounter
-                    />
+                  <TextInput
+                    label="International Telephone Number"
+                    name="phoneI"
+                    placeholder="Enter international telephone number"
+                    fieldCounter="(6-2 of 16)"
+                    limit={15}
+                    hasCounter
+                  />
                 </>
 
                 <SectionTitle title="Section II: Stressful Incidents" />
-                <> 
+                <>
                   <>
-                    <Divider title="First Incident Information" /> 
+                    <Divider title="First Incident Information" />
                     <DateSelectorExtended
                       label="Date First Incident Occurred"
                       name="incidentDate1"
@@ -560,37 +563,41 @@ export default function PTSDStressorForm() {
                       <div>
                         <p
                           className="my-3"
-                          style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
+                          style={{
+                            fontSize: '14px',
+                            color: '#035F92',
+                            fontWeight: 500,
+                          }}
                         >
-                              Dates of Unit Assignment
+                          Dates of Unit Assignment
                         </p>
                       </div>
                       <div className="grid grid-cols-2 gap-6">
-                              <DateSelectorExtended
-                                label="From"
-                                allowRange={true}
-                                name="dateOfAssignmentFrom1"
-                                referenceDate={values.dateOfAssignmentTo1}
-                                value={values.dateOfAssignmentFrom1}
-                                placeholder="Select Date"
-                                onChange={(val) =>
-                                  setFieldValue('dateOfAssignmentFrom1', val)
-                                }
-                                isStartDate={true}
-                              />
+                        <DateSelectorExtended
+                          label="From"
+                          allowRange={true}
+                          name="dateOfAssignmentFrom1"
+                          referenceDate={values.dateOfAssignmentTo1}
+                          value={values.dateOfAssignmentFrom1}
+                          placeholder="Select Date"
+                          onChange={(val) =>
+                            setFieldValue('dateOfAssignmentFrom1', val)
+                          }
+                          isStartDate={true}
+                        />
 
-                              <DateSelectorExtended
-                                label="To"
-                                allowRange={true}
-                                name="dateOfAssignmentTo1"
-                                value={values.dateOfAssignmentTo1}
-                                referenceDate={values.dateOfAssignmentFrom1}
-                                placeholder="Select Date"
-                                onChange={(val) =>
-                                  setFieldValue('dateOfAssignmentTo1', val)
-                                }
-                                isStartDate={false}
-                              />
+                        <DateSelectorExtended
+                          label="To"
+                          allowRange={true}
+                          name="dateOfAssignmentTo1"
+                          value={values.dateOfAssignmentTo1}
+                          referenceDate={values.dateOfAssignmentFrom1}
+                          placeholder="Select Date"
+                          onChange={(val) =>
+                            setFieldValue('dateOfAssignmentTo1', val)
+                          }
+                          isStartDate={false}
+                        />
                       </div>
                     </>
 
@@ -627,10 +634,10 @@ export default function PTSDStressorForm() {
                       placeholder="Enter medal received"
                       fieldCounter="(8-6 of 16)"
                     />
-                    
-                     <br /> 
-                    <Divider title="Injured/Death Person Information" /> 
-                    <Divider title="First Person's Information" lightTitle /> 
+
+                    <br />
+                    <Divider title="Injured/Death Person Information" />
+                    <Divider title="First Person's Information" lightTitle />
                     <TextInput
                       label="First Name"
                       name="person1FirstName"
@@ -689,7 +696,7 @@ export default function PTSDStressorForm() {
                       limit={300}
                     />
 
-                    <Divider title="Second Person's Information" lightTitle /> 
+                    <Divider title="Second Person's Information" lightTitle />
                     <TextInput
                       label="First Name"
                       name="person2FirstName"
@@ -697,7 +704,7 @@ export default function PTSDStressorForm() {
                       fieldCounter="(10-1-1 of 16)"
                       limit={12}
                     />
-                    
+
                     <TextInput
                       label="Last Name"
                       name="person2LastName"
@@ -735,7 +742,6 @@ export default function PTSDStressorForm() {
                         label="Please specify"
                         name="checkOptionsOther2"
                         placeholder="specify other"
-                      
                       />
                     )}
 
@@ -748,12 +754,12 @@ export default function PTSDStressorForm() {
                       rows={4}
                       limit={300}
                     />
-                  </> 
-                  
-                  <> 
+                  </>
+
+                  <>
                     <br />
                     <br />
-                    <Divider title="Second Incident Information" /> 
+                    <Divider title="Second Incident Information" />
                     <DateSelectorExtended
                       label="Date First Incident Occurred"
                       name="incidentDate2"
@@ -767,37 +773,41 @@ export default function PTSDStressorForm() {
                       <div>
                         <p
                           className="my-3"
-                          style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
+                          style={{
+                            fontSize: '14px',
+                            color: '#035F92',
+                            fontWeight: 500,
+                          }}
                         >
-                              Dates of Unit Assignment
+                          Dates of Unit Assignment
                         </p>
                       </div>
                       <div className="grid grid-cols-2 gap-6">
-                              <DateSelectorExtended
-                                label="From"
-                                allowRange={true}
-                                name="dateOfAssignmentFrom2"
-                                referenceDate={values.dateOfAssignmentTo2}
-                                value={values.dateOfAssignmentFrom2}
-                                placeholder="Select Date"
-                                onChange={(val) =>
-                                  setFieldValue('dateOfAssignmentFrom2', val)
-                                }
-                                isStartDate={true}
-                              />
+                        <DateSelectorExtended
+                          label="From"
+                          allowRange={true}
+                          name="dateOfAssignmentFrom2"
+                          referenceDate={values.dateOfAssignmentTo2}
+                          value={values.dateOfAssignmentFrom2}
+                          placeholder="Select Date"
+                          onChange={(val) =>
+                            setFieldValue('dateOfAssignmentFrom2', val)
+                          }
+                          isStartDate={true}
+                        />
 
-                              <DateSelectorExtended
-                                label="To"
-                                allowRange={true}
-                                name="dateOfAssignmentTo2"
-                                value={values.dateOfAssignmentTo2}
-                                referenceDate={values.dateOfAssignmentFrom2}
-                                placeholder="Select Date"
-                                onChange={(val) =>
-                                  setFieldValue('dateOfAssignmentTo2', val)
-                                }
-                                isStartDate={false}
-                              />
+                        <DateSelectorExtended
+                          label="To"
+                          allowRange={true}
+                          name="dateOfAssignmentTo2"
+                          value={values.dateOfAssignmentTo2}
+                          referenceDate={values.dateOfAssignmentFrom2}
+                          placeholder="Select Date"
+                          onChange={(val) =>
+                            setFieldValue('dateOfAssignmentTo2', val)
+                          }
+                          isStartDate={false}
+                        />
                       </div>
                     </>
 
@@ -836,8 +846,8 @@ export default function PTSDStressorForm() {
                     />
 
                     <br />
-                    <Divider title="Injured/Death Person Information" /> 
-                    <Divider title="First Person's Information" lightTitle /> 
+                    <Divider title="Injured/Death Person Information" />
+                    <Divider title="First Person's Information" lightTitle />
                     <TextInput
                       label="First Name"
                       name="person3FirstName"
@@ -896,7 +906,7 @@ export default function PTSDStressorForm() {
                       limit={300}
                     />
 
-                    <Divider title="Second Person's Information" lightTitle /> 
+                    <Divider title="Second Person's Information" lightTitle />
                     <TextInput
                       label="First Name"
                       name="person4FirstName"
@@ -904,7 +914,7 @@ export default function PTSDStressorForm() {
                       fieldCounter="(10-1-1 of 16)"
                       limit={12}
                     />
-                    
+
                     <TextInput
                       label="Last Name"
                       name="person4LastName"
@@ -942,7 +952,6 @@ export default function PTSDStressorForm() {
                         label="Please specify"
                         name="checkOptionsOther4"
                         placeholder="specify other"
-                      
                       />
                     )}
 
@@ -955,50 +964,51 @@ export default function PTSDStressorForm() {
                       rows={4}
                       limit={300}
                     />
-                  </> 
+                  </>
                 </>
 
                 <SectionTitle title="Section III: Remarks" />
-                <> 
+                <>
                   <TextInput
-                      label="Remarks"
-                      name="remarks"
-                      placeholder="Enter remarks if any"
-                      fieldCounter="(14 of 16)"
-                      limit={1500}
-                      hasCounter
-                      multiline
+                    label="Remarks"
+                    name="remarks"
+                    placeholder="Enter remarks if any"
+                    fieldCounter="(14 of 16)"
+                    limit={1500}
+                    hasCounter
+                    multiline
                   />
                 </>
 
                 <SectionTitle title="Section IV: Certification and Signature" />
-                <> 
-                  <p className="text-sm md:text-base leading-relaxed text-gray-700 mb-5 dark:text-white-light">
-    I <span className="font-bold">hereby certify that the information </span>
-    I have given on this form is true and correct to the best of my knowledge and belief.
+                <>
+                  <p className="mb-5 text-sm leading-relaxed text-gray-700 dark:text-white-light md:text-base">
+                    I{' '}
+                    <span className="font-bold">
+                      hereby certify that the information{' '}
+                    </span>
+                    I have given on this form is true and correct to the best of
+                    my knowledge and belief.
                   </p>
 
+                  <OptionSelector
+                    name="signatureOption"
+                    options={signatureOption}
+                    multiSelect={false}
+                    isOtherAllowed={false}
+                    lockOption={true}
+                  />
 
-                    <OptionSelector
-                      name="signatureOption"
-                      options={signatureOption}
-                      multiSelect={false}
-                      isOtherAllowed={false}
-                      lockOption={true}
-                    />
-
-                    <DateSelectorExtended
-                      label="Date Signed"
-                      name="dateSigned"
-                      value={values.dateSigned}
-                      placeholder="Select Date"
-                      onChange={(val) => setFieldValue('dateSigned', val)}
-                      fieldCounter="(16 of 16)"
-                    /> 
+                  <DateSelectorExtended
+                    label="Date Signed"
+                    name="dateSigned"
+                    value={values.dateSigned}
+                    placeholder="Select Date"
+                    onChange={(val) => setFieldValue('dateSigned', val)}
+                    fieldCounter="(16 of 16)"
+                  />
                 </>
-
               </Form>
-
             </FormContent>
           );
         }}

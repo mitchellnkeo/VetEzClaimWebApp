@@ -22,7 +22,7 @@ export default function FloatingChat() {
         id="chat-head"
         onClick={(e) => {
           e.stopPropagation();
-          setOpen(true);
+          setOpen(!open);
         }}
         className="fixed bottom-5 right-5 z-[9999] cursor-pointer"
       >

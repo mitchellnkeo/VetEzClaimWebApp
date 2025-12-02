@@ -75,7 +75,8 @@ const AnalyzeUI = () => {
 
     reader.onerror = (error) => {
       toast.error('Error reading file.');
-      console.error('FileReader error:', error);
+      process.env.NODE_ENV === 'development' &&
+        console.error('FileReader error:', error);
     };
 
     reader.readAsDataURL(selectedFile); // triggers progress events
@@ -89,7 +90,8 @@ const AnalyzeUI = () => {
     setIsLoading(true);
     try {
       const response = await docsAnalyzerService(docFile, instructions);
-      console.log('API response:', response);
+      process.env.NODE_ENV === 'development' &&
+        console.log('API response:', response);
       const dataObject = {
         ...response.data,
         instructions: instructions,
@@ -110,7 +112,7 @@ const AnalyzeUI = () => {
       setInstructions('');
       setSuccessMessage('');
     } catch (err) {
-      console.log('>>Error:', err);
+      process.env.NODE_ENV === 'development' && console.log('>>Error:', err);
       setResult(null);
       setAddNewPDFBtnVisible(false);
       setShowAnalysisHistory(false);
@@ -129,14 +131,15 @@ const AnalyzeUI = () => {
         setIsLoading(true);
         if (uid) {
           const records = await getAnalyzerRecordsByUser(uid);
-          console.log('records: >>>', records);
+          process.env.NODE_ENV === 'development' &&
+            console.log('records: >>>', records);
           if (isMounted) {
             setAnalysisHistory(records); // only update if component still mounted
             setHistoryBtnVisible(records.length > 0);
           }
         }
       } catch (err) {
-        console.error(err);
+        process.env.NODE_ENV === 'development' && console.error(err);
       } finally {
         if (isMounted) setIsLoading(false);
       }
@@ -150,7 +153,8 @@ const AnalyzeUI = () => {
   }, [uid]);
 
   const handleViewDetails = (record) => {
-    console.log('Full record data:', record);
+    process.env.NODE_ENV === 'development' &&
+      console.log('Full record data:', record);
     setResult(record);
     setShowAnalysisHistory(false);
     setHistoryBtnVisible(true);

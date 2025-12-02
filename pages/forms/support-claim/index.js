@@ -25,7 +25,6 @@ import Divider from '@/components/Common/Divider';
 import DropDownExtended from '@/components/Common/DropDownExtended';
 import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
-
 const signatureOption = [
   {
     option: 'Signature of Veteran/Beneficiary (Required)',
@@ -34,10 +33,9 @@ const signatureOption = [
 ];
 
 export default function BoardAppealForm() {
-  const formTitle       = 'Statement in Support of Claim (Form 21-4138)';
-  const formId          = 'supportofclaim';
-  const formName        = '21-4138';
-
+  const formTitle = 'Statement in Support of Claim (Form 21-4138)';
+  const formId = 'supportofclaim';
+  const formName = '21-4138';
 
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
@@ -52,7 +50,7 @@ export default function BoardAppealForm() {
   const router = useRouter();
   const { ['in-progress']: inProgress } = router.query;
 
-  // console.log('>> Reloaded :: ', router.query, inProgress);
+  // process.env.NODE_ENV === 'development' && console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
     firstName: '',
@@ -97,24 +95,24 @@ export default function BoardAppealForm() {
           setTouched,
           validateForm,
         }) => {
-
           const loadDataFromLocalStorage = async () => {
-            console.log('loading data from local storage : ', user);
+            process.env.NODE_ENV === 'development' &&
+              console.log('loading data from local storage : ', user);
             await setValues({
-                ...values,
-                firstName: user.firstName ? user.firstName : '',
-                lastName: user.lastName ? user.lastName : '',
-                ssn: user.ssn ? user.ssn : '',
-                birthday: user.birthday ? user.birthday : '',
-                phone: user.phone ? user.phone : '',
-                email: user.email ? user.email : '',
-                street: user.street ? user.street : '',
-                unitNumber: user.unitNumber ? user.unitNumber : '',
-                city: user.city ? user.city : '',
-                province: user.province ? user.province : '',
-                zipCode: user.zipCode ? user.zipCode : '',
-                signature: user.signature ? user.signature : '',
-              });
+              ...values,
+              firstName: user.firstName ? user.firstName : '',
+              lastName: user.lastName ? user.lastName : '',
+              ssn: user.ssn ? user.ssn : '',
+              birthday: user.birthday ? user.birthday : '',
+              phone: user.phone ? user.phone : '',
+              email: user.email ? user.email : '',
+              street: user.street ? user.street : '',
+              unitNumber: user.unitNumber ? user.unitNumber : '',
+              city: user.city ? user.city : '',
+              province: user.province ? user.province : '',
+              zipCode: user.zipCode ? user.zipCode : '',
+              signature: user.signature ? user.signature : '',
+            });
           };
 
           const loadDataFromFirebase = async (data) => {
@@ -124,7 +122,7 @@ export default function BoardAppealForm() {
             };
             setValues(dataBody);
           };
-          
+
           const loadData = async () => {
             setIsLoading(true);
             const data = await getFormData({
@@ -140,8 +138,10 @@ export default function BoardAppealForm() {
               setTimestamp(data?.timestamp === undefined ? '' : data.timestamp);
               setCount(data?.count === undefined ? 0 : data.count);
               const isUploaded = data?.isUploadedAlready || false;
-              console.log('Form data from Firebase:', data);
-              console.log('inProgress : ', inProgress);
+              process.env.NODE_ENV === 'development' &&
+                console.log('Form data from Firebase:', data);
+              process.env.NODE_ENV === 'development' &&
+                console.log('inProgress : ', inProgress);
 
               if (inProgress === 'true') {
                 await loadDataFromFirebase(data);
@@ -170,7 +170,8 @@ export default function BoardAppealForm() {
               }
             } else {
               await loadDataFromLocalStorage();
-              console.log('No data found');
+              process.env.NODE_ENV === 'development' &&
+                console.log('No data found');
             }
             setIsLoading(false);
           };
@@ -188,10 +189,12 @@ export default function BoardAppealForm() {
           };
 
           const saveData = async (fields, isFromSaveData = false) => {
-            console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
             var formData = await transformFormValues(values);
             formData = { ...formData, ...fields };
-            console.log('>> save Data : ', formData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data : ', formData);
             try {
               await postFormData({
                 docName: formId,
@@ -199,7 +202,7 @@ export default function BoardAppealForm() {
                 formId: formName,
                 recordExists: recordExists,
                 formData: formData,
-              });   
+              });
               return true;
             } catch (error) {
               if (isFromSaveData) {
@@ -231,7 +234,8 @@ export default function BoardAppealForm() {
                 window.open(res?.download_url, '_blank');
               })
               .catch((err) => {
-                console.log('error', err);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('error', err);
                 toast.error('Error generating PDF. Please try again.');
               })
               .finally(() => {
@@ -329,13 +333,16 @@ export default function BoardAppealForm() {
             } else {
               setIsLoading(true);
               const formData = await transformFormValues(values);
-              console.log('1  faxData >> ', formData);
+              process.env.NODE_ENV === 'development' &&
+                console.log('1  faxData >> ', formData);
               const pdfObject = await generateSupportOfClaimPdfObject(formData);
-              console.log('2  faxData >> ', pdfObject);
+              process.env.NODE_ENV === 'development' &&
+                console.log('2  faxData >> ', pdfObject);
 
               await generatePdfService(pdfObject, 'generatepdf13')
                 .then(async (res) => {
-                  console.log(res.download_url);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(res.download_url);
                   const faxBody = await getFaxBodyData(
                     'supportofclaim.pdf',
                     false
@@ -344,11 +351,13 @@ export default function BoardAppealForm() {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
                   };
-                  console.log(' faxData >> ', faxData);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(' faxData >> ', faxData);
 
                   const faxResponse = await sendViaSRFax(faxData);
 
-                  console.log('faxReponse >> ', faxResponse);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('faxReponse >> ', faxResponse);
 
                   if (faxResponse.Status === 'Success') {
                     const url =
@@ -397,7 +406,8 @@ export default function BoardAppealForm() {
                   setIsLoading(false);
                 })
                 .catch((err) => {
-                  console.log('error', err);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('error', err);
                   toast.error('Error uploading to VA. Try again later-2.');
                 })
                 .finally(() => {
@@ -417,7 +427,6 @@ export default function BoardAppealForm() {
               <Loader show={isLoading} />
 
               <Form>
-
                 <ToastModal
                   {...toastConfig}
                   isOpen={toastOpen}
@@ -425,155 +434,150 @@ export default function BoardAppealForm() {
                 />
 
                 <SectionTitle title="Section I:  Veteran/Beneficiary's Identification Information" />
-                <> 
-                    <TextInput
-                        label={`Veteran/Beneficiary's First Name`}
-                        name="firstName"
-                        placeholder="Enter first name"
-                        fieldCounter="(1 of 10)"
-                    />
-                    <TextInput
-                        label={`Veteran/Beneficiary's Last Name`}
-                        name="lastName"
-                        placeholder="Enter last name"
-                        fieldCounter="(1-2 of 10)"
-                    />
-                    <TextInput
-                        label="Veteran's Social Security Number"
-                        name="ssn"
-                        placeholder="Enter ssn"
-                        fieldCounter="(2 of 10)"
-                        limit={9}
-                    />
-                    <TextInput
-                        label="VA File Number"
-                        name="currentVa"
-                        placeholder="Enter va number"
-                        fieldCounter="(3 of 10)"
-                        limit={9}
-                        hasCounter
-                    />
-                    <DateSelectorExtended
-                        label="Veteran's Date of Birth"
-                        name="birthday"
-                        value={values.birthday}
-                        placeholder="Select Date"
-                        onChange={(val) => setFieldValue('birthday', val)}
-                        isDOB
-                        fieldCounter="(4 of 10)"  
-                    />
-                    <TextInput
-                        label="Veteran's Service Number"
-                        name="serviceNumber"
-                        placeholder="Enter service number"
-                        fieldCounter="(5 of 10)"
-                        limit={9}
-                        hasCounter
-                    />
-                    <TextInput
-                        label="Telephone Number"
-                        name="phone"
-                        placeholder="Enter telephone number"
-                        fieldCounter="(6 of 10)"
-                        limit={12}
-                        hasCounter
-                    />
-                    <TextInput
-                        label="International Telephone Number"
-                        name="phoneI"
-                        placeholder="Enter international telephone number"
-                        fieldCounter="(6-2 of 10)"
-                        limit={15}
-                        hasCounter
-                    />
-                    <TextInput
-                        label="Email Address"
-                        name="email"
-                        placeholder="Enter email"
-                        fieldCounter="(7 of 10)"
-                        hasCounter
-                        limit={40}
-                    />
-                    <Divider title="Mailing Address" />
-                    <TextInput
-                        label="No. & Street"
-                        name="street"
-                        placeholder="Enter street"
-                        fieldCounter="(8 of 10)"
-                    />
-                    <TextInput
-                        label="Apt./Unit Number"
-                        name="unitNumber"
-                        placeholder="Enter apt/unit number"
-                        fieldCounter="(8-2 of 10)"
-                        limit={5}
-                    />
-                    <TextInput
-                        label="City"
-                        name="city"
-                        placeholder="Enter city"
-                        fieldCounter="(8-3 of 10)"
-                        limit={18}
-                    />
-                    <DropDownExtended
-                        label="State/Province"
-                        name="province"
-                        data={StateData}
-                        fieldCounter="(8-4 of 10)"
-                    />
-                    
-                    <TextInput
-                        label="Country"
-                        name="country"
-                        fieldCounter="(8-5 of 10)"
-                        limit={2}
-                        readOnly
-                    />
-                    <TextInput
-                        label="ZIP Code/Postal Code"
-                        name="zipCode"
-                        placeholder="Enter zip/postal code"
-                        fieldCounter="(8-6 of 10)"
-                        limit={10}
-                    />
+                <>
+                  <TextInput
+                    label={`Veteran/Beneficiary's First Name`}
+                    name="firstName"
+                    placeholder="Enter first name"
+                    fieldCounter="(1 of 10)"
+                  />
+                  <TextInput
+                    label={`Veteran/Beneficiary's Last Name`}
+                    name="lastName"
+                    placeholder="Enter last name"
+                    fieldCounter="(1-2 of 10)"
+                  />
+                  <TextInput
+                    label="Veteran's Social Security Number"
+                    name="ssn"
+                    placeholder="Enter ssn"
+                    fieldCounter="(2 of 10)"
+                    limit={9}
+                  />
+                  <TextInput
+                    label="VA File Number"
+                    name="currentVa"
+                    placeholder="Enter va number"
+                    fieldCounter="(3 of 10)"
+                    limit={9}
+                    hasCounter
+                  />
+                  <DateSelectorExtended
+                    label="Veteran's Date of Birth"
+                    name="birthday"
+                    value={values.birthday}
+                    placeholder="Select Date"
+                    onChange={(val) => setFieldValue('birthday', val)}
+                    isDOB
+                    fieldCounter="(4 of 10)"
+                  />
+                  <TextInput
+                    label="Veteran's Service Number"
+                    name="serviceNumber"
+                    placeholder="Enter service number"
+                    fieldCounter="(5 of 10)"
+                    limit={9}
+                    hasCounter
+                  />
+                  <TextInput
+                    label="Telephone Number"
+                    name="phone"
+                    placeholder="Enter telephone number"
+                    fieldCounter="(6 of 10)"
+                    limit={12}
+                    hasCounter
+                  />
+                  <TextInput
+                    label="International Telephone Number"
+                    name="phoneI"
+                    placeholder="Enter international telephone number"
+                    fieldCounter="(6-2 of 10)"
+                    limit={15}
+                    hasCounter
+                  />
+                  <TextInput
+                    label="Email Address"
+                    name="email"
+                    placeholder="Enter email"
+                    fieldCounter="(7 of 10)"
+                    hasCounter
+                    limit={40}
+                  />
+                  <Divider title="Mailing Address" />
+                  <TextInput
+                    label="No. & Street"
+                    name="street"
+                    placeholder="Enter street"
+                    fieldCounter="(8 of 10)"
+                  />
+                  <TextInput
+                    label="Apt./Unit Number"
+                    name="unitNumber"
+                    placeholder="Enter apt/unit number"
+                    fieldCounter="(8-2 of 10)"
+                    limit={5}
+                  />
+                  <TextInput
+                    label="City"
+                    name="city"
+                    placeholder="Enter city"
+                    fieldCounter="(8-3 of 10)"
+                    limit={18}
+                  />
+                  <DropDownExtended
+                    label="State/Province"
+                    name="province"
+                    data={StateData}
+                    fieldCounter="(8-4 of 10)"
+                  />
+
+                  <TextInput
+                    label="Country"
+                    name="country"
+                    fieldCounter="(8-5 of 10)"
+                    limit={2}
+                    readOnly
+                  />
+                  <TextInput
+                    label="ZIP Code/Postal Code"
+                    name="zipCode"
+                    placeholder="Enter zip/postal code"
+                    fieldCounter="(8-6 of 10)"
+                    limit={10}
+                  />
                 </>
 
-
                 <SectionTitle title="Section II: Remarks" />
-                <> 
-                    <TextInput
-                        label="Remarks"
-                        name="claimBenefits"
-                        placeholder="Enter remarks"
-                        fieldCounter="(9 of 10)"
-                        limit={5000}
-                        multiline
-                    />
+                <>
+                  <TextInput
+                    label="Remarks"
+                    name="claimBenefits"
+                    placeholder="Enter remarks"
+                    fieldCounter="(9 of 10)"
+                    limit={5000}
+                    multiline
+                  />
                 </>
 
                 <SectionTitle title="Section III: Declaration of Intent" />
-                <> 
-                    <OptionSelector
-                        name="hasSignature"
-                        options={values.hasSignature}
-                        multiSelect={false}
-                        isOtherAllowed={false}
-                        lockOption={true}
-                    />
-                    <DateSelectorExtended
-                        label="Date Signed"
-                        name="veteranDateSigned"
-                        value={values.veteranDateSigned}
-                        placeholder="Select Date"
-                        onChange={(val) => setFieldValue('veteranDateSigned', val)}
-                        fieldCounter="(10 of 10)"
-                    />  
+                <>
+                  <OptionSelector
+                    name="hasSignature"
+                    options={values.hasSignature}
+                    multiSelect={false}
+                    isOtherAllowed={false}
+                    lockOption={true}
+                  />
+                  <DateSelectorExtended
+                    label="Date Signed"
+                    name="veteranDateSigned"
+                    value={values.veteranDateSigned}
+                    placeholder="Select Date"
+                    onChange={(val) => setFieldValue('veteranDateSigned', val)}
+                    fieldCounter="(10 of 10)"
+                  />
                 </>
-    
-               
-
               </Form>
-
             </FormContent>
           );
         }}

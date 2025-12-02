@@ -338,7 +338,7 @@ export default function ServiceList() {
                 name="providerType"
                 options={options1}
                 onChange={(value) => {
-                  console.log(value);
+                  process.env.NODE_ENV === 'development' && console.log(value);
                 }}
                 onBlur={() => {
                   // setFieldTouched("providerType", true, true);
@@ -552,7 +552,7 @@ export default function ServiceList() {
                             <div className="grid h-8 w-8 place-content-center rounded-full bg-primary text-sm font-semibold text-white ltr:mr-2 rtl:ml-2"></div>
                           )}
                           {!contact.path && !contact.name && (
-                            <div className="rounded-full border border-gray-300 p-2 ltr:mr-2 rtl:ml-2 dark:border-gray-800">
+                            <div className="rounded-full border border-gray-300 p-2 dark:border-gray-800 ltr:mr-2 rtl:ml-2">
                               <svg
                                 width="20"
                                 height="20"
@@ -716,7 +716,7 @@ export default function ServiceList() {
                   <button
                     type="button"
                     onClick={() => setAddContactModal(false)}
-                    className="absolute top-4 text-gray-400 outline-none hover:text-gray-800 ltr:right-4 rtl:left-4 dark:hover:text-gray-600"
+                    className="absolute top-4 text-gray-400 outline-none hover:text-gray-800 dark:hover:text-gray-600 ltr:right-4 rtl:left-4"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -733,7 +733,7 @@ export default function ServiceList() {
                       <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                   </button>
-                  <div className="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pl-[50px] rtl:pr-5 dark:bg-[#121c2c]">
+                  <div className="bg-[#fbfbfb] py-3 text-lg font-medium dark:bg-[#121c2c] ltr:pl-5 ltr:pr-[50px] rtl:pl-[50px] rtl:pr-5">
                     {params.id ? 'Edit Contact' : 'Add Contact'}
                   </div>
                   <div className="p-5">

@@ -24,37 +24,47 @@ const RegistrationForm = () => {
   const baseApiUrl = publicRuntimeConfig.baseApiUrl;
   const mapboxToken = publicRuntimeConfig.mapboxToken;
 
-
   const options1 = [
-    { value: 'Hairstylists', label: 'Hair stylists', isDisabled: 'option--is-disabled' },
+    {
+      value: 'Hairstylists',
+      label: 'Hair stylists',
+      isDisabled: 'option--is-disabled',
+    },
     { value: 'Extensions', label: 'Extensions' },
     { value: 'ColorSpecialist', label: 'Color Specialist' },
     { value: 'Barber', label: 'Barber' },
     { value: 'Blowouts', label: 'Blowouts' },
     { value: 'Bridal', label: 'Bridal' },
 
-    { value: 'NailTechnician', label: 'Nail Technician'},
+    { value: 'NailTechnician', label: 'Nail Technician' },
 
     { value: 'MakeupArtist', label: 'Makeup Artist' },
-    { value: 'HealthWellnessCoach', label: 'Health & Wellness Coach', isDisabled: 'option--is-disabled' },
+    {
+      value: 'HealthWellnessCoach',
+      label: 'Health & Wellness Coach',
+      isDisabled: 'option--is-disabled',
+    },
     { value: 'BarreInstructor', label: 'Barre Instructor' },
     { value: 'StrengthTrainer', label: 'Strength Trainer' },
     { value: 'Nutritionist', label: 'Nutritionist' },
 
-    { value: 'Clothingstylist', label: 'Clothing stylist'},
-    { value: 'Spraytan', label: 'Spray tan'},
-    { value: 'Esthetics', label: 'Esthetics', isDisabled: 'option--is-disabled' },
-    { value: 'Botox', label: 'Botox'},
-    { value: 'Filler', label: 'Filler'},
-    { value: 'Facials', label: 'Facials'},
-    { value: 'Massage', label: 'Massage'},
-    { value: 'Waxing', label: 'Waxing'},
+    { value: 'Clothingstylist', label: 'Clothing stylist' },
+    { value: 'Spraytan', label: 'Spray tan' },
+    {
+      value: 'Esthetics',
+      label: 'Esthetics',
+      isDisabled: 'option--is-disabled',
+    },
+    { value: 'Botox', label: 'Botox' },
+    { value: 'Filler', label: 'Filler' },
+    { value: 'Facials', label: 'Facials' },
+    { value: 'Massage', label: 'Massage' },
+    { value: 'Waxing', label: 'Waxing' },
 
-    { value: 'Models', label: 'Models'},
-    { value: 'Photographers', label: 'Photographers'},
-    { value: 'LashEyebrowTech', label: 'Lash & Eyebrow Tech'},
-    
-];
+    { value: 'Models', label: 'Models' },
+    { value: 'Photographers', label: 'Photographers' },
+    { value: 'LashEyebrowTech', label: 'Lash & Eyebrow Tech' },
+  ];
 
   useEffect(() => {
     getPracticeAreas();
@@ -166,30 +176,30 @@ const RegistrationForm = () => {
     //   password: values.password,
     //   phoneNumberOffice: formatPhoneNumber(values.phoneNumberOffice),
     // };
-    console.log('payload', values);
+    process.env.NODE_ENV === 'development' && console.log('payload', values);
   };
 
   const languageOptions = [
     {
-      label: "Chinese",
-      value: "zh-CN"
+      label: 'Chinese',
+      value: 'zh-CN',
     },
     {
-      label: "English (US)",
-      value: "en-US"
+      label: 'English (US)',
+      value: 'en-US',
     },
     {
-      label: "English (GB)",
-      value: "en-GB"
+      label: 'English (GB)',
+      value: 'en-GB',
     },
     {
-      label: "French",
-      value: "fr-FR"
+      label: 'French',
+      value: 'fr-FR',
     },
     {
-      label: "Spanish",
-      value: "es-ES"
-    }
+      label: 'Spanish',
+      value: 'es-ES',
+    },
   ];
 
   return (
@@ -294,26 +304,26 @@ const RegistrationForm = () => {
                 <ErrorMessage name="phoneNumberOffice" component={TextError} />
               </div>
 
-              {(values.role === "beautician") && (
+              {values.role === 'beautician' && (
                 <div className="mt-2">
-                <Select 
-                placeholder="Select an provider Type" 
-                id="providerType"
-                isSearchable={true}
-                name="providerType"
-                options={options1} 
-                isMulti 
-                onChange={(value) => {
-                  handleFieldValueChange(
-                    "providerType",
-                    value,
-                    setFieldValue
-                  );
-                }}
-                onBlur={() => {
-                  setFieldTouched("providerType", true, true);
-                }}
-                />
+                  <Select
+                    placeholder="Select an provider Type"
+                    id="providerType"
+                    isSearchable={true}
+                    name="providerType"
+                    options={options1}
+                    isMulti
+                    onChange={(value) => {
+                      handleFieldValueChange(
+                        'providerType',
+                        value,
+                        setFieldValue
+                      );
+                    }}
+                    onBlur={() => {
+                      setFieldTouched('providerType', true, true);
+                    }}
+                  />
                 </div>
               )}
 
@@ -341,8 +351,6 @@ const RegistrationForm = () => {
                 />
                 <ErrorMessage name="confirmPassword" component={TextError} />
               </div>
-
-
             </div>
             <button
               type="submit"

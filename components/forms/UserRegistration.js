@@ -73,7 +73,8 @@ const UserRegistration = () => {
       resetForm();
       setShowSuccess(true);
     } catch (error) {
-      console.log('Signup error:', error);
+      process.env.NODE_ENV === 'development' &&
+        console.log('Signup error:', error);
       if (error.code === 'auth/email-already-in-use') {
         toast.error('The email address is already in use by another account.');
       } else if (error.code === 'auth/network-request-failed') {

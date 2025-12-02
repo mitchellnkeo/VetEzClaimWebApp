@@ -13,7 +13,8 @@ export default function MenuPage() {
 
   const { isSubscribed } = useSelector((state) => state.revenueCat);
 
-  console.log('>> MenuPage ::', selectedForm.id);
+  process.env.NODE_ENV === 'development' &&
+    console.log('>> MenuPage ::', selectedForm.id);
 
   const handlePress = (item) => {
     if (item.disabled) {
@@ -30,12 +31,16 @@ export default function MenuPage() {
         preTitle="Forms"
         currentTitle={`${menuItem ? menuItem.title : ''} Menu`}
       />
-      {!isSubscribed && selectedForm.id !== 'court_appeal' && <SubscriptionRequired />}
+      {!isSubscribed && selectedForm.id !== 'court_appeal' && (
+        <SubscriptionRequired />
+      )}
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl dark:text-white-light">{menuItem ? menuItem.title : ''}</h1>
+              <h1 className="text-2xl dark:text-white-light">
+                {menuItem ? menuItem.title : ''}
+              </h1>
             </div>
           </div>
         </div>

@@ -339,7 +339,7 @@ export default function NewClaimForm() {
 
   return (
     <FrontLayout title="New Claim or Increas (Form 21-526EZ)">
-        <Breadcrumb
+      <Breadcrumb
         preUrl="/forms/menu"
         preTitle="Form Menu"
         currentTitle="New Claim or Increase (Form 21-526EZ)"
@@ -445,7 +445,8 @@ export default function NewClaimForm() {
           };
 
           const loadDataFromLocalStorage = async () => {
-            console.log('loading data from local storage : ', user);
+            process.env.NODE_ENV === 'development' &&
+              console.log('loading data from local storage : ', user);
             await setValues({
               ...values,
               firstName: user.firstName ? user.firstName : '',
@@ -620,10 +621,12 @@ export default function NewClaimForm() {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
             const pdfObject = await generateNewClaimPdfObject(formData);
-            console.log('pdfObject >> ', pdfObject);
+            process.env.NODE_ENV === 'development' &&
+              console.log('pdfObject >> ', pdfObject);
             await generatePdfService(pdfObject, 'generatepdf6')
               .then(async (res) => {
-                console.log('generatePdf >> res : ', res);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('generatePdf >> res : ', res);
                 if (isFromGeneratePdf) {
                   await saveData({ pdf: true }, false);
                 }
@@ -661,7 +664,7 @@ export default function NewClaimForm() {
           const onSave = async () => {
             setTouchedAction();
             const allErrors = await validateForm();
-            console.log(allErrors);
+            process.env.NODE_ENV === 'development' && console.log(allErrors);
             const [hasErrors, missingFields] = GetErrorFieldsString(
               allErrors,
               NewClaimFileMap
@@ -729,23 +732,28 @@ export default function NewClaimForm() {
             } else {
               setIsLoading(true);
               const formData = await transformFormValues(values);
-              console.log('1  faxData >> ', formData);
+              process.env.NODE_ENV === 'development' &&
+                console.log('1  faxData >> ', formData);
               const pdfObject = await generateNewClaimPdfObject(formData);
-              console.log('2  faxData >> ', pdfObject);
+              process.env.NODE_ENV === 'development' &&
+                console.log('2  faxData >> ', pdfObject);
 
               await generatePdfService(pdfObject, 'generatepdf6')
                 .then(async (res) => {
-                  console.log(res.download_url);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(res.download_url);
                   const faxBody = await getFaxBodyData('newclaim.pdf', false);
                   const faxData = {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
                   };
-                  console.log(' faxData >> ', faxData);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(' faxData >> ', faxData);
 
                   const faxResponse = await sendViaSRFax(faxData);
 
-                  console.log('faxReponse >> ', faxResponse);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('faxReponse >> ', faxResponse);
 
                   if (faxResponse.Status === 'Success') {
                     const url =
@@ -794,7 +802,8 @@ export default function NewClaimForm() {
                   setIsLoading(false);
                 })
                 .catch((err) => {
-                  console.log('error', err);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('error', err);
                   toast.error('Error uploading to VA. Try again later-2.');
                 })
                 .finally(() => {
@@ -1194,7 +1203,11 @@ export default function NewClaimForm() {
                           <div>
                             <p
                               className="my-3"
-                              style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
+                              style={{
+                                fontSize: '14px',
+                                color: '#035F92',
+                                fontWeight: 500,
+                              }}
                             >
                               When did you serve in these locations?
                             </p>
@@ -1246,7 +1259,11 @@ export default function NewClaimForm() {
                           <div>
                             <p
                               className="my-3"
-                              style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
+                              style={{
+                                fontSize: '14px',
+                                color: '#035F92',
+                                fontWeight: 500,
+                              }}
                             >
                               When did you serve in these locations?
                             </p>
@@ -1301,7 +1318,11 @@ export default function NewClaimForm() {
                       <div>
                         <p
                           className="my-3"
-                          style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
+                          style={{
+                            fontSize: '14px',
+                            color: '#035F92',
+                            fontWeight: 500,
+                          }}
                         >
                           When were you exposed?
                         </p>
@@ -1456,7 +1477,8 @@ export default function NewClaimForm() {
                           multiSelect={true}
                           isOtherAllowed={false}
                           onSelectionChange={(selectedOptions) => {
-                            console.log(selectedOptions);
+                            process.env.NODE_ENV === 'development' &&
+                              console.log(selectedOptions);
                             setValues({
                               ...values,
                               treatmentFacilities:
@@ -1652,7 +1674,11 @@ export default function NewClaimForm() {
                         <div>
                           <p
                             className="my-3"
-                            style={{ fontSize: '14px', color: '#035F92', fontWeight: 500 }}
+                            style={{
+                              fontSize: '14px',
+                              color: '#035F92',
+                              fontWeight: 500,
+                            }}
                           >
                             Obligation term of service
                           </p>
@@ -2330,7 +2356,7 @@ export default function NewClaimForm() {
                       the OMB Internet Page at{' '}
                       <a
                         href="https://www.reginfo.gov/public/do/PRAMain"
-                        className="font-semibold text-black underline dark:text-white-light dark:underline-white-light"
+                        className="dark:underline-white-light font-semibold text-black underline dark:text-white-light"
                         target="_blank"
                         rel="noopener noreferrer"
                       >

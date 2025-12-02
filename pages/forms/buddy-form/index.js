@@ -8,9 +8,12 @@ import SectionTitle from '@/components/Common/SectionTitle';
 import DateSelectorExtended from '@/components/Common/DateSelectorExtended';
 import OptionSelector from '@/components/Common/OptionSelector';
 import { GetErrorFieldsString } from '@/utils/utils';
-import { BuddyFormFileMap  } from '@/utils/FormikFieldMap';
+import { BuddyFormFileMap } from '@/utils/FormikFieldMap';
 import ToastModal from '@/components/Common/ToastModal';
-import { updateBuddyStatementData, getBuddyFormData } from '@/firebase/firebaseOperations';
+import {
+  updateBuddyStatementData,
+  getBuddyFormData,
+} from '@/firebase/firebaseOperations';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Loader from '@/components/Common/Loader';
@@ -28,23 +31,25 @@ import { deleteBuddyRequestData } from '@/firebase/firebaseOperations';
 import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const receivingEmail = [
-    {
-      option:
-        'I agree to receive electronic correspondence from VA in regards to my claim',
-      isSelected: false,
-    },
+  {
+    option:
+      'I agree to receive electronic correspondence from VA in regards to my claim',
+    isSelected: false,
+  },
 ];
 
 export default function BuddyForm() {
-  const formTitle       = 'Request Buddy Statement (Form 21-10210)';
-  const formId          = 'Buddy form';
-  const formName        = '21-10210';
-  const collectionName  = 'buddy_statement';
-  const docName         = 'buddyStatement';
+  const formTitle = 'Request Buddy Statement (Form 21-10210)';
+  const formId = 'Buddy form';
+  const formName = '21-10210';
+  const collectionName = 'buddy_statement';
+  const docName = 'buddyStatement';
 
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
-  const buddyStatement = useSelector((state) => state.form.selectedBuddyStatement);
+  const buddyStatement = useSelector(
+    (state) => state.form.selectedBuddyStatement
+  );
   const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [buddyData, setBuddyData] = useState(buddyStatement);
   const [recordExists, setRecordsExists] = useState(false);
@@ -53,7 +58,7 @@ export default function BuddyForm() {
   const [toastOpen, setToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
   const [timestamp, setTimestamp] = useState('');
-  
+
   const router = useRouter();
 
   const [initialValues, setInitialValues] = useState({
@@ -77,323 +82,322 @@ export default function BuddyForm() {
 
   const reviewModal = (
     <>
-       <Modal open={openReviewModal} onClose={() => setOpenReviewModal(false)} title="Review & Submit to VA">
-            <div className="max-h-[89vh] overflow-y-auto">
-                <Formik 
-                initialValues={buddyData}
-                >
-                {({
-                    values,
-                }) => {
-                    const onSubmitToVA = async (e) => {
-                        e.preventDefault();
-                        console.log(" onSubmit Now>> ", buddyData )
+      <Modal
+        open={openReviewModal}
+        onClose={() => setOpenReviewModal(false)}
+        title="Review & Submit to VA"
+      >
+        <div className="max-h-[89vh] overflow-y-auto">
+          <Formik initialValues={buddyData}>
+            {({ values }) => {
+              const onSubmitToVA = async (e) => {
+                e.preventDefault();
+                process.env.NODE_ENV === 'development' &&
+                  console.log(' onSubmit Now>> ', buddyData);
+                setToastConfig({
+                  title: 'VetEZ Claim',
+                  message: `Are you sure you want to submit to VA?`,
+                  primaryButtonText: 'Sure',
+                  primaryButtonAction: async () => {
+                    setOpenSubmitModal(false);
+                    setOpenReviewModal(false);
+                    await reviewAndSubmitAction(buddyData);
+                  },
+                  secondaryButtonText: 'Cancel',
+                  secondaryButtonAction: () => {
+                    setOpenSubmitModal(false);
+                  },
+                });
+                setOpenSubmitModal(true);
+              };
+
+              const reviewAndSubmitAction = async (data) => {
+                setIsLoading(true);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('1  faxData >> ', data);
+                const pdfObject = await generateBuddyFormPdfObject(data);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('2  faxData >> ', pdfObject);
+                await generatePdfService(
+                  pdfObject,
+                  'generate-buddy-statement-pdf'
+                )
+                  .then(async (res) => {
+                    process.env.NODE_ENV === 'development' &&
+                      console.log(res.download_url);
+                    const faxBody = await getFaxBodyData(
+                      'buddy-statement.pdf',
+                      false
+                    );
+                    const faxData = {
+                      ...faxBody,
+                      sFileContent_1: res?.download_url,
+                    };
+                    process.env.NODE_ENV === 'development' &&
+                      console.log(' faxData >> ', faxData);
+
+                    const faxResponse = await sendViaSRFax(faxData);
+
+                    process.env.NODE_ENV === 'development' &&
+                      console.log('faxReponse >> ', faxResponse);
+
+                    if (faxResponse.Status === 'Success') {
+                      const completeForm = {
+                        ...data,
+                        isSaved: true,
+                        recordExists: recordExists,
+                        formId: formId,
+                        formUploadedToVA: true,
+                        guid: faxResponse.Result,
+                        status: 'completed',
+                        pdf: true,
+                        timestamp: `${moment().format(
+                          'MM/DD/YYYY'
+                        )}|${timestamp}`,
+                        urlDocspring: res?.permanent_download_url,
+                        url: res?.download_url,
+                      };
+
+                      const saveStatus = await saveAction(completeForm);
+                      if (saveStatus) {
                         setToastConfig({
-                            title: 'VetEZ Claim',
-                            message: `Are you sure you want to submit to VA?`,
-                            primaryButtonText: 'Sure',
-                            primaryButtonAction: async () => {
-                                setOpenSubmitModal(false);
-                                setOpenReviewModal(false)
-                                await reviewAndSubmitAction(buddyData);
-                            },
-                            secondaryButtonText: 'Cancel',
-                            secondaryButtonAction: () => {
-                                setOpenSubmitModal(false);
-                            },
+                          title: 'VetEZ Claim',
+                          message: `Your submission has been successfully uploaded to VA.`,
+                          primaryButtonText: 'Ok',
+                          primaryButtonAction: async () => {
+                            setToastOpen(false);
+                            router.push('/forms/buddy-requests');
+                          },
                         });
-                        setOpenSubmitModal(true);
+                        setToastOpen(true);
+                      } else {
+                        toast.error('Error uploading to VA. Try again later.');
+                      }
+                    } else {
+                      toast.error('Error uploading to VA. Try again later.');
                     }
 
+                    setIsLoading(false);
+                  })
+                  .catch((err) => {
+                    process.env.NODE_ENV === 'development' &&
+                      console.log('error', err);
+                    toast.error('Error uploading to VA. Try again later-2.');
+                  })
+                  .finally(() => {
+                    setIsLoading(false);
+                  });
+              };
 
-                    const reviewAndSubmitAction = async (data) => {
-                        setIsLoading(true);
-                        console.log('1  faxData >> ', data);
-                        const pdfObject = await generateBuddyFormPdfObject(data);
-                        console.log('2  faxData >> ', pdfObject);
-                        await generatePdfService(pdfObject, 'generate-buddy-statement-pdf')
-                        .then(async (res) => {
-                            console.log(res.download_url);
-                            const faxBody = await getFaxBodyData(
-                            'buddy-statement.pdf',
-                            false
-                            );
-                            const faxData = {
-                            ...faxBody,
-                            sFileContent_1: res?.download_url,
-                            };
-                            console.log(' faxData >> ', faxData);
+              return (
+                <div className="p-1">
+                  <Form className="space-y-4">
+                    <ToastModal
+                      {...toastConfig}
+                      isOpen={openSubmitModal}
+                      onClose={() => setOpenSubmitModal(false)}
+                    />
 
-                            const faxResponse = await sendViaSRFax(faxData);
+                    <SectionTitle title="Section I:  Veteran's Identification Information" />
+                    <>
+                      <TextInput
+                        label={`Veteran's First Name`}
+                        name="first_name"
+                        placeholder="Enter first name"
+                        limit={12}
+                        readOnly
+                      />
+                      <TextInput
+                        label="Veteran's Last Name"
+                        name="last_name"
+                        placeholder="Enter file number"
+                        limit={18}
+                        readOnly
+                      />
+                      <TextInput
+                        label="Social Security Number"
+                        name="ssn"
+                        placeholder="Enter ssn"
+                        readOnly
+                        limit={9}
+                      />
+                      <TextInput
+                        label="VA File Number"
+                        name="current_va"
+                        placeholder="Enter va file number"
+                        readOnly
+                        limit={9}
+                      />
 
-                            console.log('faxReponse >> ', faxResponse);
+                      <TextInput
+                        label="Date of Birth"
+                        name="birthday"
+                        readOnly
+                      />
+                      <TextInput
+                        label="VA Insurance File Number"
+                        name="insurance_number"
+                        placeholder="Enter insurance number"
+                        readOnly
+                        limit={20}
+                      />
 
-                            if (faxResponse.Status === 'Success') {
-                            const completeForm = {
-                                ...data,
-                                isSaved: true,
-                                recordExists: recordExists,
-                                formId: formId,
-                                formUploadedToVA: true,
-                                guid: faxResponse.Result,
-                                status: 'completed', 
-                                pdf: true,
-                                timestamp: `${moment().format(
-                                'MM/DD/YYYY'
-                                )}|${timestamp}`,
-                                urlDocspring: res?.permanent_download_url ,
-                                url: res?.download_url, 
-                            };
+                      <Divider title="Mailing Address" />
+                      <TextInput
+                        label="No. & Street"
+                        name="street"
+                        placeholder="Enter street"
+                        readOnly
+                        limit={30}
+                      />
+                      <TextInput
+                        label="Apt./Unit Number"
+                        name="unit_number"
+                        placeholder="Enter apt/unit number"
+                        readOnly
+                        limit={5}
+                      />
+                      <TextInput
+                        label="City"
+                        name="city"
+                        placeholder="Enter city"
+                        readOnly
+                      />
+                      <DropDownExtended
+                        label="State/Province"
+                        name="province"
+                        data={StateData}
+                        readOnly
+                      />
+                      <TextInput label="Country" name="country" readOnly />
+                      <TextInput
+                        label="ZIP Code/Postal Code"
+                        name="zip_code"
+                        placeholder="Enter zip/postal code"
+                        readOnly
+                        limit={10}
+                      />
+                      <TextInput
+                        label="International Telephone Number"
+                        name="phone_number"
+                        placeholder="Enter international telephone number"
+                        readOnly
+                      />
 
-                            const saveStatus = await saveAction(completeForm);
-                            if (saveStatus) {
-                                setToastConfig({
-                                title: 'VetEZ Claim',
-                                message: `Your submission has been successfully uploaded to VA.`,
-                                primaryButtonText: 'Ok',
-                                primaryButtonAction: async () => {
-                                    setToastOpen(false);
-                                    router.push('/forms/buddy-requests');
-                                },
-                                });
-                                setToastOpen(true);
-                            }else {
-                                toast.error('Error uploading to VA. Try again later.');
-                            }
-                            } else {
-                            toast.error('Error uploading to VA. Try again later.');
-                            }
+                      <TextInput
+                        label="Email Address"
+                        name="email"
+                        placeholder="Enter email"
+                        readOnly
+                      />
+                      <br />
 
-                            setIsLoading(false);
-                        })
-                        .catch((err) => {
-                            console.log('error', err);
-                            toast.error('Error uploading to VA. Try again later-2.');
-                        })
-                        .finally(() => {
-                            setIsLoading(false);
-                        });
-                    };
+                      <OptionSelector
+                        name="receivingEmailOpt"
+                        options={values.receivingEmailOpt}
+                        multiSelect={true}
+                        isOtherAllowed={false}
+                        readOnly
+                        lockOption={true}
+                      />
+                      <br />
+                      <br />
+                    </>
 
+                    <SectionTitle title="Section II:  Witness's Response" />
+                    <>
+                      <TextInput
+                        label="Statement of Witness"
+                        name="statement"
+                        multiline
+                        readOnly
+                      />
+                      <TextInput
+                        label="Witness's First Name"
+                        name="witness_first_name"
+                        readOnly
+                      />
+                      <TextInput
+                        label="Witness's Last Name"
+                        name="witness_last_name"
+                        readOnly
+                      />
+                      <TextInput
+                        label="Witness's Phone Number"
+                        name="witness_phone"
+                        readOnly
+                      />
+                      <TextInput
+                        label="Witness's Email Address"
+                        name="witness_primary_email"
+                        readOnly
+                      />
+                      <TextInput
+                        label="Relationship to Veteran"
+                        name="relationship"
+                        readOnly
+                      />
 
-                    return (
-                        <div className="p-1"> 
-                            <Form className="space-y-4">
-                                <ToastModal
-                                    {...toastConfig}
-                                    isOpen={openSubmitModal}
-                                    onClose={() => setOpenSubmitModal(false)}
-                                />  
+                      <div className="w-full rounded-lg border border-gray-300 bg-gray-50 shadow-sm">
+                        <img
+                          src={values.signature}
+                          alt="Signature"
+                          className="h-auto w-full rounded-lg bg-white object-contain"
+                        />
+                      </div>
 
-                                <SectionTitle title="Section I:  Veteran's Identification Information" />
-                                <> 
-                                    <TextInput
-                                        label={`Veteran's First Name`}
-                                        name="first_name"
-                                        placeholder="Enter first name"
-                                        limit={12}
-                                        readOnly
-                                    />
-                                    <TextInput
-                                        label="Veteran's Last Name"
-                                        name="last_name"
-                                        placeholder="Enter file number"
-                                        limit={18}
-                                        readOnly
-                                    />
-                                    <TextInput
-                                        label="Social Security Number"
-                                        name="ssn"
-                                        placeholder="Enter ssn"
-                                        readOnly
-                                        limit={9}
-                                    />
-                                    <TextInput
-                                        label="VA File Number"
-                                        name="current_va"
-                                        placeholder="Enter va file number"
-                                        readOnly
-                                        limit={9}
-                                       
-                                    />
-                                                     
-                                    <TextInput
-                                        label="Date of Birth"
-                                        name="birthday"
-                                        readOnly
-                                    />
-                                    <TextInput
-                                        label="VA Insurance File Number"
-                                        name="insurance_number"
-                                        placeholder="Enter insurance number"
-                                        readOnly
-                                        limit={20}
-                                    />
+                      <TextInput
+                        label="Date Signed"
+                        name="dateSigned"
+                        readOnly
+                      />
 
+                      <br />
 
-                                    <Divider title="Mailing Address" />
-                                    <TextInput
-                                        label="No. & Street"
-                                        name="street"
-                                        placeholder="Enter street"
-                                        readOnly
-                                        limit={30}
-                                    />
-                                    <TextInput
-                                        label="Apt./Unit Number"
-                                        name="unit_number"
-                                        placeholder="Enter apt/unit number"
-                                        readOnly
-                                        limit={5}
-                                    />
-                                    <TextInput
-                                        label="City"
-                                        name="city"
-                                        placeholder="Enter city"
-                                        readOnly
-                                      
-                                    />
-                                    <DropDownExtended
-                                        label="State/Province"
-                                        name="province"
-                                        data={StateData}
-                                        readOnly
-                                    />
-                                    <TextInput
-                                        label="Country"
-                                        name="country"
-                                      
-                                        readOnly
-                                    />
-                                    <TextInput
-                                        label="ZIP Code/Postal Code"
-                                        name="zip_code"
-                                        placeholder="Enter zip/postal code"
-                                        readOnly
-                                        limit={10}
-                                    />
-                                    <TextInput
-                                        label="International Telephone Number"
-                                        name="phone_number"
-                                        placeholder="Enter international telephone number"
-                                        readOnly
-                                       
-                                    />
+                      <OptionSelector
+                        name="signatureOption"
+                        options={[
+                          {
+                            option:
+                              'I certify that the information provided is true and correct to the best of my knowledge.',
+                            isSelected: values.certify || false,
+                          },
+                        ]}
+                        multiSelect={false}
+                        isOtherAllowed={false}
+                        lockOption={true}
+                      />
+                    </>
 
-                                    <TextInput
-                                        label="Email Address"
-                                        name="email"
-                                        placeholder="Enter email"
-                                        readOnly
-                                    />
-                                    <br /> 
-
-                                    <OptionSelector
-                                        name="receivingEmailOpt"
-                                        options={values.receivingEmailOpt}
-                                        multiSelect={true}
-                                        isOtherAllowed={false}
-                                        readOnly
-                                        lockOption={true}
-                                    />
-                                    <br /> 
-                                    <br /> 
-                                </>
-                    
-                                <SectionTitle title="Section II:  Witness's Response" />
-                                <>
-                                   
-                                    <TextInput  
-                                        label="Statement of Witness"
-                                        name="statement"
-                                        multiline
-                                        readOnly
-                                    />
-                                    <TextInput
-                                        label="Witness's First Name"
-                                        name="witness_first_name"
-                                        readOnly
-                                    />
-                                    <TextInput
-                                            label="Witness's Last Name"
-                                            name="witness_last_name"
-                                            readOnly
-                                    />
-                                    <TextInput
-                                            label="Witness's Phone Number"
-                                            name="witness_phone"
-                                            readOnly
-                                    />
-                                    <TextInput
-                                        label="Witness's Email Address" 
-                                        name="witness_primary_email"
-                                        readOnly
-                                    />
-                                    <TextInput
-                                        label="Relationship to Veteran"
-                                        name="relationship"
-                                        readOnly
-                                    />
-                                  
-                                    <div className="w-full border border-gray-300 rounded-lg bg-gray-50 shadow-sm">
-                                        <img
-                                        src={values.signature}
-                                        alt="Signature"
-                                        className="w-full h-auto bg-white rounded-lg object-contain"
-                                        />
-                                    </div>
-                                    
-                                    <TextInput
-                                        label="Date Signed"
-                                        name="dateSigned"
-                                        readOnly
-                                    />
-                                    
-                                    <br />
-                                   
-                                    <OptionSelector
-                                        name="signatureOption"
-                                        options={[
-                                            {
-                                            option: 'I certify that the information provided is true and correct to the best of my knowledge.',
-                                            isSelected: values.certify || false,
-                                            },
-                                        ]}
-                                        multiSelect={false}
-                                        isOtherAllowed={false}
-                                        lockOption={true}
-                                    />
-                                </>
-
-                                <button
-                                type="submit"
-                                className="mt-4 w-full rounded-md bg-[#016092] px-4 py-2 text-white hover:bg-[#014a66]"
-                                onClick={onSubmitToVA}
-                                >
-                                Submit to VA
-                                </button>
-                            </Form>
-                        </div>
-                    )
-                }}
-                </Formik>
-            </div>
-        </Modal>
+                    <button
+                      type="submit"
+                      className="mt-4 w-full rounded-md bg-[#016092] px-4 py-2 text-white hover:bg-[#014a66]"
+                      onClick={onSubmitToVA}
+                    >
+                      Submit to VA
+                    </button>
+                  </Form>
+                </div>
+              );
+            }}
+          </Formik>
+        </div>
+      </Modal>
     </>
-  )
+  );
 
   const saveAction = async (data) => {
     try {
-        await updateBuddyStatementData(uid, {
-          formId: formId,
-          recordExists: recordExists,
-          ...data
-        });   
-        return true;
-      } catch (error) {
-        return false;
-      }
-  }
+      await updateBuddyStatementData(uid, {
+        formId: formId,
+        recordExists: recordExists,
+        ...data,
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
 
   return (
     <FrontLayout title={formTitle}>
@@ -417,70 +421,76 @@ export default function BuddyForm() {
           setTouched,
           validateForm,
         }) => {
-
           const loadDataFromLocalStorage = async () => {
-            console.log('loading data from local storage : ', user);
+            process.env.NODE_ENV === 'development' &&
+              console.log('loading data from local storage : ', user);
             await setValues({
-                ...values,
-                first_name: user.firstName ? user.firstName : '',  
-                last_name: user.lastName ? user.lastName : '',
-                ssn: user.ssn ? user.ssn : '',
-                birthday: user.dob ? user.dob : '',
-                email: user.email ? user.email : '',
-                street: user.street ? user.street : '',
-                unit_number: user.unitNumber ? user.unitNumber : '',
-                city: user.city ? user.city : '',
-                province: user.province ? user.province : '',
-                zip_code: user.zipCode ? user.zipCode : '',
+              ...values,
+              first_name: user.firstName ? user.firstName : '',
+              last_name: user.lastName ? user.lastName : '',
+              ssn: user.ssn ? user.ssn : '',
+              birthday: user.dob ? user.dob : '',
+              email: user.email ? user.email : '',
+              street: user.street ? user.street : '',
+              unit_number: user.unitNumber ? user.unitNumber : '',
+              city: user.city ? user.city : '',
+              province: user.province ? user.province : '',
+              zip_code: user.zipCode ? user.zipCode : '',
             });
           };
 
           const loadDataFromFirebase = async (data) => {
             const dataBody = {
               ...data,
-              receivingEmailOpt: [{ ...receivingEmail[0], isSelected: data.claim || false }],
+              receivingEmailOpt: [
+                { ...receivingEmail[0], isSelected: data.claim || false },
+              ],
             };
 
-            console.log('dataBody : >> ', dataBody);
-            setValues(dataBody); 
+            process.env.NODE_ENV === 'development' &&
+              console.log('dataBody : >> ', dataBody);
+            setValues(dataBody);
           };
-          
+
           const loadData = async () => {
             setIsLoading(true);
             try {
-                const data = await getBuddyFormData(uid, buddyStatement.docId);
-                if (data ){
-                    setRecordsExists(true);
-                }
-                if (data && data.isSaved) {
-                    console.log('data : >> ', data);
-                    setTimestamp(data?.timestamp === undefined ? '' : data.timestamp);
-                    setToastConfig({
-                        title: 'VetEZ Claim',
-                        message: `Do you want to continue with the existing form?`,
-                        primaryButtonText: 'Yes',
-                        primaryButtonAction: async () => {
-                          setToastOpen(false);
-                          await loadDataFromFirebase(data);
-                          setIsLoading(false);
-                        },
-                        secondaryButtonText: 'No',
-                        secondaryButtonAction: async () => {
-                          setToastOpen(false);
-                          await loadDataFromLocalStorage();
-                          setIsLoading(false);
-                        },
-                      });
-                      setToastOpen(true);
-                }else {
+              const data = await getBuddyFormData(uid, buddyStatement.docId);
+              if (data) {
+                setRecordsExists(true);
+              }
+              if (data && data.isSaved) {
+                process.env.NODE_ENV === 'development' &&
+                  console.log('data : >> ', data);
+                setTimestamp(
+                  data?.timestamp === undefined ? '' : data.timestamp
+                );
+                setToastConfig({
+                  title: 'VetEZ Claim',
+                  message: `Do you want to continue with the existing form?`,
+                  primaryButtonText: 'Yes',
+                  primaryButtonAction: async () => {
+                    setToastOpen(false);
+                    await loadDataFromFirebase(data);
+                    setIsLoading(false);
+                  },
+                  secondaryButtonText: 'No',
+                  secondaryButtonAction: async () => {
+                    setToastOpen(false);
                     await loadDataFromLocalStorage();
                     setIsLoading(false);
-                }
-              
-            } catch(error){
+                  },
+                });
+                setToastOpen(true);
+              } else {
+                await loadDataFromLocalStorage();
+                setIsLoading(false);
+              }
+            } catch (error) {
               await loadDataFromLocalStorage();
               setIsLoading(false);
-              console.log('error : >> ', error);
+              process.env.NODE_ENV === 'development' &&
+                console.log('error : >> ', error);
             } finally {
               setIsLoading(false);
             }
@@ -499,16 +509,18 @@ export default function BuddyForm() {
           };
 
           const saveData = async (fields, isFromSaveData = false) => {
-            console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
             const formData = { ...buddyStatement, ...values, ...fields };
-            console.log('>> save Data : ', formData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data : ', formData);
             const saveStatus = await saveAction(formData);
             if (saveStatus) {
               return true;
-            }else {
-                if (isFromSaveData) {
-                  toast.error('Save failed. Something went wrong!');
-                }
+            } else {
+              if (isFromSaveData) {
+                toast.error('Save failed. Something went wrong!');
+              }
               return false;
             }
           };
@@ -525,17 +537,26 @@ export default function BuddyForm() {
           const generatePdf = async (formValues, isFromGeneratePdf = false) => {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
-            const pdfObject = await  generateBuddyFormPdfObject(formData);
+            const pdfObject = await generateBuddyFormPdfObject(formData);
             await generatePdfService(pdfObject, 'generate-buddy-statement-pdf')
               .then(async (res) => {
                 if (isFromGeneratePdf) {
-                  await saveData({  isSaved: true, pdf: true, pdfUrl: res?.download_url, urlDocspring: res?.permanent_download_url }, false);
+                  await saveData(
+                    {
+                      isSaved: true,
+                      pdf: true,
+                      pdfUrl: res?.download_url,
+                      urlDocspring: res?.permanent_download_url,
+                    },
+                    false
+                  );
                 }
                 setIsLoading(false);
                 window.open(res?.download_url, '_blank');
               })
               .catch((err) => {
-                console.log('error', err);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('error', err);
                 toast.error('Error generating PDF. Please try again.');
               })
               .finally(() => {
@@ -560,30 +581,34 @@ export default function BuddyForm() {
           };
 
           const onCancelForm = async () => {
-            console.log("onCancel >> ", buddyStatement);
+            process.env.NODE_ENV === 'development' &&
+              console.log('onCancel >> ', buddyStatement);
             try {
-                setToastConfig({
-                    title: 'VetEZ Claim',
-                    message: `Are you sure you want to cancel this request?`,
-                    secondaryButtonText: 'Cancel',
-                    secondaryButtonAction: async () => {
-                        setToastOpen(false);
-                    },
-                    primaryButtonText: 'Sure',
-                    primaryButtonAction : async () => {
-                        setToastOpen(false);
-                        setIsLoading(true);
-                        await deleteBuddyRequestData(uid, buddyStatement.id);
-                        toast.success("Buddy request cancelled successfully");
-                        router.push('/forms/buddy-requests');
-                    },
-                });
-                setToastOpen(true);
+              setToastConfig({
+                title: 'VetEZ Claim',
+                message: `Are you sure you want to cancel this request?`,
+                secondaryButtonText: 'Cancel',
+                secondaryButtonAction: async () => {
+                  setToastOpen(false);
+                },
+                primaryButtonText: 'Sure',
+                primaryButtonAction: async () => {
+                  setToastOpen(false);
+                  setIsLoading(true);
+                  await deleteBuddyRequestData(uid, buddyStatement.id);
+                  toast.success('Buddy request cancelled successfully');
+                  router.push('/forms/buddy-requests');
+                },
+              });
+              setToastOpen(true);
             } catch (error) {
-                console.error("Error cancelling buddy request:", error);
-                toast.error("Failed to cancel buddy request. Please try again later.");
+              process.env.NODE_ENV === 'development' &&
+                console.error('Error cancelling buddy request:', error);
+              toast.error(
+                'Failed to cancel buddy request. Please try again later.'
+              );
             } finally {
-                setIsLoading(false);
+              setIsLoading(false);
             }
           };
 
@@ -655,8 +680,8 @@ export default function BuddyForm() {
               });
               setToastOpen(true);
             } else {
-                setBuddyData({...buddyStatement, ...values});
-                setOpenReviewModal(true)
+              setBuddyData({ ...buddyStatement, ...values });
+              setOpenReviewModal(true);
             }
           };
 
@@ -672,7 +697,6 @@ export default function BuddyForm() {
               <Loader show={isLoading} />
 
               <Form>
-
                 <ToastModal
                   {...toastConfig}
                   isOpen={toastOpen}
@@ -680,128 +704,126 @@ export default function BuddyForm() {
                 />
 
                 <SectionTitle title="Section I:  Veteran's Identification Information" />
-                <> 
-                    <TextInput
-                        label={`Veteran's First Name`}
-                        name="first_name"
-                        placeholder="Enter first name"
-                        fieldCounter="(1 of 8)"
-                        limit={12}
-                    />
-                    <TextInput
-                        label="Veteran's Last Name"
-                        name="last_name"
-                        placeholder="Enter file number"
-                        fieldCounter="(1-2 of 8)"
-                        limit={18}
-                    />
-                    <TextInput
-                        label="Social Security Number"
-                        name="ssn"
-                        placeholder="Enter ssn"
-                        fieldCounter="(2 of 8)"
-                        limit={9}
-                    />
-                    <TextInput
-                        label="VA File Number"
-                        name="current_va"
-                        placeholder="Enter va file number"
-                        fieldCounter="(3 of 8)"
-                        limit={9}
-                        hasCounter
-                    />
-                    <DateSelectorExtended
-                        label="Date of Birth"
-                        name="birthday"
-                        value={values.birthday}
-                        placeholder="Select Date"
-                        onChange={(val) => setFieldValue('birthday', val)}
-                        isDOB
-                        fieldCounter="(4 of 8)"  
-                    />
+                <>
+                  <TextInput
+                    label={`Veteran's First Name`}
+                    name="first_name"
+                    placeholder="Enter first name"
+                    fieldCounter="(1 of 8)"
+                    limit={12}
+                  />
+                  <TextInput
+                    label="Veteran's Last Name"
+                    name="last_name"
+                    placeholder="Enter file number"
+                    fieldCounter="(1-2 of 8)"
+                    limit={18}
+                  />
+                  <TextInput
+                    label="Social Security Number"
+                    name="ssn"
+                    placeholder="Enter ssn"
+                    fieldCounter="(2 of 8)"
+                    limit={9}
+                  />
+                  <TextInput
+                    label="VA File Number"
+                    name="current_va"
+                    placeholder="Enter va file number"
+                    fieldCounter="(3 of 8)"
+                    limit={9}
+                    hasCounter
+                  />
+                  <DateSelectorExtended
+                    label="Date of Birth"
+                    name="birthday"
+                    value={values.birthday}
+                    placeholder="Select Date"
+                    onChange={(val) => setFieldValue('birthday', val)}
+                    isDOB
+                    fieldCounter="(4 of 8)"
+                  />
 
-                    <TextInput
-                        label="VA Insurance File Number"
-                        name="insurance_number"
-                        placeholder="Enter insurance number"
-                        fieldCounter="(5 of 8)"
-                        limit={20}
-                    />
+                  <TextInput
+                    label="VA Insurance File Number"
+                    name="insurance_number"
+                    placeholder="Enter insurance number"
+                    fieldCounter="(5 of 8)"
+                    limit={20}
+                  />
 
+                  <Divider title="Mailing Address" />
+                  <TextInput
+                    label="No. & Street"
+                    name="street"
+                    placeholder="Enter street"
+                    fieldCounter="(6 of 8)"
+                    limit={30}
+                  />
+                  <TextInput
+                    label="Apt./Unit Number"
+                    name="unit_number"
+                    placeholder="Enter apt/unit number"
+                    fieldCounter="(6-2 of 8)"
+                    limit={5}
+                  />
+                  <TextInput
+                    label="City"
+                    name="city"
+                    placeholder="Enter city"
+                    fieldCounter="(6-3 of 8)"
+                    limit={18}
+                  />
+                  <DropDownExtended
+                    label="State/Province"
+                    name="province"
+                    data={StateData}
+                    fieldCounter="(6-4 of 8)"
+                  />
+                  <TextInput
+                    label="Country"
+                    name="country"
+                    fieldCounter="(6-5 of 8)"
+                    limit={2}
+                    readOnly
+                  />
+                  <TextInput
+                    label="ZIP Code/Postal Code"
+                    name="zip_code"
+                    placeholder="Enter zip/postal code"
+                    fieldCounter="(6-6 of 8)"
+                    limit={10}
+                  />
+                  <TextInput
+                    label="International Telephone Number"
+                    name="phone_number"
+                    placeholder="Enter international telephone number"
+                    fieldCounter="(7-2 of 8)"
+                    limit={15}
+                    hasCounter
+                  />
 
-                    <Divider title="Mailing Address" />
-                    <TextInput
-                      label="No. & Street"
-                      name="street"
-                      placeholder="Enter street"
-                      fieldCounter="(6 of 8)"
-                      limit={30}
-                    />
-                    <TextInput
-                      label="Apt./Unit Number"
-                      name="unit_number"
-                      placeholder="Enter apt/unit number"
-                      fieldCounter="(6-2 of 8)"
-                      limit={5}
-                    />
-                    <TextInput
-                      label="City"
-                      name="city"
-                      placeholder="Enter city"
-                      fieldCounter="(6-3 of 8)"
-                      limit={18}    
-                    />
-                    <DropDownExtended
-                      label="State/Province"
-                      name="province"
-                      data={StateData}
-                      fieldCounter="(6-4 of 8)"
-                    />
-                    <TextInput
-                      label="Country"
-                      name="country"
-                      fieldCounter="(6-5 of 8)"
-                      limit={2}
-                      readOnly
-                    />
-                    <TextInput
-                      label="ZIP Code/Postal Code"
-                      name="zip_code"
-                      placeholder="Enter zip/postal code"
-                      fieldCounter="(6-6 of 8)"
-                      limit={10}
-                    />
-                    <TextInput
-                        label="International Telephone Number"
-                        name="phone_number"
-                        placeholder="Enter international telephone number"
-                        fieldCounter="(7-2 of 8)"
-                        limit={15}
-                        hasCounter
-                    />
+                  <TextInput
+                    label="Email Address"
+                    name="email"
+                    placeholder="Enter email"
+                    fieldCounter="(6 of 8)"
+                  />
+                  <br />
 
-                    <TextInput
-                        label="Email Address"
-                        name="email"
-                        placeholder="Enter email"
-                        fieldCounter="(6 of 8)"
-                    />
-                    <br /> 
-
-                    <OptionSelector
-                        name="receivingEmailOpt"
-                        options={values.receivingEmailOpt}
-                        multiSelect={true}
-                        isOtherAllowed={false}
-                        onSelectionChange={async (options) => {
-                           await setFieldValue('claim', options[0].isSelected)
-                        }}
-                    />
-                    <br /> 
-                    <br /> 
+                  <OptionSelector
+                    name="receivingEmailOpt"
+                    options={values.receivingEmailOpt}
+                    multiSelect={true}
+                    isOtherAllowed={false}
+                    onSelectionChange={async (options) => {
+                      await setFieldValue('claim', options[0].isSelected);
+                    }}
+                  />
+                  <br />
+                  <br />
                 </>
               </Form>
-
             </FormContent>
           );
         }}
