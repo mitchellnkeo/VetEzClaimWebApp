@@ -462,7 +462,7 @@ export default function VABackPayCalculator() {
                 <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700">
                   <label className="text-md block  font-bold">
                     {' '}
-                    What the SMC level should you have been receiving on this
+                    What the benefit rate should you have been receiving on this
                     date?{' '}
                   </label>
                   <select
@@ -479,7 +479,7 @@ export default function VABackPayCalculator() {
                 </div>
                 <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700 dark:text-white-light">
                   <label className="text-md block  font-bold">
-                    What was the SMC level you were actually receiving on this
+                    What was the benefit rate you were actually receiving on this
                     date?
                   </label>
                   <select
