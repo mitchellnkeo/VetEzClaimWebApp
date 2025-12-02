@@ -110,7 +110,7 @@ export default function DateSelectorExtended({
         disabled={!editable}
         max={maxDate}
         min={minDate}
-        className={`form-input w-full rounded-md border border-gray-300 p-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 ${inputClassName}`}
+        className={`form-input w-full rounded-md border border-gray-300 p-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:bg-gray-600 dark:text-white-light ${inputClassName}`}
       />
 
       {/* Hint / Error */}

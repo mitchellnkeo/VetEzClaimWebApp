@@ -73,7 +73,8 @@ const LoginForm = () => {
       formikRef.current;
 
     setSubmitting(true);
-    console.log(' >> handleLogin >> ', values);
+    process.env.NODE_ENV === 'development' &&
+      console.log(' >> handleLogin >> ', values);
 
     // validate form
     const validationErrors = await validateForm();
@@ -112,7 +113,8 @@ const LoginForm = () => {
       setIsOtpSent(true);
       toast.success('OTP sent. Please verify to continue.');
     } catch (err) {
-      console.error('Login failed:', err);
+      process.env.NODE_ENV === 'development' &&
+        console.error('Login failed:', err);
       toast.error(err || 'Invalid email or password');
     } finally {
       setSubmitting(false);
@@ -127,7 +129,7 @@ const LoginForm = () => {
       setTimeout(() => {
         window.location.replace('/');
       }, 500);
-      console.log('User:', result);
+      process.env.NODE_ENV === 'development' && console.log('User:', result);
     } catch (err) {
       toast.error(err || 'Authentication failed!');
     } finally {
@@ -212,12 +214,13 @@ const LoginForm = () => {
         }
         onSubmit={() => {
           // Optional: Leave blank or for fallback
-          console.log('onSubmit triggered');
+          process.env.NODE_ENV === 'development' &&
+            console.log('onSubmit triggered');
         }}
         enableReinitialize
       >
         {({ isSubmitting }) => (
-          <Form  
+          <Form
             onSubmit={(e) => {
               e.preventDefault();
               if (isOtpSent) {

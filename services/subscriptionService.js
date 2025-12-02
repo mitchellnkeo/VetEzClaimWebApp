@@ -1,17 +1,18 @@
-import { Purchases } from "@revenuecat/purchases-js";
+import { Purchases } from '@revenuecat/purchases-js';
 
 const REVENUECAT_API_KEY = process.env.NEXT_PUBLIC_REVENUECAT_API_KEY_TEST;
-const PREMIUM_ENTITLEMENT = "premium_subscription";
+const PREMIUM_ENTITLEMENT = 'premium_subscription';
 
 class RevenueCatManager {
   static instance = null;
 
   constructor() {
-    if (RevenueCatManager.instance) {   // Singleton pattern
+    if (RevenueCatManager.instance) {
+      // Singleton pattern
       return RevenueCatManager.instance;
     }
 
-    this.purchases = null;       // Web SDK instance
+    this.purchases = null; // Web SDK instance
     this.customerInfo = null;
     this.customerId = null;
 
@@ -28,7 +29,8 @@ class RevenueCatManager {
   // Initialize RevenueCat
   async initialize(userId = null) {
     try {
-      console.log("Initializing RevenueCat with userId:", userId);
+      process.env.NODE_ENV === 'development' &&
+        console.log('Initializing RevenueCat with userId:', userId);
 
       this.purchases = Purchases.configure({
         apiKey: REVENUECAT_API_KEY,
@@ -39,11 +41,13 @@ class RevenueCatManager {
 
       // Fetch initial customer info
       this.customerInfo = await this.purchases.getCustomerInfo();
-      console.log("RevenueCat customerInfo fetched:", this.customerInfo);
+      process.env.NODE_ENV === 'development' &&
+        console.log('RevenueCat customerInfo fetched:', this.customerInfo);
 
       return this.customerInfo;
     } catch (err) {
-      console.error("RevenueCat initialization error:", err);
+      process.env.NODE_ENV === 'development' &&
+        console.error('RevenueCat initialization error:', err);
       throw err;
     }
   }
@@ -61,17 +65,23 @@ class RevenueCatManager {
 
   // Logout RevenueCat
   async logout() {
-    console.log("RevenueCat logout");
+    process.env.NODE_ENV === 'development' && console.log('RevenueCat logout');
     try {
       if (this.customerId) {
-        console.log("RevenueCat logOut called with customerId:", this.customerId);
+        process.env.NODE_ENV === 'development' &&
+          console.log(
+            'RevenueCat logOut called with customerId:',
+            this.customerId
+          );
         await this.purchases.logOut();
       }
       this.customerId = null;
       this.customerInfo = null;
-      console.log("RevenueCat logout successful");
+      process.env.NODE_ENV === 'development' &&
+        console.log('RevenueCat logout successful');
     } catch (err) {
-      console.error("RevenueCat logout error:", err);
+      process.env.NODE_ENV === 'development' &&
+        console.error('RevenueCat logout error:', err);
       throw err;
     }
   }
@@ -82,13 +92,16 @@ class RevenueCatManager {
       const offerings = await this.purchases.getOfferings();
       const defaultOffering = offerings?.current;
       if (!defaultOffering) {
-        console.error("No default offering found");
+        process.env.NODE_ENV === 'development' &&
+          console.error('No default offering found');
         return [];
       }
-      console.log('>> defaultOffering:', defaultOffering);
+      process.env.NODE_ENV === 'development' &&
+        console.log('>> defaultOffering:', defaultOffering);
       return defaultOffering.availablePackages || [];
     } catch (err) {
-      console.error("Error fetching packages:", err);
+      process.env.NODE_ENV === 'development' &&
+        console.error('Error fetching packages:', err);
       return [];
     }
   }
@@ -97,27 +110,25 @@ class RevenueCatManager {
     try {
       const packages = await this.getAvailablePackages();
       if (!packages || packages.length === 0) {
-        throw new Error("No available packages found");
+        throw new Error('No available packages found');
       }
 
       const selectedPackage = packages[0];
 
       // Web Billing → returns checkoutUrl
-      const { customerInfo, checkoutUrl } = await Purchases.getSharedInstance().purchase({
-        rcPackage: selectedPackage,
-      });
-      
+      const { customerInfo, checkoutUrl } =
+        await Purchases.getSharedInstance().purchase({
+          rcPackage: selectedPackage,
+        });
+
       if (checkoutUrl) {
-        window.open(checkoutUrl, "_self");
+        window.open(checkoutUrl, '_self');
         return null; // redirect will take over
       }
-
     } catch (e) {
       throw e;
     }
   }
-
-
 }
 
 // Export singleton instance

@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { signInWithEmailAndPassword, deleteUser, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  deleteUser,
+  updatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+} from 'firebase/auth';
 import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { auth, db, provider } from '@/firebase/firebase';
 import { sendOtp, verifyOtp } from '@/services/auth';
@@ -51,7 +57,8 @@ export const loginUser = createAsyncThunk(
       }
       return { uid, profileData };
     } catch (error) {
-      console.log('Login Error : >> ', error);
+      process.env.NODE_ENV === 'development' &&
+        console.log('Login Error : >> ', error);
       let errorMsg = error.message;
       if (
         error.message === 'Invalid email or password.' ||
@@ -130,7 +137,7 @@ export const googleLogin = createAsyncThunk(
         accessToken: user.uid,
       };
     } catch (error) {
-      console.log('err >> ', error);
+      process.env.NODE_ENV === 'development' && console.log('err >> ', error);
       let errorMsg = error.message;
       if (
         error.message === 'Invalid email or password.' ||
@@ -213,8 +220,23 @@ export const updateProfile = createAsyncThunk(
 
       return profileData; // this will be used to update state.user
     } catch (error) {
-      // console.error('error while updating profile', error);
+      // process.env.NODE_ENV === 'development' && console.error('error while updating profile', error);
       return rejectWithValue(error.message || 'Profile update failed');
+    }
+  }
+);
+
+export const updateSessionId = createAsyncThunk(
+  'auth/updateSessionId ',
+  async ({ uid, sessionId }, { rejectWithValue }) => {
+    try {
+      const docRef = doc(db, 'profile', uid);
+      await updateDoc(docRef, { sessionId: sessionId });
+
+      return sessionId; // this will be used to update state.user
+    } catch (error) {
+      // process.env.NODE_ENV === 'development' && console.error('error while updating profile', error);
+      return rejectWithValue(error.message || 'Session ID update failed');
     }
   }
 );
@@ -225,6 +247,7 @@ export const authSlice = createSlice({
     isLoggedIn: false,
     user: {},
     uid: null,
+    sessionId: null,
     accessToken: null,
     isLoading: false,
     error: {},
@@ -233,6 +256,7 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.user = {};
       state.uid = null;
+      state.sessionId = null;
       state.accessToken = null;
       state.isLoggedIn = false;
       deltCookie();
@@ -247,10 +271,12 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.uid = action.payload.uid;
       state.user = action.payload.profileData;
+      state.sessionId = action.payload.profileData.sessionId;
       state.error = {};
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.isLoading = false;
+      state.sessionId = null;
       state.error = action.payload;
     });
 
@@ -273,6 +299,7 @@ export const authSlice = createSlice({
     // google login
     builder.addCase(googleLogin.pending, (state) => {
       state.isLoading = true;
+      state.sessionId = null;
       state.error = null;
     });
     builder.addCase(googleLogin.fulfilled, (state, action) => {
@@ -281,49 +308,72 @@ export const authSlice = createSlice({
       state.uid = action.payload.uid;
       state.user = action.payload.profileData;
       state.accessToken = action.payload.accessToken;
+      state.sessionId = action.payload.profileData.sessionId;
       state.error = null;
     });
     builder.addCase(googleLogin.rejected, (state, action) => {
       state.isLoading = false;
       state.isLoggedIn = false;
+      state.sessionId = null;
       state.error = action.payload || 'Login failed';
     });
 
     // update profile
     builder.addCase(updateProfile.pending, (state) => {
       state.isLoading = true;
+      state.sessionId = null;
       state.error = null;
     });
     builder.addCase(updateProfile.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
+      state.sessionId = action.payload.profileData.sessionId;
       state.error = null;
     });
     builder.addCase(updateProfile.rejected, (state, action) => {
       state.isLoading = false;
       state.error = 'Update failed';
+      state.sessionId = null;
+    });
+    // update session id
+    builder.addCase(updateSessionId.pending, (state) => {
+      state.isLoading = true;
+      state.sessionId = null;
+      state.error = null;
+    });
+    builder.addCase(updateSessionId.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.sessionId = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateSessionId.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = 'Session ID update failed';
     });
   },
 });
 
 export const changePassword = createAsyncThunk(
-  "auth/changePassword",
+  'auth/changePassword',
   async ({ currentPassword, newPassword }, { rejectWithValue }) => {
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error("No authenticated user");
+      if (!user) throw new Error('No authenticated user');
 
       // Re-authenticate
-      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        currentPassword
+      );
       await reauthenticateWithCredential(user, credential);
 
       // Now update password
       await updatePassword(user, newPassword);
-      return "Password updated successfully";
+      return 'Password updated successfully';
     } catch (error) {
-      console.log("error", error);
+      process.env.NODE_ENV === 'development' && console.log('error', error);
       return rejectWithValue({ code: error.code, message: error.message });
-    } 
+    }
   }
 );
 

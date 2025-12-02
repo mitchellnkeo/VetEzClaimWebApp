@@ -44,7 +44,7 @@ export const getPdf = (submissionId) => {
   return ApiService.get(`/docspring/pdf/${submissionId}`, {
     noAuth: true,
   }).then((res) => {
-    // console.log('res >> ', res);
+    // process.env.NODE_ENV === 'development' && console.log('res >> ', res);
     return res;
   });
 };

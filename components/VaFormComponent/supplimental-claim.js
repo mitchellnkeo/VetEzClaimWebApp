@@ -27,9 +27,9 @@ import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 const yesNoData = ['Yes', 'No'];
 const claimantTypeData = [
   'Veteran',
-  'Veteran\'s spouse',
-  'Veteran\'s child',
-  'Veteran\'s parent',
+  "Veteran's spouse",
+  "Veteran's child",
+  "Veteran's parent",
   'Other',
 ];
 
@@ -47,17 +47,18 @@ const benefitTypeData = [
 
 const optInOption = [
   {
-    option: 'Check this box if any listed issue is being withdrawn from the legacy appeals process. OPT-IN from SOC/SSOC',
+    option:
+      'Check this box if any listed issue is being withdrawn from the legacy appeals process. OPT-IN from SOC/SSOC',
     isSelected: false,
-  }
-]
+  },
+];
 
 const alternateSignerOption = [
   {
     option: 'Signature of Alternate Signer',
     isSelected: true,
-  }
-]
+  },
+];
 
 const receivingEmail = [
   {
@@ -69,7 +70,7 @@ const receivingEmail = [
 
 const signatureOption = [
   {
-    option: 'Veteran/Claimant\'s Signature (Required)',
+    option: "Veteran/Claimant's Signature (Required)",
     isSelected: true,
   },
 ];
@@ -77,7 +78,7 @@ const signatureOption = [
 export default function SupplementalClaimForm({
   docName = 'supplementalclaim',
   formTitle = 'Supplemental Claim & Reopening (Form 20-0995)',
-  inProgress = false 
+  inProgress = false,
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
@@ -89,8 +90,8 @@ export default function SupplementalClaimForm({
   const [guid, setGuid] = useState('');
   const [timestamp, setTimestamp] = useState('');
   const [count, setCount] = useState(0);
-  
-  // console.log('>> Reloaded :: ', router.query, inProgress);
+
+  // process.env.NODE_ENV === 'development' && console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
     firstName: '',
@@ -115,14 +116,14 @@ export default function SupplementalClaimForm({
     email: '',
     benefitType: '',
     optIn: optInOption,
-    issues: [{specificIssue: '', date: ''}],
-    federalRecords: [{facilityName: '', dateOfRecords: ''}],
+    issues: [{ specificIssue: '', date: '' }],
+    federalRecords: [{ facilityName: '', dateOfRecords: '' }],
     noticeAcknowledgement: '',
     veteranDateSigned: '',
     vaAuthorizedRepresentative: '',
     veteranDateSignedAS: '',
     alternateSignerName: '',
-    dic:true,
+    dic: true,
     alternateSignerOption: alternateSignerOption,
     signature: '',
     signatureOption: signatureOption,
@@ -149,9 +150,9 @@ export default function SupplementalClaimForm({
           setTouched,
           validateForm,
         }) => {
-
           const loadDataFromLocalStorage = async () => {
-            console.log('loading data from local storage : ', user);
+            process.env.NODE_ENV === 'development' &&
+              console.log('loading data from local storage : ', user);
             await setValues({
               ...values,
               firstName: user.firstName ? user.firstName : '',
@@ -174,7 +175,7 @@ export default function SupplementalClaimForm({
               ...data,
               optIn: data.optIn
                 ? [{ ...optInOption[0], isSelected: true }]
-                : [...optInOption]
+                : [...optInOption],
             };
 
             setValues(dataBody);
@@ -195,8 +196,10 @@ export default function SupplementalClaimForm({
               setTimestamp(data?.timestamp === undefined ? '' : data.timestamp);
               setCount(data?.count === undefined ? 0 : data.count);
               const isUploaded = data?.isUploadedAlready || false;
-              console.log('Form data from Firebase:', data);
-              console.log('inProgress : ', inProgress);
+              process.env.NODE_ENV === 'development' &&
+                console.log('Form data from Firebase:', data);
+              process.env.NODE_ENV === 'development' &&
+                console.log('inProgress : ', inProgress);
 
               if (inProgress === 'true') {
                 await loadDataFromFirebase(data);
@@ -225,7 +228,8 @@ export default function SupplementalClaimForm({
               }
             } else {
               await loadDataFromLocalStorage();
-              console.log('No data found');
+              process.env.NODE_ENV === 'development' &&
+                console.log('No data found');
             }
             setIsLoading(false);
           };
@@ -243,10 +247,12 @@ export default function SupplementalClaimForm({
           };
 
           const saveData = async (fields, isFromSaveData = false) => {
-            console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
             var formData = await transformFormValues(values);
             formData = { ...formData, ...fields };
-            console.log('>> save Data : ', formData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data : ', formData);
             try {
               await postFormData({
                 docName: docName,
@@ -276,7 +282,9 @@ export default function SupplementalClaimForm({
           const generatePdf = async (formValues, isFromGeneratePdf = false) => {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
-            const pdfObject = await generateSupplementalClaimPdfObject(formData);
+            const pdfObject = await generateSupplementalClaimPdfObject(
+              formData
+            );
             await generatePdfService(pdfObject, 'generatepdf4')
               .then(async (res) => {
                 if (isFromGeneratePdf) {
@@ -286,7 +294,8 @@ export default function SupplementalClaimForm({
                 window.open(res?.download_url, '_blank');
               })
               .catch((err) => {
-                console.log('error', err);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('error', err);
                 toast.error('Error generating PDF. Please try again.');
               })
               .finally(() => {
@@ -384,26 +393,30 @@ export default function SupplementalClaimForm({
             } else {
               setIsLoading(true);
               const formData = await transformFormValues(values);
-              console.log('1  faxData >> ', formData);
-              const pdfObject = await generateSupplementalClaimPdfObject(formData);
-              console.log('2  faxData >> ', pdfObject);
+              process.env.NODE_ENV === 'development' &&
+                console.log('1  faxData >> ', formData);
+              const pdfObject = await generateSupplementalClaimPdfObject(
+                formData
+              );
+              process.env.NODE_ENV === 'development' &&
+                console.log('2  faxData >> ', pdfObject);
 
               await generatePdfService(pdfObject, 'generatepdf4')
                 .then(async (res) => {
-                  console.log(res.download_url);
-                  const faxBody = await getFaxBodyData(
-                    `${docName}.pdf`,
-                    false
-                  );
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(res.download_url);
+                  const faxBody = await getFaxBodyData(`${docName}.pdf`, false);
                   const faxData = {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
                   };
-                  console.log(' faxData >> ', faxData);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(' faxData >> ', faxData);
 
                   const faxResponse = await sendViaSRFax(faxData);
 
-                  console.log('faxReponse >> ', faxResponse);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('faxReponse >> ', faxResponse);
 
                   if (faxResponse.Status === 'Success') {
                     const url =
@@ -452,7 +465,8 @@ export default function SupplementalClaimForm({
                   setIsLoading(false);
                 })
                 .catch((err) => {
-                  console.log('error', err);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('error', err);
                   toast.error('Error uploading to VA. Try again later-2.');
                 })
                 .finally(() => {
@@ -477,7 +491,7 @@ export default function SupplementalClaimForm({
                 />
 
                 <SectionTitle title="Section I: Claimant's Identifying Information" />
-                <> 
+                <>
                   <TextInput
                     label="Veteran's First Name"
                     name="firstName"
@@ -553,11 +567,11 @@ export default function SupplementalClaimForm({
 
                   {values.claimantsRelationship === 'Other' && (
                     <TextInput
-                    label="Other (Specify)"
-                    name="claimantsRelationshipOther"
-                    placeholder="Enter other"
-                    limit={18}
-                  />
+                      label="Other (Specify)"
+                      name="claimantsRelationshipOther"
+                      placeholder="Enter other"
+                      limit={18}
+                    />
                   )}
 
                   <Divider title="Mailing Address" />
@@ -626,26 +640,36 @@ export default function SupplementalClaimForm({
                   />
                 </>
 
-                <SectionTitle
-                  title="Section II: Issue(s) for supplemental claim"
-                />
-                <>  
-                  <p> You must list each issue decided by VA that you would like VA to review as part of your  <strong> SUPPLEMENTAL CLAIM. </strong>  </p>
-                  <p> Please refer to your decision notice(s) for a list of the issues that have been adjudicated. For each issue, please provide the date of the VA's decision.(You can attach extra sheets of paper if needed. Make sure to include your name and file number on each additional sheet.)</p>
+                <SectionTitle title="Section II: Issue(s) for supplemental claim" />
+                <>
+                  <p className="dark:text-white-light">
+                    {' '}
+                    You must list each issue decided by VA that you would like
+                    VA to review as part of your{' '}
+                    <strong> SUPPLEMENTAL CLAIM. </strong>{' '}
+                  </p>
+                  <p className="dark:text-white-light">
+                    {' '}
+                    Please refer to your decision notice(s) for a list of the
+                    issues that have been adjudicated. For each issue, please
+                    provide the date of the VA's decision.(You can attach extra
+                    sheets of paper if needed. Make sure to include your name
+                    and file number on each additional sheet.)
+                  </p>
 
                   <OptionSelector
                     name="optIn"
                     options={values.optIn}
                     multiSelect={true}
                     isOtherAllowed={false}
-                  /> 
+                  />
 
                   <>
                     {values.issues.map((item, ind) => {
                       return (
                         <div key={ind} className="mt-10">
                           <TextInput
-                            label={`Specific Issue #${ ind + 1}`}
+                            label={`Specific Issue #${ind + 1}`}
                             name={`issues[${ind}].specificIssue`}
                             placeholder="Enter specific issue"
                             hasCounter
@@ -653,17 +677,14 @@ export default function SupplementalClaimForm({
                           />
 
                           <DateSelectorExtended
-                              label="Date of VA Decision Notice"
-                              name={`issues[${ind}].date`}
-                              value={values.issues[ind].date}
-                              placeholder="Select Date"
-                              onChange={(val) =>
-                                setFieldValue(
-                                  `issues[${ind}].date`,
-                                  val
-                                )
-                              }
-                            />
+                            label="Date of VA Decision Notice"
+                            name={`issues[${ind}].date`}
+                            value={values.issues[ind].date}
+                            placeholder="Select Date"
+                            onChange={(val) =>
+                              setFieldValue(`issues[${ind}].date`, val)
+                            }
+                          />
                         </div>
                       );
                     })}
@@ -693,9 +714,7 @@ export default function SupplementalClaimForm({
                         hidden={values.issues.length <= 1}
                         onClick={() => {
                           if (values.issues.length > 1) {
-                            const updatedIssue = [
-                              ...values.issues,
-                            ];
+                            const updatedIssue = [...values.issues];
                             updatedIssue.pop();
                             setValues({
                               ...values,
@@ -710,24 +729,44 @@ export default function SupplementalClaimForm({
                   </>
                 </>
 
-                <SectionTitle
-                  title="Section III: New and Relevant Evidence"
-                />
-                <> 
-                  <p>To complete your application, you must provide new and relevant evidence to the VA or let us know about any new and relevant evidence that the VA can help you gather in support of your supplemental claim. If you have records in your possession, please attach them to this form. Please include your name and file number on each page. If you would like VA to request <strong>non-federal records</strong>, please review your decision notification letter for the appropriate authorization forms to complete and submit to VA with this request form.</p>
+                <SectionTitle title="Section III: New and Relevant Evidence" />
+                <>
+                  <p className="dark:text-white-light">
+                    To complete your application, you must provide new and
+                    relevant evidence to the VA or let us know about any new and
+                    relevant evidence that the VA can help you gather in support
+                    of your supplemental claim. If you have records in your
+                    possession, please attach them to this form. Please include
+                    your name and file number on each page. If you would like VA
+                    to request <strong>non-federal records</strong>, please
+                    review your decision notification letter for the appropriate
+                    authorization forms to complete and submit to VA with this
+                    request form.
+                  </p>
                   <br></br>
-                  <p>Do you want VA to get federal records?</p> 
+                  <p className="dark:text-white-light">
+                    Do you want VA to get federal records?
+                  </p>
                   <br></br>
-                  <p>List below any VA Medical Centers (VAMC), <strong> VA treatment facilities, or federal departments or agencies </strong> that have new and relevant evidence that you are authorizing VA to obtain in support of your supplemental claim. You may attach additional sheets of paper if necessary. Please list your name and file number on each additional sheet.</p> 
-                 
+                  <p className="dark:text-white-light">
+                    List below any VA Medical Centers (VAMC),{' '}
+                    <strong>
+                      {' '}
+                      VA treatment facilities, or federal departments or
+                      agencies{' '}
+                    </strong>{' '}
+                    that have new and relevant evidence that you are authorizing
+                    VA to obtain in support of your supplemental claim. You may
+                    attach additional sheets of paper if necessary. Please list
+                    your name and file number on each additional sheet.
+                  </p>
+
                   <>
                     {values.federalRecords.map((item, ind) => {
                       return (
                         <div key={ind} className="mt-10">
                           <TextInput
-                            label={`Name and Location #${
-                              ind + 1
-                            }`}
+                            label={`Name and Location #${ind + 1}`}
                             name={`federalRecords[${ind}].facilityName`}
                             placeholder="Enter name"
                             hasCounter
@@ -735,17 +774,17 @@ export default function SupplementalClaimForm({
                           />
 
                           <DateSelectorExtended
-                              label="Date(s) of Records"
-                              name={`federalRecords[${ind}].dateOfRecords`}
-                              value={values.federalRecords[ind].dateOfRecords}
-                              placeholder="Select Date"
-                              onChange={(val) =>
-                                setFieldValue(
-                                  `federalRecords[${ind}].dateOfRecords`,
-                                  val
-                                )
-                              }
-                            />
+                            label="Date(s) of Records"
+                            name={`federalRecords[${ind}].dateOfRecords`}
+                            value={values.federalRecords[ind].dateOfRecords}
+                            placeholder="Select Date"
+                            onChange={(val) =>
+                              setFieldValue(
+                                `federalRecords[${ind}].dateOfRecords`,
+                                val
+                              )
+                            }
+                          />
                         </div>
                       );
                     })}
@@ -775,9 +814,7 @@ export default function SupplementalClaimForm({
                         hidden={values.federalRecords.length <= 1}
                         onClick={() => {
                           if (values.federalRecords.length > 1) {
-                            const updatedRecords = [
-                              ...values.federalRecords,
-                            ];
+                            const updatedRecords = [...values.federalRecords];
                             updatedRecords.pop();
                             setValues({
                               ...values,
@@ -789,7 +826,7 @@ export default function SupplementalClaimForm({
                         Remove Facility
                       </button>
                     </div>
-                  </>  
+                  </>
                 </>
 
                 <SectionTitle
@@ -797,7 +834,11 @@ export default function SupplementalClaimForm({
                   subtitle="(This section applies to Compensation benefit claims only)"
                 />
                 <>
-                  <p> <strong>Note: </strong>If we issued your decision within the past year, you can skip this section.</p>
+                  <p className="dark:text-white-light">
+                    {' '}
+                    <strong>Note: </strong>If we issued your decision within the
+                    past year, you can skip this section.
+                  </p>
                   <DropDownExtended
                     label="I CERTIFY THAT I have received or reviewed the notice of evidence needed to support a claim for Veterans Disability Compensation and related benefits as provided at https://www.va.gov/disability/how-to-file-claim/evidence-needed/"
                     name="noticeAcknowledgement"
@@ -806,19 +847,41 @@ export default function SupplementalClaimForm({
                   />
                 </>
 
-                <SectionTitle
-                  title="Section V: Certification and Signature"
-                />
+                <SectionTitle title="Section V: Certification and Signature" />
                 <>
                   <>
-                    <p> <strong>Note: </strong>This section is <strong>mandatory</strong> , and you must complete it to process your claim. If anything is missing, it may delay the processing of your claim.</p>
+                    <p className="dark:text-white-light">
+                      {' '}
+                      <strong>Note: </strong>This section is{' '}
+                      <strong>mandatory</strong> , and you must complete it to
+                      process your claim. If anything is missing, it may delay
+                      the processing of your claim.
+                    </p>
                     <br></br>
-                    <p> <strong> VA AUTHORIZED REPRESENTATIVES ONLY: </strong>I confirm that the claimant has given me permission to file this supplemental claim on their behalf and that the claimant is aware of and agrees with the information in this document. I also confirm that the claimant has authorized me to state that they certify the information in this document is true and complete to the best of their knowledge.</p>
+                    <p className="dark:text-white-light">
+                      {' '}
+                      <strong> VA AUTHORIZED REPRESENTATIVES ONLY: </strong>I
+                      confirm that the claimant has given me permission to file
+                      this supplemental claim on their behalf and that the
+                      claimant is aware of and agrees with the information in
+                      this document. I also confirm that the claimant has
+                      authorized me to state that they certify the information
+                      in this document is true and complete to the best of their
+                      knowledge.
+                    </p>
                     <br></br>
-                    <p> <strong> NOTE:</strong> A Power of Attorney (POA) signature will only be accepted if, at the time of submitting this claim, there is a valid VA Form 21-22 (Appointment of Veterans Service Organization as Claimant's Representative) or VA Form 21-22a (Appointment of Individual as Claimant's Representative) on record with the VA, showing the appropriate POA. </p>
+                    <p className="dark:text-white-light">
+                      {' '}
+                      <strong> NOTE:</strong> A Power of Attorney (POA)
+                      signature will only be accepted if, at the time of
+                      submitting this claim, there is a valid VA Form 21-22
+                      (Appointment of Veterans Service Organization as
+                      Claimant's Representative) or VA Form 21-22a (Appointment
+                      of Individual as Claimant's Representative) on record with
+                      the VA, showing the appropriate POA.{' '}
+                    </p>
                     <br></br>
                   </>
-
 
                   <OptionSelector
                     name="signatureOption"
@@ -833,59 +896,59 @@ export default function SupplementalClaimForm({
                     name="veteranDateSigned"
                     value={values.veteranDateSigned}
                     placeholder="Select Date"
-                    onChange={(val) =>
-                      setFieldValue('veteranDateSigned', val)
-                    }
+                    onChange={(val) => setFieldValue('veteranDateSigned', val)}
                     fieldCounter="(17-2 of 18)"
                   />
 
                   <TextInput
-                      label="Name of VA Authorized Representative"
-                      name="vaAuthorizedRepresentative"
-                      placeholder="Enter representative info"
-                      fieldCounter="(17-3 of 18)" 
+                    label="Name of VA Authorized Representative"
+                    name="vaAuthorizedRepresentative"
+                    placeholder="Enter representative info"
+                    fieldCounter="(17-3 of 18)"
                   />
                 </>
 
-                <SectionTitle
-                  title="Alternate Signer Certification and Signature"
-                />
+                <SectionTitle title="Alternate Signer Certification and Signature" />
                 <>
                   <>
-                    <p> <strong>I Certify That </strong>  by
-                      signing on behalf of the claimant, that I am a court-appointed
-                      representative; <strong>OR</strong>, an
-                      attorney in fact or agent authorized to act on behalf of a claimant
-                      under a durable power of attorney;{' '}
-                      <strong>OR</strong>, a person who is
-                      responsible for the care of the claimant, to include but not limited
-                      to a spouse or other relative; OR, a manager or principal officer
-                      acting on behalf of an institution which is responsible for the care
-                      of an individual; <strong>AND</strong>, that
-                      the claimant is under the age of 29;{' '}
-                      <strong>OR</strong>, is mentally incompetent
-                      to provide substantially accurate information needed to complete the
-                      form, or to certify that the statements made on the form are true
-                      and complete; <strong>OR</strong>, is
+                    <p className="dark:text-white-light">
+                      {' '}
+                      <strong>I Certify That </strong> by signing on behalf of
+                      the claimant, that I am a court-appointed representative;{' '}
+                      <strong>OR</strong>, an attorney in fact or agent
+                      authorized to act on behalf of a claimant under a durable
+                      power of attorney; <strong>OR</strong>, a person who is
+                      responsible for the care of the claimant, to include but
+                      not limited to a spouse or other relative; OR, a manager
+                      or principal officer acting on behalf of an institution
+                      which is responsible for the care of an individual;{' '}
+                      <strong>AND</strong>, that the claimant is under the age
+                      of 29; <strong>OR</strong>, is mentally incompetent to
+                      provide substantially accurate information needed to
+                      complete the form, or to certify that the statements made
+                      on the form are true and complete; <strong>OR</strong>, is
                       physically unable to sign this form.
-                      {'\n\n'}I understand that I may be asked to confirm the truthfulness
-                      of the answers to the best of my knowledge under penalty of perjury.
-                      I also understand that VA may request further documentation or
-                      evidence to verify or confirm my authorization to sign or complete
-                      an application on behalf of the claimant if necessary. Examples of
-                      evidence which VA may request include: Social Security Number (SSN)
-                      or Taxpayer Identification Number (TIN); a certificate or order from
-                      a court with competent jurisdiction showing your authority to act
-                      for the claimant with a judge's signature and a date/time stamp;
-                      copy of documentation showing appointment of fiduciary; durable
-                      power of attorney showing the name and signature of the claimant and
-                      your authority as attorney in fact or agent; health care power of
-                      attorney, affidavit or notarized statement from an institution or
-                      person responsible for the care of the claimant indicating the
+                      {'\n\n'}I understand that I may be asked to confirm the
+                      truthfulness of the answers to the best of my knowledge
+                      under penalty of perjury. I also understand that VA may
+                      request further documentation or evidence to verify or
+                      confirm my authorization to sign or complete an
+                      application on behalf of the claimant if necessary.
+                      Examples of evidence which VA may request include: Social
+                      Security Number (SSN) or Taxpayer Identification Number
+                      (TIN); a certificate or order from a court with competent
+                      jurisdiction showing your authority to act for the
+                      claimant with a judge's signature and a date/time stamp;
+                      copy of documentation showing appointment of fiduciary;
+                      durable power of attorney showing the name and signature
+                      of the claimant and your authority as attorney in fact or
+                      agent; health care power of attorney, affidavit or
+                      notarized statement from an institution or person
+                      responsible for the care of the claimant indicating the
                       capacity or responsibility of care provided; or any other
-                      documentation showing such authorization. </p>
+                      documentation showing such authorization.{' '}
+                    </p>
                     <br></br>
-                   
                   </>
 
                   <OptionSelector
@@ -908,21 +971,20 @@ export default function SupplementalClaimForm({
                   />
 
                   <TextInput
-                      label="Name of Alternate Signer"
-                      name="alternateSignerName"
-                      placeholder="Enter alternate signer"
-                      fieldCounter="(18-3 of 18)" 
+                    label="Name of Alternate Signer"
+                    name="alternateSignerName"
+                    placeholder="Enter alternate signer"
+                    fieldCounter="(18-3 of 18)"
                   />
 
-                  <p> 
-                    <strong>Penalty: </strong>
-                    The law provides
-                    severe penalties which include a fine, imprisonment, or both, for
-                    the willful submission of any statement or evidence of a material
-                    fact, knowing it to be false.
+                  <p className="dark:text-white-light">
+                    <strong className="dark:text-white-light">Penalty: </strong>
+                    The law provides severe penalties which include a fine,
+                    imprisonment, or both, for the willful submission of any
+                    statement or evidence of a material fact, knowing it to be
+                    false.
                   </p>
                 </>
-
               </Form>
             </FormContent>
           );

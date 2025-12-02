@@ -1,12 +1,13 @@
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import app from "./firebase";
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import app from './firebase';
 
 const getMessagingClient = () => {
-  if (typeof window === "undefined") return null; // SSR check
+  if (typeof window === 'undefined') return null; // SSR check
   try {
     return getMessaging(app);
   } catch (err) {
-    console.warn("Messaging not supported in this browser:", err);
+    process.env.NODE_ENV === 'development' &&
+      console.warn('Messaging not supported in this browser:', err);
     return null;
   }
 };
@@ -17,17 +18,20 @@ export const requestNotificationPermission = async () => {
 
   try {
     const permission = await Notification.requestPermission();
-    if (permission === "granted") {
+    if (permission === 'granted') {
       const token = await getToken(messaging);
-      console.log("FCM Token:", token);
-      localStorage.setItem("fcm_token", token);
+      process.env.NODE_ENV === 'development' &&
+        console.log('FCM Token:', token);
+      localStorage.setItem('fcm_token', token);
       return token;
     } else {
-      console.log("Notification permission denied");
+      process.env.NODE_ENV === 'development' &&
+        console.log('Notification permission denied');
       return null;
     }
   } catch (err) {
-    console.error("Error getting FCM token", err);
+    process.env.NODE_ENV === 'development' &&
+      console.error('Error getting FCM token', err);
     return null;
   }
 };

@@ -84,7 +84,7 @@ export default function SubmitToIntentForm() {
   const router = useRouter();
   const { ['in-progress']: inProgress } = router.query;
 
-  // console.log('>> Reloaded :: ', router.query, inProgress);
+  // process.env.NODE_ENV === 'development' && console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
     firstName: '',
@@ -132,11 +132,7 @@ export default function SubmitToIntentForm() {
 
   return (
     <FrontLayout title={formTitle}>
-      <Breadcrumb
-        preUrl="/forms"
-        preTitle="Forms"
-        currentTitle={formTitle}
-      />
+      <Breadcrumb preUrl="/forms" preTitle="Forms" currentTitle={formTitle} />
       <Formik
         initialValues={initialValues}
         validationSchema={SubmitIntentFileValidation}
@@ -151,7 +147,8 @@ export default function SubmitToIntentForm() {
           validateForm,
         }) => {
           const loadDataFromLocalStorage = async () => {
-            console.log('loading data from local storage : ', user);
+            process.env.NODE_ENV === 'development' &&
+              console.log('loading data from local storage : ', user);
             await setValues({
               ...values,
               firstName: user.firstName ? user.firstName : '',
@@ -211,8 +208,10 @@ export default function SubmitToIntentForm() {
               setTimestamp(data?.timestamp === undefined ? '' : data.timestamp);
               setCount(data?.count === undefined ? 0 : data.count);
               const isUploaded = data?.isUploadedAlready || false;
-              console.log('Form data from Firebase:', data);
-              console.log('inProgress : ', inProgress);
+              process.env.NODE_ENV === 'development' &&
+                console.log('Form data from Firebase:', data);
+              process.env.NODE_ENV === 'development' &&
+                console.log('inProgress : ', inProgress);
 
               if (inProgress === 'true') {
                 await loadDataFromFirebase(data);
@@ -241,7 +240,8 @@ export default function SubmitToIntentForm() {
               }
             } else {
               await loadDataFromLocalStorage();
-              console.log('No data found');
+              process.env.NODE_ENV === 'development' &&
+                console.log('No data found');
             }
             setIsLoading(false);
           };
@@ -268,10 +268,12 @@ export default function SubmitToIntentForm() {
             };
           };
           const saveData = async (fields, isFromSaveData = false) => {
-            console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
             var formData = await transformFormValues(values);
             formData = { ...formData, ...fields };
-            console.log('>> save Data : ', formData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data : ', formData);
             try {
               await postFormData({
                 docName: 'fillform',
@@ -309,7 +311,8 @@ export default function SubmitToIntentForm() {
                 window.open(res?.download_url, '_blank');
               })
               .catch((err) => {
-                console.log('error', err);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('error', err);
                 toast.error('Error generating PDF. Please try again.');
               })
               .finally(() => {
@@ -395,13 +398,16 @@ export default function SubmitToIntentForm() {
             } else {
               setIsLoading(true);
               const formData = await transformFormValues(values);
-              console.log('1  faxData >> ', formData);
+              process.env.NODE_ENV === 'development' &&
+                console.log('1  faxData >> ', formData);
               const pdfObject = await generateSubmitToIntentPdf(formData);
-              console.log('2  faxData >> ', pdfObject);
+              process.env.NODE_ENV === 'development' &&
+                console.log('2  faxData >> ', pdfObject);
 
               await generatePdfService(pdfObject, 'generate')
                 .then(async (res) => {
-                  console.log(res.download_url);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(res.download_url);
                   const faxBody = await getFaxBodyData(
                     'fillsubmitform.pdf',
                     false
@@ -410,11 +416,13 @@ export default function SubmitToIntentForm() {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
                   };
-                  console.log(' faxData >> ', faxData);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(' faxData >> ', faxData);
 
                   const faxResponse = await sendViaSRFax(faxData);
 
-                  console.log('faxReponse >> ', faxResponse);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('faxReponse >> ', faxResponse);
 
                   if (faxResponse.Status === 'Success') {
                     const url =
@@ -463,7 +471,8 @@ export default function SubmitToIntentForm() {
                   setIsLoading(false);
                 })
                 .catch((err) => {
-                  console.log('error', err);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('error', err);
                   toast.error('Error uploading to VA. Try again later-2.');
                 })
                 .finally(() => {
@@ -611,7 +620,6 @@ export default function SubmitToIntentForm() {
                   options={values.emailE}
                   multiSelect={true}
                   isOtherAllowed={false}
-                 
                 />
                 <SectionTitle
                   title="Section II: Claimant's Identification Information"
@@ -759,7 +767,6 @@ export default function SubmitToIntentForm() {
                       options={values.claimantsEmailE}
                       multiSelect={true}
                       isOtherAllowed={false}
-                  
                     />
                   </>
                 )}
@@ -787,7 +794,7 @@ export default function SubmitToIntentForm() {
                   isOtherAllowed={false}
                 />
 
-                <p>
+                <p className="dark:text-white-light">
                   <strong>Important: </strong>
                   After receiving this form, VA will give you the appropriate
                   application to file for the general benefit you select above.

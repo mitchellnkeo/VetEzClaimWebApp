@@ -8,10 +8,7 @@ import Sidebar from './Sidebar';
 import Portals from '../Portals';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-// import { doc, getDoc, collection } from 'firebase/firestore';
-import { collection, getDocs } from 'firebase/firestore/lite';
-import { auth, db } from '@/firebase/firebase';
-import { setUser } from '@/store/slices/authSlice';
+import FloatingChat from '../Common/ChatHead';
 
 const FrontLayout = ({ children, title }) => {
   const router = useRouter();
@@ -20,37 +17,6 @@ const FrontLayout = ({ children, title }) => {
   const themeConfig = useSelector((state) => state.themeConfig);
   const [animation, setAnimation] = useState(themeConfig.animation);
   const dispatch = useDispatch();
-
-  // const getCities = async () => {
-  //   const citiesCol = collection(db, 'profile');
-  //   const citySnapshot = await getDocs(citiesCol);
-  //   const totalCount = citySnapshot.size;
-  //   const cityList = citySnapshot.docs.map((doc) => doc.data());
-  //   const result = {
-  //     totalCount,
-  //     rows: cityList,
-  //   };
-  //   console.log(result);
-  //   return result;
-  // };
-
-  // const fetchUserData = async () => {
-  //   auth.onAuthStateChanged(async (user) => {
-  //     const docRef = doc(db, 'Users', user.uid);
-  //     const docSnap = await getDoc(docRef);
-  //     if (docSnap.exists()) {
-  //       dispatch(setUser(docSnap.data()));
-  //       console.log('FrontLayout->', docSnap.data());
-  //     } else {
-  //       console.log('User is not logged in');
-  //     }
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   // fetchUserData();
-  //   getCities();
-  // }, []);
 
   const goToTop = () => {
     document.body.scrollTop = 0;
@@ -190,6 +156,7 @@ const FrontLayout = ({ children, title }) => {
               <Footer />
               {/* END FOOTER */}
             </div>
+            <FloatingChat />
             <Portals />
           </div>
           {/* END CONTENT AREA */}

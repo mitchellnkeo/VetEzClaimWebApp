@@ -49,14 +49,9 @@ export default function TextInput({
           id={props.id || props.name}
           maxLength={limit}
           placeholder={placeholder}
-          style={{
-            width: '100%',
-            borderBottom: '1px solid #ccc',
-            fontSize: '14px',
-            padding: '6px 4px',
-            color: readOnly ? '#777' : '#000', // 👈 grayish if readOnly
-            backgroundColor: readOnly ? '#f9f9f9' : '#fff', // optional softer bg
-          }}
+          className={`form-input w-full border-b border-gray-300 text-sm px-3 py-2
+            ${readOnly ? 'text-gray-500 bg-gray-100' : 'text-black bg-white'} 
+            dark:bg-gray-600 dark:text-white-light form-input`}
           readOnly={readOnly}
         />
       ) : (
@@ -67,15 +62,15 @@ export default function TextInput({
           maxLength={limit}
           placeholder={placeholder}
           rows={4}
-          style={{
-            width: '100%',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            fontSize: '14px',
-            padding: '8px',
-            color: readOnly ? '#777' : '#000', // 👈 grayish if readOnly
-            backgroundColor: readOnly ? '#f9f9f9' : '#fff', // optional softer bg
-          }}
+          className={`form-textarea dark:text-white-light
+            w-full
+            border
+            border-gray-300
+            rounded-md
+            text-sm
+            p-2
+            ${readOnly ? 'text-gray-500 bg-gray-100' : 'text-black bg-white'}
+          `}
           readOnly={readOnly}
         />
       )}

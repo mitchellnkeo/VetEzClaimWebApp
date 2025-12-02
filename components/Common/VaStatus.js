@@ -8,7 +8,7 @@ const VaStatus = ({ row }) => {
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [error, setError] = useState(null);
 
-  console.log('row:', row);
+  process.env.NODE_ENV === 'development' && console.log('row:', row);
 
   const getFaxDetails = async () => {
     setLoadingStatus(true);

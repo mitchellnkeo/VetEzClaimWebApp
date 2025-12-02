@@ -60,7 +60,8 @@ export default function NoaForm() {
   const router = useRouter();
   const { ['in-progress']: inProgress } = router.query;
 
-  console.log('>> Reloaded :: ', router.query, inProgress);
+  process.env.NODE_ENV === 'development' &&
+    console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
     boardDecisionDate: '',
@@ -85,7 +86,7 @@ export default function NoaForm() {
 
   return (
     <FrontLayout title="Notice of Appeal (NOA) & Optional Fee Waiver">
-            <Breadcrumb
+      <Breadcrumb
         preUrl="/forms/menu"
         preTitle="Form Menu"
         currentTitle="Notice of Appeal (NOA) & Optional Fee Waiver"
@@ -104,7 +105,8 @@ export default function NoaForm() {
           validateForm,
         }) => {
           const loadDataFromLocalStorage = async () => {
-            console.log('loading data from local storage : ', user);
+            process.env.NODE_ENV === 'development' &&
+              console.log('loading data from local storage : ', user);
             await setValues({
               ...values,
               appeallantName: user.firstName
@@ -148,7 +150,8 @@ export default function NoaForm() {
               formName: 'courtform',
             });
             if (data) {
-              console.log('Data Found on Firebase: ', data);
+              process.env.NODE_ENV === 'development' &&
+                console.log('Data Found on Firebase: ', data);
               setRecordsExists(true);
               setUrlDocspring(
                 data?.urlDocspring === undefined ? '' : data.urlDocspring
@@ -167,8 +170,10 @@ export default function NoaForm() {
                   : []
               );
               const isUploaded = data?.isUploadedAlready || false;
-              console.log('Form data from Firebase:', data);
-              console.log('inProgress : ', inProgress);
+              process.env.NODE_ENV === 'development' &&
+                console.log('Form data from Firebase:', data);
+              process.env.NODE_ENV === 'development' &&
+                console.log('inProgress : ', inProgress);
 
               if (inProgress === 'true') {
                 await loadDataFromFirebase(data);
@@ -197,7 +202,8 @@ export default function NoaForm() {
               }
             } else {
               await loadDataFromLocalStorage();
-              console.log('No data found');
+              process.env.NODE_ENV === 'development' &&
+                console.log('No data found');
             }
             setIsLoading(false);
           };
@@ -219,10 +225,12 @@ export default function NoaForm() {
           };
 
           const saveData = async (fields, isFromSaveData = false) => {
-            console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
             var formData = await transformFormValues(values);
             formData = { ...formData, ...fields };
-            console.log('>> save Data : ', formData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data : ', formData);
             try {
               await postFormData({
                 docName: 'courtform',
@@ -269,7 +277,8 @@ export default function NoaForm() {
                 window.open(res?.download_url, '_blank');
               })
               .catch((err) => {
-                console.log('error', err);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('error', err);
                 toast.error('Error generating PDF. Please try again.');
               })
               .finally(() => {
@@ -378,12 +387,14 @@ export default function NoaForm() {
             } else {
               setIsLoading(true);
               const formData = await transformFormValues(values);
-              console.log('1  faxData >> ', formData);
+              process.env.NODE_ENV === 'development' &&
+                console.log('1  faxData >> ', formData);
               const pdfObject = await generateNoaPdfObject(
                 formData,
                 values.financialHardship === 'Yes'
               );
-              console.log('2  faxData >> ', pdfObject);
+              process.env.NODE_ENV === 'development' &&
+                console.log('2  faxData >> ', pdfObject);
 
               await generatePdfService(
                 pdfObject,
@@ -392,17 +403,20 @@ export default function NoaForm() {
                   : 'generate-noa-pdf'
               )
                 .then(async (res) => {
-                  console.log(res.download_url);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(res.download_url);
                   const faxBody = await getFaxBodyData('courtform.pdf', true);
                   const faxData = {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
                   };
-                  console.log(' faxData >> ', faxData);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(' faxData >> ', faxData);
 
                   const faxResponse = await sendViaSRFax(faxData);
 
-                  console.log('faxReponse >> ', faxResponse);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('faxReponse >> ', faxResponse);
 
                   if (faxResponse.Status === 'Success') {
                     const url =
@@ -436,7 +450,8 @@ export default function NoaForm() {
                   setIsLoading(false);
                 })
                 .catch((err) => {
-                  console.log('error', err);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('error', err);
                   toast.error('Error uploading to VA. Try again later-2.');
                 })
                 .finally(() => {
@@ -585,7 +600,7 @@ export default function NoaForm() {
                   fieldCounter="(8 of 14)"
                 />
 
-                <div className="mb-5 mt-2 text-sm text-gray-600">
+                <div className="mb-5 mt-2 text-sm text-gray-600 dark:text-white-light">
                   (*You may electronically sign by typing "/s/" and then your
                   name in the signature block above: for example, /s/John Doe,
                   or you may sign with an electronic signature from a commercial
@@ -619,7 +634,7 @@ export default function NoaForm() {
                       fieldCounter="(11 of 14)"
                     />
 
-                    <div className="my-5 text-base text-gray-700">
+                    <div className="my-5 text-base text-gray-700 dark:text-white-light">
                       I am the appellant/petitioner. I declare by my signature
                       below that payment of the fifty dollar ($50.00) filing fee
                       referenced in Rule 3(f) and Rule 21(a) of the Court's
@@ -667,7 +682,7 @@ export default function NoaForm() {
                       fieldCounter="(14 of 14)"
                     />
 
-                    <div className="my-5 text-base text-gray-700">
+                    <div className="my-5 text-base text-gray-700 dark:text-white-light">
                       (*To be signed by Appellant/Petitioner, NOT
                       Appellant's/Petitioner's representative. You may
                       electronically sign by typing "/s/" and then your name in
@@ -681,7 +696,7 @@ export default function NoaForm() {
                 )}
 
                 <SectionTitle title="INSTRUCTIONS" />
-                <div className="my-5 text-base text-gray-700">
+                <div className="my-5 text-base text-gray-700 dark:text-white-light  ">
                   The NOA must be received by the Court, or properly addressed
                   and postmarked by the U.S. Postal Service, not later than 120
                   days after the date on which the Board mailed notice of the

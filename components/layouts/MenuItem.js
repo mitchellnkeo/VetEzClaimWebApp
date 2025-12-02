@@ -28,21 +28,21 @@ const MenuItem = ({
       return;
     }
     if (!submenu) return;
-    // console.log('>> keyID: ', keyID);
+    // process.env.NODE_ENV === 'development' && console.log('>> keyID: ', keyID);
     toggleMenu(keyID);
   };
 
   return (
-      <li
-        className={`menu nav-item ${
-          disabled ? 'cursor-not-allowed opacity-50' : ''
-        } ${active ? 'bg-[#005985] text-white rounded-md' : ''}`}
-      >
+    <li
+      className={`menu nav-item ${
+        disabled ? 'cursor-not-allowed opacity-50' : ''
+      } ${active ? 'rounded-md bg-[#005985] text-white dark:bg-gray-600' : ''}`}
+    >
       {!submenu ? (
         <Link href={disabled ? '#' : path} className="group">
           <div className="flex items-center">
             {icon}
-            <span className="text-white dark:text-[#506690] dark:group-hover:text-white-dark ltr:pl-3 rtl:pr-3">
+            <span className="text-white dark:text-[#ccc] dark:group-hover:text-white-dark ltr:pl-3 rtl:pr-3">
               {t(title)}
             </span>
           </div>

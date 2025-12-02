@@ -19,10 +19,11 @@ export default function InProgressForms() {
     setIsLoading(true);
     try {
       const forms = await getInprogressFormData(uid);
-      console.log('forms:', forms);
+      process.env.NODE_ENV === 'development' && console.log('forms:', forms);
       setInprogressForms(forms);
     } catch (error) {
-      console.error('Error fetching in-progress forms:', error);
+      process.env.NODE_ENV === 'development' &&
+        console.error('Error fetching in-progress forms:', error);
     } finally {
       setIsLoading(false);
     }
@@ -34,19 +35,29 @@ export default function InProgressForms() {
   }, [uid]);
 
   const onDraft = async (item) => {
-    if (!isSubscribed && item.formId !== 'financial_hardship' && item.formId !== 'courtform' && item.formId !== 'fillform') {
+    if (
+      !isSubscribed &&
+      item.formId !== 'financial_hardship' &&
+      item.formId !== 'courtform' &&
+      item.formId !== 'fillform'
+    ) {
       toast.info('Subscribe Now');
       return;
     }
-    let routerBody = { pathname: item.formUrl }
-    if(item.formId !== 'buddy_statement'){
+    let routerBody = { pathname: item.formUrl };
+    if (item.formId !== 'buddy_statement') {
       routerBody.query = { 'in-progress': true };
-    } 
+    }
     router.push(routerBody);
   };
 
   const onDiscard = async (item) => {
-    if (!isSubscribed && item.formId !== 'financial_hardship' && item.formId !== 'courtform' && item.formId !== 'fillform') {
+    if (
+      !isSubscribed &&
+      item.formId !== 'financial_hardship' &&
+      item.formId !== 'courtform' &&
+      item.formId !== 'fillform'
+    ) {
       toast.info('Subscribe Now');
       return;
     }
@@ -65,16 +76,15 @@ export default function InProgressForms() {
   return (
     <FrontLayout title="In-Progress Forms">
       <Loader show={isloading} />
-      <Breadcrumb
-        preUrl="/"
-        preTitle="Home"
-        currentTitle="In-Progress"
-      />
+      <Breadcrumb preUrl="/" preTitle="Home" currentTitle="In-Progress" />
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl"> In-Progress Forms</h1>
+              <h1 className="text-2xl dark:text-white-light">
+                {' '}
+                In-Progress Forms
+              </h1>
             </div>
           </div>
         </div>
@@ -84,10 +94,10 @@ export default function InProgressForms() {
           inprogressForms.map((form, index) => (
             <div
               key={index}
-              className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+              className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white-light"
             >
               <div>
-                <p className="text-base font-medium text-gray-900">
+                <p className="text-base font-medium text-gray-900 dark:text-white-light">
                   {form.formTitle}
                 </p>
               </div>
@@ -109,7 +119,7 @@ export default function InProgressForms() {
             </div>
           ))
         ) : (
-          <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-500 shadow-sm">
+          <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-500 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white-light">
             No forms found
           </div>
         )}

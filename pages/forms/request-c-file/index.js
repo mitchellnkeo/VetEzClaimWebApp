@@ -25,8 +25,6 @@ import { useRouter } from 'next/router';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
-
-
 const receivingEmail = [
   {
     option:
@@ -49,7 +47,8 @@ const recordRequestOption = [
     isSelected: false,
   },
   {
-    option: 'LIFE INSURANCE BENEFIT RECORDS\n(If applicable, enter policy number in Section IV, Item 18, Remarks)',
+    option:
+      'LIFE INSURANCE BENEFIT RECORDS\n(If applicable, enter policy number in Section IV, Item 18, Remarks)',
     isSelected: false,
   },
   {
@@ -64,7 +63,7 @@ const recordRequestOption = [
     option: 'HOME LOAN BENEFIT RECORDS',
     isSelected: false,
   },
-  
+
   {
     option: 'VOCATIONAL REHABILITATION RECORDS AND EMPLOYMENT RECORDS',
     isSelected: false,
@@ -84,7 +83,7 @@ const recordRequestOption = [
     option: 'PENSION BENEFIT DOCUMENTS',
     isSelected: false,
   },
-  
+
   {
     option: 'EDUCATION BENEFIT RECORDS',
     isSelected: false,
@@ -95,10 +94,11 @@ const recordRequestOption = [
     isSelected: false,
   },
   {
-    option: 'DISABILITY EXAMINATIONS\n(C & P EXAMS) (If applicable enter date of exam in Section VI, Item 20, Remarks)',
+    option:
+      'DISABILITY EXAMINATIONS\n(C & P EXAMS) (If applicable enter date of exam in Section VI, Item 20, Remarks)',
     isSelected: false,
   },
-  { 
+  {
     option: 'OTHER',
     isSelected: false,
   },
@@ -106,45 +106,47 @@ const recordRequestOption = [
 
 const signatureOption = [
   {
-    option: 'Requester\'s Signature (Required)',
+    option: "Requester's Signature (Required)",
     isSelected: true,
   },
 ];
 
 const willingOption = [
-    {
-      option:
-        'I AM WILLING TO PAY THE APPLICABLE FEES UP TO THE AMOUNT OF',
-      isSelected: false,
-    },
-  ];
+  {
+    option: 'I AM WILLING TO PAY THE APPLICABLE FEES UP TO THE AMOUNT OF',
+    isSelected: false,
+  },
+];
 
 const indicateOption = [
-    {
-        option: 'IF YOU BELIEVE YOU ARE ENTITLED TO A FEE WAIVER OR EXPEDITED PROCESSING, PLEASE INDICATE:', 
-        isSelected: false 
-    }
-  ]
+  {
+    option:
+      'IF YOU BELIEVE YOU ARE ENTITLED TO A FEE WAIVER OR EXPEDITED PROCESSING, PLEASE INDICATE:',
+    isSelected: false,
+  },
+];
 
-  const optionToFormikField = {
-    'CLAIMS FILE (C-FILE)': 'claimsFile',
-    'DD FORM 214': 'ddForm214',
-    'HUMAN RESOURCE RECORDS': 'humanResourceRecords',
-    'LIFE INSURANCE BENEFIT RECORDS\n(If applicable, enter policy number in Section IV, Item 18, Remarks)': 'lifeInsuranceBenefitRecords',
-    'SERVICE TREATMENT RECORDS / MILITARY TREATMENT RECORDS': 'serviceTreatment',    
-    'LIFE INSURANCE RECORDS': 'lifeInsuranceRecords',
-    'HOME LOAN BENEFIT RECORDS': 'homeLoanBenefitRecords',
-    'VOCATIONAL REHABILITATION RECORDS AND EMPLOYMENT RECORDS': 'vocationalRehabilitationRecords',
-    'FIDUCIARY SERVICES RECORDS': 'fiduciaryServicesRecords',   
-    'MILITARY TO CIVILIAN TRANSITION TAP DOCUMENTS': 'militaryToCivilianTransition',    
-    'PENSION BENEFIT DOCUMENTS': 'pensionBenefit',
-    'EDUCATION BENEFIT RECORDS': 'educationBenefitRecords',
-    'FINANCIAL RECORDS': 'financialRecords',
-    'DISABILITY EXAMINATIONS\n(C & P EXAMS) (If applicable enter date of exam in Section VI, Item 20, Remarks)': 'disabilityExaminations',
-    'OTHER': 'other', // special case because it has { value, specify } 
-  };
-  
-  
+const optionToFormikField = {
+  'CLAIMS FILE (C-FILE)': 'claimsFile',
+  'DD FORM 214': 'ddForm214',
+  'HUMAN RESOURCE RECORDS': 'humanResourceRecords',
+  'LIFE INSURANCE BENEFIT RECORDS\n(If applicable, enter policy number in Section IV, Item 18, Remarks)':
+    'lifeInsuranceBenefitRecords',
+  'SERVICE TREATMENT RECORDS / MILITARY TREATMENT RECORDS': 'serviceTreatment',
+  'LIFE INSURANCE RECORDS': 'lifeInsuranceRecords',
+  'HOME LOAN BENEFIT RECORDS': 'homeLoanBenefitRecords',
+  'VOCATIONAL REHABILITATION RECORDS AND EMPLOYMENT RECORDS':
+    'vocationalRehabilitationRecords',
+  'FIDUCIARY SERVICES RECORDS': 'fiduciaryServicesRecords',
+  'MILITARY TO CIVILIAN TRANSITION TAP DOCUMENTS':
+    'militaryToCivilianTransition',
+  'PENSION BENEFIT DOCUMENTS': 'pensionBenefit',
+  'EDUCATION BENEFIT RECORDS': 'educationBenefitRecords',
+  'FINANCIAL RECORDS': 'financialRecords',
+  'DISABILITY EXAMINATIONS\n(C & P EXAMS) (If applicable enter date of exam in Section VI, Item 20, Remarks)':
+    'disabilityExaminations',
+  OTHER: 'other', // special case because it has { value, specify }
+};
 
 export default function SubmitToIntentForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -160,7 +162,7 @@ export default function SubmitToIntentForm() {
   const router = useRouter();
   const { ['in-progress']: inProgress } = router.query;
 
-  // console.log('>> Reloaded :: ', router.query, inProgress);
+  // process.env.NODE_ENV === 'development' && console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
     firstName: '',
@@ -182,7 +184,6 @@ export default function SubmitToIntentForm() {
     faxI: '',
     email: '',
     emailE: receivingEmail,
-    
 
     firstNameTwo: '',
     lastNameTwo: '',
@@ -232,8 +233,7 @@ export default function SubmitToIntentForm() {
     feeWaiver: '',
     ssnWillingnessToPay: '',
     dateSignedOne: '',
-    signature: '', 
-
+    signature: '',
   });
 
   return (
@@ -257,28 +257,37 @@ export default function SubmitToIntentForm() {
           setTouched,
           validateForm,
         }) => {
+          const recordRequestCallback = async (selectedOptions) => {
+            process.env.NODE_ENV === 'development' &&
+              console.log('recordRequestCallback >> ', selectedOptions);
 
-            const recordRequestCallback = async (selectedOptions) => {
-                console.log('recordRequestCallback >> ', selectedOptions);
-              
-                Object.keys(optionToFormikField).forEach((option) => {
-                  const fieldName = optionToFormikField[option];
-                  const selectedOption = selectedOptions.find((o) => o.option === option);
-              
-                  if (fieldName === 'other') {
-                   
-                    setFieldValue('typeOfRecords.other.value', selectedOption?.isSelected || false);
-                    setFieldValue('typeOfRecords.other.specify', selectedOption?.value || '');
-                  } else {
-                  
-                    setFieldValue(`typeOfRecords.${fieldName}`, selectedOption?.isSelected || false);
-                  }
-                });
-              };
-              
+            Object.keys(optionToFormikField).forEach((option) => {
+              const fieldName = optionToFormikField[option];
+              const selectedOption = selectedOptions.find(
+                (o) => o.option === option
+              );
+
+              if (fieldName === 'other') {
+                setFieldValue(
+                  'typeOfRecords.other.value',
+                  selectedOption?.isSelected || false
+                );
+                setFieldValue(
+                  'typeOfRecords.other.specify',
+                  selectedOption?.value || ''
+                );
+              } else {
+                setFieldValue(
+                  `typeOfRecords.${fieldName}`,
+                  selectedOption?.isSelected || false
+                );
+              }
+            });
+          };
 
           const loadDataFromLocalStorage = async () => {
-            console.log('loading data from local storage : ', user);
+            process.env.NODE_ENV === 'development' &&
+              console.log('loading data from local storage : ', user);
             await setValues({
               ...values,
               firstName: user.firstName ? user.firstName : '',
@@ -297,12 +306,13 @@ export default function SubmitToIntentForm() {
           };
 
           const loadDataFromFirebase = async (data) => {
-            const updatedRecordRequest = values.recordRequest.map((optionObj) => {
+            const updatedRecordRequest = values.recordRequest.map(
+              (optionObj) => {
                 const key = optionToFormikField[optionObj.option];
                 if (key === 'other') {
                   return {
                     ...optionObj,
-                    isSelected: data.typeOfRecords.other.value, 
+                    isSelected: data.typeOfRecords.other.value,
                     value: data.typeOfRecords.other.specify,
                   };
                 } else {
@@ -311,21 +321,22 @@ export default function SubmitToIntentForm() {
                     isSelected: !!data.typeOfRecords[key],
                   };
                 }
-              });
+              }
+            );
             var dataBody = {
               ...data,
               emailE: data.emailE
                 ? [{ ...receivingEmail[0], isSelected: true }]
                 : [...receivingEmail],
 
-            checkApplicableFees: data.checkApplicableFees
+              checkApplicableFees: data.checkApplicableFees
                 ? [{ ...willingOption[0], isSelected: true }]
                 : [...willingOption],
 
-            checkFeeWaiver: data.checkFeeWaiver
+              checkFeeWaiver: data.checkFeeWaiver
                 ? [{ ...indicateOption[0], isSelected: true }]
                 : [...indicateOption],
-            recordRequest: updatedRecordRequest, 
+              recordRequest: updatedRecordRequest,
             };
             await setValues(dataBody);
           };
@@ -345,8 +356,10 @@ export default function SubmitToIntentForm() {
               setTimestamp(data?.timestamp === undefined ? '' : data.timestamp);
               setCount(data?.count === undefined ? 0 : data.count);
               const isUploaded = data?.isUploadedAlready || false;
-              console.log('Form data from Firebase:', data);
-              console.log('inProgress : ', inProgress);
+              process.env.NODE_ENV === 'development' &&
+                console.log('Form data from Firebase:', data);
+              process.env.NODE_ENV === 'development' &&
+                console.log('inProgress : ', inProgress);
 
               if (inProgress === 'true') {
                 await loadDataFromFirebase(data);
@@ -375,7 +388,8 @@ export default function SubmitToIntentForm() {
               }
             } else {
               await loadDataFromLocalStorage();
-              console.log('No data found');
+              process.env.NODE_ENV === 'development' &&
+                console.log('No data found');
             }
             setIsLoading(false);
           };
@@ -399,7 +413,8 @@ export default function SubmitToIntentForm() {
           const saveData = async (fields, isFromSaveData = false) => {
             var formData = await transformFormValues(values);
             formData = { ...formData, ...fields };
-            console.log('>> save Data : ', formData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data : ', formData);
             try {
               await postFormData({
                 docName: 'requestcfile',
@@ -429,7 +444,7 @@ export default function SubmitToIntentForm() {
           const generatePdf = async (formValues, isFromGeneratePdf = false) => {
             setIsLoading(true);
             const formData = await transformFormValues(formValues);
-            const pdfObject = await  generateRequestCFilePdfObject(formData);
+            const pdfObject = await generateRequestCFilePdfObject(formData);
             await generatePdfService(pdfObject, 'generatepdf15')
               .then(async (res) => {
                 if (isFromGeneratePdf) {
@@ -439,7 +454,8 @@ export default function SubmitToIntentForm() {
                 window.open(res?.download_url, '_blank');
               })
               .catch((err) => {
-                console.log('error', err);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('error', err);
                 toast.error('Error generating PDF. Please try again.');
               })
               .finally(() => {
@@ -461,7 +477,8 @@ export default function SubmitToIntentForm() {
           };
 
           const onSave = async () => {
-            console.log('>> onSave : ', values);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> onSave : ', values);
             setTouchedAction();
             const allErrors = await validateForm();
             const [hasErrors, missingFields] = GetErrorFieldsString(
@@ -531,13 +548,16 @@ export default function SubmitToIntentForm() {
             } else {
               setIsLoading(true);
               const formData = await transformFormValues(values);
-              console.log('1  faxData >> ', formData);
+              process.env.NODE_ENV === 'development' &&
+                console.log('1  faxData >> ', formData);
               const pdfObject = await generateRequestCFilePdfObject(formData);
-              console.log('2  faxData >> ', pdfObject);
+              process.env.NODE_ENV === 'development' &&
+                console.log('2  faxData >> ', pdfObject);
 
               await generatePdfService(pdfObject, 'generatepdf15')
                 .then(async (res) => {
-                  console.log(res.download_url);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(res.download_url);
                   const faxBody = await getFaxBodyData(
                     'requestcfile.pdf',
                     false
@@ -546,11 +566,13 @@ export default function SubmitToIntentForm() {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
                   };
-                  console.log(' faxData >> ', faxData);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(' faxData >> ', faxData);
 
                   const faxResponse = await sendViaSRFax(faxData);
 
-                  console.log('faxReponse >> ', faxResponse);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('faxReponse >> ', faxResponse);
 
                   if (faxResponse.Status === 'Success') {
                     const url =
@@ -599,7 +621,8 @@ export default function SubmitToIntentForm() {
                   setIsLoading(false);
                 })
                 .catch((err) => {
-                  console.log('error', err);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('error', err);
                   toast.error('Error uploading to VA. Try again later-2.');
                 })
                 .finally(() => {
@@ -623,328 +646,323 @@ export default function SubmitToIntentForm() {
                   isOpen={toastOpen}
                   onClose={() => setToastOpen(false)}
                 />
-                <SectionTitle title="Section I: Request for Information on Yourself" subtitle="(If you are seeking information on yourself, complete Sections I, III, V and VI. Complete Section IV, if applicable)"/>
-                
-                <> 
-                <TextInput
-                  label="First Name"
-                  name="firstName"
-                  placeholder="Enter first name"
-                  fieldCounter="(1 of 22)"
-                  limit={18}
-                />
-                
-            
-                <TextInput
-                  label="Last Name"
-                  name="lastName"
-                  placeholder="Enter last name"
-                  fieldCounter="(1-2 of 22)"
-                  limit={12}
-                />
-                <TextInput
-                  label="Social Security Number"
-                  name="ssn"
-                  placeholder="Enter ssn"
-                  fieldCounter="(2 of 22)"
-                  limit={9}
+                <SectionTitle
+                  title="Section I: Request for Information on Yourself"
+                  subtitle="(If you are seeking information on yourself, complete Sections I, III, V and VI. Complete Section IV, if applicable)"
                 />
 
-                <TextInput
-                  label="Alien Registration Number"
-                  name="alien"
-                  placeholder="Enter alien registration number"
-                  fieldCounter="(3 of 22)"
-                  limit={10}
-                />
+                <>
+                  <TextInput
+                    label="First Name"
+                    name="firstName"
+                    placeholder="Enter first name"
+                    fieldCounter="(1 of 22)"
+                    limit={18}
+                  />
 
-                <TextInput
-                  label="VA File Number"
-                  name="currentVa"
-                  placeholder="Enter va file number"
-                  fieldCounter="(4 of 22)"
-                  limit={9}
-                  hasCounter
-                />
+                  <TextInput
+                    label="Last Name"
+                    name="lastName"
+                    placeholder="Enter last name"
+                    fieldCounter="(1-2 of 22)"
+                    limit={12}
+                  />
+                  <TextInput
+                    label="Social Security Number"
+                    name="ssn"
+                    placeholder="Enter ssn"
+                    fieldCounter="(2 of 22)"
+                    limit={9}
+                  />
 
-                <DateSelectorExtended
-                  label="Date of Birth"
-                  name="birthday"
-                  value={values.birthday}
-                  placeholder="Select Date"
-                  onChange={(val) => setFieldValue('birthday', val)}
-                  isDOB
-                  fieldCounter="(5 of 22)"
-                />
+                  <TextInput
+                    label="Alien Registration Number"
+                    name="alien"
+                    placeholder="Enter alien registration number"
+                    fieldCounter="(3 of 22)"
+                    limit={10}
+                  />
 
-                 <TextInput
-                  label="Place of Birth"
-                  name="placeBirth"
-                  placeholder="Enter place of birth"
-                  fieldCounter="(6 of 22)"
-                  limit={100}
-                  hasCounter
-                />
+                  <TextInput
+                    label="VA File Number"
+                    name="currentVa"
+                    placeholder="Enter va file number"
+                    fieldCounter="(4 of 22)"
+                    limit={9}
+                    hasCounter
+                  />
 
-                <Divider title="Current Mailing Address" />
+                  <DateSelectorExtended
+                    label="Date of Birth"
+                    name="birthday"
+                    value={values.birthday}
+                    placeholder="Select Date"
+                    onChange={(val) => setFieldValue('birthday', val)}
+                    isDOB
+                    fieldCounter="(5 of 22)"
+                  />
 
-                <TextInput
-                  label="No. & Street"
-                  name="street"
-                  placeholder="Enter street"
-                  fieldCounter="(7 of 22)"
-                  limit={20}
-                />
+                  <TextInput
+                    label="Place of Birth"
+                    name="placeBirth"
+                    placeholder="Enter place of birth"
+                    fieldCounter="(6 of 22)"
+                    limit={100}
+                    hasCounter
+                  />
 
-                <TextInput
-                  label="Apt./Unit Number"
-                  name="unitNumber"
-                  placeholder="Enter apt/unit number"
-                  fieldCounter="(7-2 of 22)"
-                  limit={5}
-                />
+                  <Divider title="Current Mailing Address" />
 
-                <TextInput
-                  label="City"
-                  name="city"       
-                  placeholder="Enter city"
-                  fieldCounter="(7-3 of 22)"
-                  limit={18}
-                />
-                <DropDownExtended
-                  label="State/Province"
-                  name="province"
-                  data={StateData}
-                  hasCounter={true}
-                  fieldCounter="(7-4 of 22)"
-                />
-                <TextInput
-                  label="Country"
-                  name="country"
-                  fieldCounter="(7-5 of 22)"
-                  limit={2}
-                  readOnly
-                />
-                <TextInput
-                  label="ZIP Code/Postal Code"
-                  name="zipCode"
-                  placeholder="Enter zip/postal code"
-                  fieldCounter="(7-6 of 22)"
-                  limit={10}
-                />
+                  <TextInput
+                    label="No. & Street"
+                    name="street"
+                    placeholder="Enter street"
+                    fieldCounter="(7 of 22)"
+                    limit={20}
+                  />
 
-                <Divider title="Telephone Number" />
-                <TextInput
-                  label="Telephone Number"
-                  name="phone"
-                  placeholder="Enter telephone number"
-                  fieldCounter="(8 of 22)"
-                  limit={12}
-                />
-                <TextInput
-                  label="International Phone Number"
-                  name="phoneI"
-                  placeholder="Enter international phone number"
-                  fieldCounter="(8-2 of 22)"
-                  limit={15}
-                  hasCounter
-                />
+                  <TextInput
+                    label="Apt./Unit Number"
+                    name="unitNumber"
+                    placeholder="Enter apt/unit number"
+                    fieldCounter="(7-2 of 22)"
+                    limit={5}
+                  />
 
-                <Divider title="Fax Number" />
-                <TextInput
-                  label="Fax Number"
-                  name="fax"
-                  placeholder="Enter fax number"
-                  fieldCounter="(8-3 of 22)"
-                  limit={10}
-                />
+                  <TextInput
+                    label="City"
+                    name="city"
+                    placeholder="Enter city"
+                    fieldCounter="(7-3 of 22)"
+                    limit={18}
+                  />
+                  <DropDownExtended
+                    label="State/Province"
+                    name="province"
+                    data={StateData}
+                    hasCounter={true}
+                    fieldCounter="(7-4 of 22)"
+                  />
+                  <TextInput
+                    label="Country"
+                    name="country"
+                    fieldCounter="(7-5 of 22)"
+                    limit={2}
+                    readOnly
+                  />
+                  <TextInput
+                    label="ZIP Code/Postal Code"
+                    name="zipCode"
+                    placeholder="Enter zip/postal code"
+                    fieldCounter="(7-6 of 22)"
+                    limit={10}
+                  />
 
-                <TextInput
-                  label="International Fax Number"
-                  name="faxI"
-                  placeholder="Enter international fax number"
-                  fieldCounter="(8-4 of 22)"
-                  limit={15}
-                  hasCounter
-                />
+                  <Divider title="Telephone Number" />
+                  <TextInput
+                    label="Telephone Number"
+                    name="phone"
+                    placeholder="Enter telephone number"
+                    fieldCounter="(8 of 22)"
+                    limit={12}
+                  />
+                  <TextInput
+                    label="International Phone Number"
+                    name="phoneI"
+                    placeholder="Enter international phone number"
+                    fieldCounter="(8-2 of 22)"
+                    limit={15}
+                    hasCounter
+                  />
 
+                  <Divider title="Fax Number" />
+                  <TextInput
+                    label="Fax Number"
+                    name="fax"
+                    placeholder="Enter fax number"
+                    fieldCounter="(8-3 of 22)"
+                    limit={10}
+                  />
 
-                <TextInput
-                  label="Email Address"
-                  name="email"
-                  placeholder="Enter email"
-                  fieldCounter="(9 of 22)"
-                  limit={40}
-                  hasCounter
-                />
+                  <TextInput
+                    label="International Fax Number"
+                    name="faxI"
+                    placeholder="Enter international fax number"
+                    fieldCounter="(8-4 of 22)"
+                    limit={15}
+                    hasCounter
+                  />
 
+                  <TextInput
+                    label="Email Address"
+                    name="email"
+                    placeholder="Enter email"
+                    fieldCounter="(9 of 22)"
+                    limit={40}
+                    hasCounter
+                  />
 
-
-                <OptionSelector
-                  name="emailE"
-                  options={values.emailE}
-                  multiSelect={true}
-                  isOtherAllowed={false}
-                />
-
+                  <OptionSelector
+                    name="emailE"
+                    options={values.emailE}
+                    multiSelect={true}
+                    isOtherAllowed={false}
+                  />
                 </>
 
                 <SectionTitle
                   title="Section II: Request for information on a person other than yourself"
                   subtitle=" (If you are seeking information on an individual other than yourself, complete Sections II, III or IV, V, VII and IX or X. Complete Section VI, if applicable)"
                 />
-            
-                  <>
-                    <TextInput
-                      label="First Name"
-                      name="firstNameTwo"
-                      placeholder="Enter first name"
-                      fieldCounter="(10 of 22)"
-                      limit={18}
-                    />
-                    <TextInput
-                      label="Last Name"
-                      name="lastNameTwo"
-                      placeholder="Enter last name"
-                      fieldCounter="(10-2 of 22)"
-                      limit={12}
-                    />
-                    <TextInput
-                      label="Organization's Name"
-                      name="organization"
-                      placeholder="Enter organization's name"
-                      fieldCounter="(10-3 of 22)"
-                      limit={32}
-                      hasCounter
-                    />
-                    <Divider title="Current Mailing Address" />
 
-                    <TextInput
-                      label="No. & Street"
-                      name="streetTwo"
-                      placeholder="Enter street"
-                      fieldCounter="(11 of 22)"
-                      limit={30}
-                    />
-                    <TextInput
-                      label="Apt./Unit Number"
-                      name="unitNumberTwo"
-                      placeholder="Enter apt/unit number"
-                      fieldCounter="(11-2 of 22)"
-                      limit={5}
-                    />
-                    <TextInput
-                      label="City"
-                      name="cityTwo"
-                      placeholder="Enter city"
-                      fieldCounter="(11-3 of 22)"
-                      limit={18}
-                    />
-                    <DropDownExtended
-                      label="State/Province"
-                      name="provinceTwo"
-                      data={StateData}
-                      hasCounter={true}
-                      fieldCounter="(11-4 of 22)"
-                    />
-                    <TextInput
-                      label="Country"
-                      name="countryTwo"
-                      fieldCounter="(11-5 of 22)"
-                      limit={2}
-                      readOnly
-                    />
-                    <TextInput
-                      label="ZIP Code/Postal Code"
-                      name="zipCodeTwo"
-                      placeholder="Enter zip/postal code"
-                      fieldCounter="(11-6 of 22)"
-                      limit={10}
-                    />
-                        <Divider title="Telephone Number" />
-                    <TextInput
-                      label="Telephone Number"
-                      name="phoneTwo"
-                      placeholder="Enter telephone number"
-                      fieldCounter="(12 of 22)"
-                      limit={12}    
-                    />
-                    <TextInput
-                      label="International Phone Number"
-                      name="phoneITwo"
-                      placeholder="Enter international phone number"
-                      fieldCounter="(12-2 of 22)"
-                      limit={15}
-                      hasCounter
-                    />
+                <>
+                  <TextInput
+                    label="First Name"
+                    name="firstNameTwo"
+                    placeholder="Enter first name"
+                    fieldCounter="(10 of 22)"
+                    limit={18}
+                  />
+                  <TextInput
+                    label="Last Name"
+                    name="lastNameTwo"
+                    placeholder="Enter last name"
+                    fieldCounter="(10-2 of 22)"
+                    limit={12}
+                  />
+                  <TextInput
+                    label="Organization's Name"
+                    name="organization"
+                    placeholder="Enter organization's name"
+                    fieldCounter="(10-3 of 22)"
+                    limit={32}
+                    hasCounter
+                  />
+                  <Divider title="Current Mailing Address" />
 
-                    <Divider title="Fax Number" />
-                    <TextInput
-                      label="Fax Number"
-                      name="faxTwo"
-                      placeholder="Enter fax number"
-                      fieldCounter="(12-3 of 22)"
-                      limit={10}
-                    />
+                  <TextInput
+                    label="No. & Street"
+                    name="streetTwo"
+                    placeholder="Enter street"
+                    fieldCounter="(11 of 22)"
+                    limit={30}
+                  />
+                  <TextInput
+                    label="Apt./Unit Number"
+                    name="unitNumberTwo"
+                    placeholder="Enter apt/unit number"
+                    fieldCounter="(11-2 of 22)"
+                    limit={5}
+                  />
+                  <TextInput
+                    label="City"
+                    name="cityTwo"
+                    placeholder="Enter city"
+                    fieldCounter="(11-3 of 22)"
+                    limit={18}
+                  />
+                  <DropDownExtended
+                    label="State/Province"
+                    name="provinceTwo"
+                    data={StateData}
+                    hasCounter={true}
+                    fieldCounter="(11-4 of 22)"
+                  />
+                  <TextInput
+                    label="Country"
+                    name="countryTwo"
+                    fieldCounter="(11-5 of 22)"
+                    limit={2}
+                    readOnly
+                  />
+                  <TextInput
+                    label="ZIP Code/Postal Code"
+                    name="zipCodeTwo"
+                    placeholder="Enter zip/postal code"
+                    fieldCounter="(11-6 of 22)"
+                    limit={10}
+                  />
+                  <Divider title="Telephone Number" />
+                  <TextInput
+                    label="Telephone Number"
+                    name="phoneTwo"
+                    placeholder="Enter telephone number"
+                    fieldCounter="(12 of 22)"
+                    limit={12}
+                  />
+                  <TextInput
+                    label="International Phone Number"
+                    name="phoneITwo"
+                    placeholder="Enter international phone number"
+                    fieldCounter="(12-2 of 22)"
+                    limit={15}
+                    hasCounter
+                  />
 
-                    <TextInput
-                      label="International Fax Number"
-                      name="faxITwo"
-                      placeholder="Enter international fax number"
-                      fieldCounter="(12-4 of 22)"
-                      limit={15}
-                      hasCounter
-                    />
+                  <Divider title="Fax Number" />
+                  <TextInput
+                    label="Fax Number"
+                    name="faxTwo"
+                    placeholder="Enter fax number"
+                    fieldCounter="(12-3 of 22)"
+                    limit={10}
+                  />
 
+                  <TextInput
+                    label="International Fax Number"
+                    name="faxITwo"
+                    placeholder="Enter international fax number"
+                    fieldCounter="(12-4 of 22)"
+                    limit={15}
+                    hasCounter
+                  />
 
-                    <Divider title="Name Of The Person You Are Requesting Information On " />
+                  <Divider title="Name Of The Person You Are Requesting Information On " />
 
-                   <TextInput
-                      label="First Name"
-                      name="firstNameThree"
-                      placeholder="Enter first name"
-                      fieldCounter="(13 of 22)"
-                      limit={18}
-                    />
-                    <TextInput
-                      label="Last Name"
-                      name="lastNameThree"
-                      placeholder="Enter last name"
-                      fieldCounter="(13-2 of 22)"
-                      limit={12}
-                    />
-                    <TextInput
-                      label="Social Security Number"
-                      name="ssnThree"
-                      placeholder="Enter ssn"
-                      fieldCounter="(14 of 22)"
-                      limit={9}
-                    />
+                  <TextInput
+                    label="First Name"
+                    name="firstNameThree"
+                    placeholder="Enter first name"
+                    fieldCounter="(13 of 22)"
+                    limit={18}
+                  />
+                  <TextInput
+                    label="Last Name"
+                    name="lastNameThree"
+                    placeholder="Enter last name"
+                    fieldCounter="(13-2 of 22)"
+                    limit={12}
+                  />
+                  <TextInput
+                    label="Social Security Number"
+                    name="ssnThree"
+                    placeholder="Enter ssn"
+                    fieldCounter="(14 of 22)"
+                    limit={9}
+                  />
 
-                    <TextInput
-                      label="Alien Registration Number"
-                      name="alienThree"
-                      placeholder="Enter alien registration number"
-                      fieldCounter="(15 of 22)"
-                      limit={10}
-                    />
+                  <TextInput
+                    label="Alien Registration Number"
+                    name="alienThree"
+                    placeholder="Enter alien registration number"
+                    fieldCounter="(15 of 22)"
+                    limit={10}
+                  />
 
-                    <TextInput
-                      label="VA File Number"
-                      name="currentVaThree"
-                      placeholder="Enter va file number"
-                      fieldCounter="(16 of 22)"
-                      limit={9}
-                      hasCounter
-                    />
-
-                  </>
-                
+                  <TextInput
+                    label="VA File Number"
+                    name="currentVaThree"
+                    placeholder="Enter va file number"
+                    fieldCounter="(16 of 22)"
+                    limit={9}
+                    hasCounter
+                  />
+                </>
 
                 <SectionTitle
                   title="Section III: Records you are seeking"
-                  subtitle="(This information is required in order to complete the request)"   />
-
+                  subtitle="(This information is required in order to complete the request)"
+                />
 
                 <OptionSelector
                   label="Select the type(s) of records you are requesting, below:"
@@ -956,101 +974,101 @@ export default function SubmitToIntentForm() {
                   onSelectionChange={(selectedOptions) => {
                     recordRequestCallback(selectedOptions);
                   }}
-                  
-
                 />
 
-<ErrorMessage
-                    name="typeOfRecords"
-                    component="div"
-                    className="mt-1 text-danger"
-                  />
+                <ErrorMessage
+                  name="typeOfRecords"
+                  component="div"
+                  className="mt-1 text-danger"
+                />
 
                 <SectionTitle title="Section IV: Remarks" />
 
                 <TextInput
-                      label="Remarks"
-                      name="remarks"
-                      placeholder="Enter remarks if any"
-                      fieldCounter="(18 of 22)"
-                      limit={175}
-                      hasCounter
-                      multiline
-                    />
+                  label="Remarks"
+                  name="remarks"
+                  placeholder="Enter remarks if any"
+                  fieldCounter="(18 of 22)"
+                  limit={175}
+                  hasCounter
+                  multiline
+                />
 
-<SectionTitle title="Section IV: Willingness to pay fees" />
+                <SectionTitle title="Section IV: Willingness to pay fees" />
 
-                <p> 
-                  19. <strong>Important :</strong> 
-                  For the
-            purpose of fees only, FOIA divides requesters into three categories:
-            (1) commercial requesters may be charged fees for searching for
-            records, reviewing the records, and photocopying them; (2)
-            educational, non-commercial scientific institutions, and
-            representatives of the news media are charged for photocopying after
-            the first 100 pages; (3) all other requesters (requesters who do not
-            fall into any of the other two categories) are charged for
-            photocopying after the first 100 pages and for time spent searching
-            for records in excess of two hours. VA charges $0.15 per
-            single-sided page for photocopying. Actual costs are charged for a
-            format other than paper copies.
-            {'\n\n'}
-            An agency may grant fee waivers if the requester successfully
-            demonstrates that disclosure of information is in the publics
-            interest because it is likely to contribute significantly to the
-            public understanding of the operations or activities of the
-            government and is not primarily in the commercial interest of the
-            requester.
-
+                <p className="dark:text-white-light">
+                  19. <strong>Important :</strong>
+                  For the purpose of fees only, FOIA divides requesters into
+                  three categories: (1) commercial requesters may be charged
+                  fees for searching for records, reviewing the records, and
+                  photocopying them; (2) educational, non-commercial scientific
+                  institutions, and representatives of the news media are
+                  charged for photocopying after the first 100 pages; (3) all
+                  other requesters (requesters who do not fall into any of the
+                  other two categories) are charged for photocopying after the
+                  first 100 pages and for time spent searching for records in
+                  excess of two hours. VA charges $0.15 per single-sided page
+                  for photocopying. Actual costs are charged for a format other
+                  than paper copies.
+                  {'\n\n'}
+                  An agency may grant fee waivers if the requester successfully
+                  demonstrates that disclosure of information is in the publics
+                  interest because it is likely to contribute significantly to
+                  the public understanding of the operations or activities of
+                  the government and is not primarily in the commercial interest
+                  of the requester.
                 </p>
 
                 <OptionSelector
                   name="checkApplicableFees"
                   options={values.checkApplicableFees}
                   multiSelect={false}
-                  isOtherAllowed={false} 
+                  isOtherAllowed={false}
                 />
 
                 {values.checkApplicableFees[0].isSelected && (
-                    <>
-                      <TextInput
+                  <>
+                    <TextInput
                       label="Amount"
                       name="amount"
                       placeholder="Enter amount in $"
                       limit={4}
                       hasCounter
                     />
-                    </>
+                  </>
                 )}
 
                 <OptionSelector
                   name="checkFeeWaiver"
                   options={values.checkFeeWaiver}
                   multiSelect={false}
-                  isOtherAllowed={false} 
+                  isOtherAllowed={false}
                 />
 
-{values.checkFeeWaiver[0].isSelected && (
-                    <>
-                      <TextInput
+                {values.checkFeeWaiver[0].isSelected && (
+                  <>
+                    <TextInput
                       label="Indicate Here"
                       name="feeWaiver"
                       placeholder="Enter here"
                       limit={35}
                       hasCounter
                     />
-                    </>
+                  </>
                 )}
 
+                <SectionTitle
+                  title="Section VI: Requester Certification and Signature"
+                  subtitle="(Valid only if Section II has been completed and requester has an
+            authorized third party)"
+                />
 
-
-
-                <SectionTitle title="Section VI: Requester Certification and Signature"  subtitle="(Valid only if Section II has been completed and requester has an
-            authorized third party)"/>
-
-<p className='mb-5'> <strong> I CERTIFY THAT </strong> I have
-            completed this FOIA/PA request and declare it is true and correct to
-            the best of my knowledge and belief. </p>
+                <p className="mb-5 dark:text-white-light">
+                  {' '}
+                  <strong> I CERTIFY THAT </strong> I have completed this
+                  FOIA/PA request and declare it is true and correct to the best
+                  of my knowledge and belief.{' '}
+                </p>
 
                 <OptionSelector
                   name="signatureOption"

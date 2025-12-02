@@ -41,7 +41,8 @@ export default function FeeWaiverForm() {
   const router = useRouter();
   const { ['in-progress']: inProgress } = router.query;
 
-  console.log('>> Reloaded :: ', router.query, inProgress);
+  process.env.NODE_ENV === 'development' &&
+    console.log('>> Reloaded :: ', router.query, inProgress);
 
   const [initialValues, setInitialValues] = useState({
     docketNo: '',
@@ -66,7 +67,8 @@ export default function FeeWaiverForm() {
       >
         {({ values, setValues, setFieldValue, setTouched, validateForm }) => {
           const loadDataFromLocalStorage = async () => {
-            console.log('loading data from local storage : ', user);
+            process.env.NODE_ENV === 'development' &&
+              console.log('loading data from local storage : ', user);
             await setValues({
               ...values,
               appeallant: user.firstName
@@ -103,8 +105,10 @@ export default function FeeWaiverForm() {
               setTimestamp(data?.timestamp === undefined ? '' : data.timestamp);
               setCount(data?.count === undefined ? 0 : data.count);
               const isUploaded = data?.isUploadedAlready || false;
-              console.log('Form data from Firebase:', data);
-              console.log('inProgress : ', inProgress);
+              process.env.NODE_ENV === 'development' &&
+                console.log('Form data from Firebase:', data);
+              process.env.NODE_ENV === 'development' &&
+                console.log('inProgress : ', inProgress);
 
               if (inProgress === 'true') {
                 await loadDataFromFirebase(data);
@@ -133,7 +137,8 @@ export default function FeeWaiverForm() {
               }
             } else {
               await loadDataFromLocalStorage();
-              console.log('No data found');
+              process.env.NODE_ENV === 'development' &&
+                console.log('No data found');
             }
             setIsLoading(false);
           };
@@ -152,10 +157,12 @@ export default function FeeWaiverForm() {
           };
 
           const saveData = async (fields, isFromSaveData = false) => {
-            console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data :  isFromSaveData : ', isFromSaveData);
             var formData = await transformFormValues(values);
             formData = { ...formData, ...fields };
-            console.log('>> save Data : ', formData);
+            process.env.NODE_ENV === 'development' &&
+              console.log('>> save Data : ', formData);
             try {
               await postFormData({
                 docName: 'financial_hardship',
@@ -200,7 +207,8 @@ export default function FeeWaiverForm() {
                 window.open(res?.download_url, '_blank');
               })
               .catch((err) => {
-                console.log('error', err);
+                process.env.NODE_ENV === 'development' &&
+                  console.log('error', err);
                 toast.error('Error generating PDF. Please try again.');
               })
               .finally(() => {
@@ -291,18 +299,21 @@ export default function FeeWaiverForm() {
             } else {
               setIsLoading(true);
               const formData = await transformFormValues(values);
-              console.log('1  faxData >> ', formData);
+              process.env.NODE_ENV === 'development' &&
+                console.log('1  faxData >> ', formData);
               const pdfObject = await generateFinancialHardshipPdfObject(
                 formData
               );
-              console.log('2  faxData >> ', pdfObject);
+              process.env.NODE_ENV === 'development' &&
+                console.log('2  faxData >> ', pdfObject);
 
               await generatePdfService(
                 pdfObject,
                 'generate-financial-hardship-pdf'
               )
                 .then(async (res) => {
-                  console.log(res.download_url);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(res.download_url);
                   const faxBody = await getFaxBodyData(
                     'financialhardship.pdf',
                     false
@@ -311,11 +322,13 @@ export default function FeeWaiverForm() {
                     ...faxBody,
                     sFileContent_1: res?.download_url,
                   };
-                  console.log(' faxData >> ', faxData);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log(' faxData >> ', faxData);
 
                   const faxResponse = await sendViaSRFax(faxData);
 
-                  console.log('faxReponse >> ', faxResponse);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('faxReponse >> ', faxResponse);
 
                   if (faxResponse.Status === 'Success') {
                     const url =
@@ -364,7 +377,8 @@ export default function FeeWaiverForm() {
                   setIsLoading(false);
                 })
                 .catch((err) => {
-                  console.log('error', err);
+                  process.env.NODE_ENV === 'development' &&
+                    console.log('error', err);
                   toast.error('Error uploading to VA. Try again later-2.');
                 })
                 .finally(() => {
@@ -408,7 +422,7 @@ export default function FeeWaiverForm() {
                     fieldCounter="(2 of 5)"
                   />
 
-                  <div className="my-5 text-base text-gray-700">
+                  <div className="my-5 text-base text-gray-700 dark:text-white-light">
                     I am the appellant/petitioner. I declare by my signature
                     below that payment of the fifty dollar ($50.00) filing fee
                     referenced in Rule 3(f) and Rule 21(a) of the Court's Rules
@@ -428,6 +442,7 @@ export default function FeeWaiverForm() {
                     options={values.signatureOfAppeallant}
                     multiSelect={true}
                     isOtherAllowed={false}
+                    lockOption={true}
                   />
 
                   <DateSelectorExtended
@@ -455,12 +470,12 @@ export default function FeeWaiverForm() {
                     fieldCounter="(5 of 5)"
                   />
 
-                  <div className="my-5 text-base text-gray-700">
+                  <div className="my-5 text-base text-gray-700 dark:text-white-light">
                     (*To be signed by Appellant/Petitioner, NOT
                     Appellant's/Petitioner's representative. You may
                     electronically sign by typing "/s/" and then your name in
                     the signature block above: for example, /s/John Doe.{' '}
-                    <span className="font-extrabold">
+                    <span className="font-extrabold dark:text-white-light ">
                       If you are filing this form, do not pay the $50 filing
                       fee.)
                     </span>

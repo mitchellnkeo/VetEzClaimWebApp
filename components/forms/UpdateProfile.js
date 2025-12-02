@@ -62,10 +62,12 @@ const UpdateProfileForm = () => {
           country: 'US',
         });
       } else {
-        console.log('User data does not exist');
+        process.env.NODE_ENV === 'development' &&
+          console.log('User data does not exist');
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      process.env.NODE_ENV === 'development' &&
+        console.error('Error fetching user data:', error);
     } finally {
       setLoading(false);
     }
@@ -79,7 +81,8 @@ const UpdateProfileForm = () => {
   }, [uid]);
 
   const handleUpdateProfile = async (values, { setSubmitting }) => {
-    console.log(' >> handleUpdateProfile : ', values);
+    process.env.NODE_ENV === 'development' &&
+      console.log(' >> handleUpdateProfile : ', values);
     try {
       const updatePostBody = Object.fromEntries(
         Object.entries(values).filter(
@@ -97,7 +100,7 @@ const UpdateProfileForm = () => {
       toast.success('Profile update successfully!');
     } catch (error) {
       toast.error('Profile update failed!');
-      console.log('error', error);
+      process.env.NODE_ENV === 'development' && console.log('error', error);
     } finally {
       setSubmitting(false);
     }
@@ -108,7 +111,9 @@ const UpdateProfileForm = () => {
       <Loader show={isLoading} />
       <div className="mb-5 rounded-md border border-[#ebedf2] bg-white p-4 dark:border-[#191e3a] dark:bg-black">
         <div className="mb-5 flex items-center rounded bg-primary-light p-3.5 text-primary dark:bg-primary-dark-light">
-          <h6 className="text-lg font-bold">General Information</h6>
+          <h6 className="text-lg font-bold dark:text-white-light ">
+            General Information
+          </h6>
         </div>
 
         <Formik
@@ -119,8 +124,10 @@ const UpdateProfileForm = () => {
         >
           {({ values, errors, touched, setFieldValue, isSubmitting }) => (
             <Form className="space-y-5">
-              {console.log('🔥 Form Values:', values)}
-              {console.log('🔥 Form Errors:', errors)}
+              {process.env.NODE_ENV === 'development' &&
+                console.log('🔥 Form Values:', values)}
+              {process.env.NODE_ENV === 'development' &&
+                console.log('🔥 Form Errors:', errors)}
               {/* Row 1: First Name & Last Name */}
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
@@ -204,7 +211,9 @@ const UpdateProfileForm = () => {
 
               {/* Mailing Address */}
               <div className="mb-5 flex items-center rounded bg-primary-light p-3.5 text-primary dark:bg-primary-dark-light">
-                <h6 className="text-lg font-bold">Mailing Address</h6>
+                <h6 className="text-lg font-bold dark:text-white-light ">
+                  Mailing Address
+                </h6>
               </div>
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -288,7 +297,9 @@ const UpdateProfileForm = () => {
 
               {/* Mailing Address */}
               <div className="mb-5 flex items-center rounded bg-primary-light p-3.5 text-primary dark:bg-primary-dark-light">
-                <h6 className="text-lg font-bold">Signature</h6>
+                <h6 className="text-lg font-bold dark:text-white-light ">
+                  Signature
+                </h6>
                 <small className="text-md font-semibold text-danger">
                   * required
                 </small>
@@ -300,7 +311,8 @@ const UpdateProfileForm = () => {
                   onChange={(val) => setFieldValue('signature', val)}
                   imgWidth={500}
                   imgHeight={220}
-                  style={`.m-signature-pad { border: 1px solid #ccc; }`}
+                  style={`.m-signature-pad { border: 1px solid #cc1212; }`}
+                  editMode={isLoading}
                 />
                 <div className="flex items-center justify-start">
                   <ErrorMessage name="signature" component={TextError} />

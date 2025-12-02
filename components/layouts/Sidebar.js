@@ -19,6 +19,7 @@ import {
   SubscriptionIcon,
   SideToggleCloseIcon,
   CalculatorIcon,
+  DocumentAnalyzerIcon,
 } from '../icons/SvgIcons';
 
 const Sidebar = () => {
@@ -108,6 +109,13 @@ const Sidebar = () => {
       keyID: 'Subscription',
       disabled: buttonStatus < 2,
     },
+    {
+      path: '/analyze',
+      title: 'Document Analyzer',
+      icon: <DocumentAnalyzerIcon />,
+      keyID: 'Document Analyzer',
+      disabled: buttonStatus < 2,
+    },
 
   ];
 
@@ -118,7 +126,7 @@ const Sidebar = () => {
           semidark ? 'text-white-dark' : ''
         }`}
       >
-        <div className="h-full bg-[#006092] dark:bg-gray-400">
+        <div className="h-full bg-[#006092] dark:bg-gray">
           {/* Logo & toggle button */}
           <div className="flex items-center justify-between px-4 py-3 ">
             <Link href="/" className="main-logo flex shrink-0 items-center">

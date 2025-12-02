@@ -9,7 +9,7 @@ function SignInwithGoogle({ icon }) {
   function googleLogin() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider).then(async (result) => {
-      console.log(result);
+      process.env.NODE_ENV === 'development' && console.log(result);
       const user = result.user;
       if (result.user) {
         await setDoc(doc(db, 'Users', user.uid), {
