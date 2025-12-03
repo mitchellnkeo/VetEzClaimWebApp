@@ -11,8 +11,9 @@ import { formsIdList } from '@/utils/staticData';
 import { FaRobot } from 'react-icons/fa';
 import { RiChatNewLine } from 'react-icons/ri';
 import { RxCross2 } from 'react-icons/rx';
+import { FaExpand, FaCompress } from 'react-icons/fa';
 
-export default function ChatWindow({ open, setOpen }) {
+export default function ChatWindow({ open, setOpen, isExtended, setIsExtended }) {
   const winRef = useRef(null);
   const fileInputRef = useRef(null);
   const bodyRef = useRef(null);
@@ -25,13 +26,15 @@ export default function ChatWindow({ open, setOpen }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const dispatch = useDispatch();
   const didFetchMessages = useRef(false);
-  const [displayedText, setDisplayedText] = useState('');
 
   useEffect(() => {
     const onDocClick = (e) => {
       if (!winRef.current) return;
       if (e.target.closest('#chat-head')) return;
-      if (!winRef.current.contains(e.target)) setOpen(false);
+      if (!winRef.current.contains(e.target)) {
+        setOpen(false);
+        setIsExtended(false);
+      }
     };
     document.addEventListener('click', onDocClick);
     return () => document.removeEventListener('click', onDocClick);
@@ -188,10 +191,23 @@ export default function ChatWindow({ open, setOpen }) {
     );
   };
 
+  const extendScreen = (e) => {
+    e.stopPropagation();
+    setIsExtended(!isExtended);
+    if (!isExtended) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  };
+
+  console.log("isExtended >>>", isExtended);
+
+
   return (
     <div
       ref={winRef}
-      className={`fixed bottom-24 right-5 z-[9998] flex h-[600px] w-96 transform flex-col overflow-hidden rounded-2xl
+      className={`fixed bottom-24 right-5 z-[9998] flex ${isExtended ? 'h-[650px]' : 'h-[600px]'} ${isExtended ? 'w-4/5' : 'w-96'} transform flex-col overflow-hidden rounded-2xl
     bg-white/90 from-white/90 to-gray-100 text-gray-900
     shadow-2xl ring-1 ring-gray-300/50 backdrop-blur-sm
     transition-all duration-300 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black
@@ -203,9 +219,9 @@ export default function ChatWindow({ open, setOpen }) {
     }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-300/50 bg-gray-100/60 p-3 backdrop-blur dark:border-white/10 dark:bg-neutral-900/60">
+      <div className="flex items-center justify-between border-b border-gray-300/50 bg-gray-800 p-3 backdrop-blur dark:border-white/10 dark:bg-neutral-900/60">
         {/* Left: Chatbot title with icon */}
-        <span className="flex items-center gap-2 font-semibold text-gray-900 dark:text-white">
+        <span className="flex items-center gap-2 font-semibold text-white dark:text-white">
           <FaRobot className="h-5 w-5" /> VetEZ ChatBot
         </span>
 
@@ -217,17 +233,31 @@ export default function ChatWindow({ open, setOpen }) {
             className="rounded-full p-1 hover:bg-gray-300/20 dark:hover:bg-white/10"
             title="Start New Chat"
           >
-            <RiChatNewLine className="h-4 w-4 text-gray-900 dark:text-white" />
+            <RiChatNewLine className="h-4 w-4 text-white dark:text-white" />
           </button>
 
           {/* Close Chat */}
           <button
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              setIsExtended(false);
+              setOpen(false)
+            }}
             className="rounded-full p-1 hover:bg-gray-300/20 dark:hover:bg-white/10"
             title="Close Chat"
           >
-            <RxCross2 className="h-4 w-4 text-gray-900 dark:text-white" />
+            <RxCross2 className="h-4 w-4 text-white dark:text-white" />
           </button>
+
+          {/* Extend Screen */}
+          <button
+            onClick={extendScreen}
+            className="rounded-full p-1 hover:bg-gray-300/20 dark:hover:bg-white/10"
+            title="Extend Screen"
+          >
+            {isExtended ? <FaCompress className="h-4 w-4 text-white dark:text-white" /> : <FaExpand className="h-4 w-4 text-white dark:text-white" />}
+          </button>
+
+
         </div>
       </div>
 
@@ -235,11 +265,11 @@ export default function ChatWindow({ open, setOpen }) {
       {/* Body */}
       <div
         ref={bodyRef}
-        className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent dark:scrollbar-thumb-gray-700 flex-1 space-y-3 overflow-auto p-3 text-sm"
+        className="bg-blue-0 dark:bg-transparent scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent dark:scrollbar-thumb-gray-700 flex-1 space-y-3 overflow-auto p-3 text-sm"
       >
         {chat.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center px-4 text-center">
-            <div className="mb-4 flex items-center justify-center rounded-md bg-gray-800 p-3">
+          <div className="w-full h-full flex flex-col items-center justify-center text-center">
+            <div className="mb-4 items-center justify-center rounded-md bg-gray-800 p-3">
               <img
                 src="/assets/images/logo.svg"
                 alt="VetEZ Logo"
@@ -269,15 +299,15 @@ export default function ChatWindow({ open, setOpen }) {
                   <div
                     className={`max-w-[75%] break-words rounded-lg px-1 py-2 text-sm leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-blue-600/60 text-white'
-                        : 'bg-gray-300 text-gray-900 dark:bg-white/10 dark:text-white'
+                        ? 'bg-primary text-white'
+                        : `${msg.hasFile ? 'bg-transparent' : 'bg-gray-300 dark:bg-white/10'} text-gray-900 dark:text-white`
                     }`}
                   >
                     {msg.role === 'user' ? (
                       <div className="flex items-center gap-2 p-2">
                         <span>{msg.content}</span>
                         {msg.hasFile && (
-                          <AiOutlineFile className="text-2xl text-gray-600 dark:text-white" />
+                          <AiOutlineFile className="text-2xl text-white" />
                         )}
                       </div>
                     ) : (
@@ -379,43 +409,48 @@ export default function ChatWindow({ open, setOpen }) {
                                           ) &&
                                             issue.recommendations.length >
                                               0 && (
-                                              <div className="flex flex-wrap gap-3">
-                                                {issue.recommendations.map(
-                                                  (rec, recIdx) => {
-                                                    const matchedForm =
-                                                      formsIdList.find(
-                                                        (f) =>
-                                                          f.formId ===
-                                                          rec.formId
-                                                      );
-                                                    return (
-                                                      <button
-                                                        key={recIdx}
-                                                        onClick={() => {
-                                                          if (
-                                                            matchedForm?.formUrl
-                                                          ) {
-                                                            window.open(
-                                                              `${window.location.origin}${matchedForm.formUrl}`,
-                                                              '_blank'
-                                                            );
-                                                          } else {
-                                                            toast.warning(
-                                                              rec.explanation ||
-                                                                'Form route not found for this action.'
-                                                            );
-                                                          }
-                                                        }}
-                                                        className="rounded-lg bg-primary px-4 py-2 text-white transition hover:bg-primaryHover"
-                                                      >
-                                                        {rec.formTitle ||
-                                                          matchedForm?.formTitle ||
-                                                          `Form ${rec.formId}`}
-                                                      </button>
-                                                    );
-                                                  }
-                                                )}
-                                              </div>
+                                                  <div className="mb-3 rounded-md bg-gray-100 p-3 text-sm dark:bg-gray-700">
+                                                    <span className="font-semibold">
+                                                      Recommendate Form to fill:
+                                                    </span>
+                                                  <div className="flex flex-wrap gap-3 mt-3">
+                                                    {issue.recommendations.map(
+                                                      (rec, recIdx) => {
+                                                        const matchedForm =
+                                                          formsIdList.find(
+                                                            (f) =>
+                                                              f.formId ===
+                                                              rec.formId
+                                                          );
+                                                        return (
+                                                          <button
+                                                            key={recIdx}
+                                                            onClick={() => {
+                                                              if (
+                                                                matchedForm?.formUrl
+                                                              ) {
+                                                                window.open(
+                                                                  `${window.location.origin}${matchedForm.formUrl}`,
+                                                                  '_blank'
+                                                                );
+                                                              } else {
+                                                                toast.warning(
+                                                                  rec.explanation ||
+                                                                    'Form route not found for this action.'
+                                                                );
+                                                              }
+                                                            }}
+                                                            className="rounded-lg bg-primary px-4 py-2 text-white transition hover:bg-primaryHover"
+                                                          >
+                                                            {rec.formTitle ||
+                                                              matchedForm?.formTitle ||
+                                                              `Form ${rec.formId}`}
+                                                          </button>
+                                                        );
+                                                      }
+                                                    )}
+                                                  </div>
+                                                  </div>
                                             )}
                                         </div>
                                       ))}
