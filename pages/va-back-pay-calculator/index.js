@@ -257,7 +257,7 @@ export default function VABackPayCalculator() {
             </h1>
             {/* Date Selection */}
             <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700">
-              <h2 className="text-md  font-bold dark:text-white-light">
+              <h2 className="text-md  font-semibold dark:text-white-light">
                 When should you have received a larger disability/smc payment
                 than you did?
               </h2>
@@ -314,7 +314,7 @@ export default function VABackPayCalculator() {
             </div>
 
             <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700">
-              <h2 className="text-md  font-bold dark:text-white-light">
+              <h2 className="text-md  font-semibold dark:text-white-light">
                 (Optional) Specify a stop date, or leave empty to use today's
                 date.
               </h2>
@@ -378,7 +378,7 @@ export default function VABackPayCalculator() {
             </h1>
 
             <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700 dark:text-white-light">
-              <label className=" text-md  mb-2 font-bold dark:text-white-light">
+              <label className=" text-md  mb-2 font-semibold dark:text-white-light">
                 Total SMC-K Awards Received
               </label>
               <select
@@ -460,11 +460,11 @@ export default function VABackPayCalculator() {
             {/* {compensationType === 'SMC' && ( */}
               <>
                 <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700">
-                  <label className="text-md block  font-bold">
-                    {' '}
-                    What the benefit rate should you have been receiving on this
-                    date?{' '}
+                  <label className="text-md block font-semibold">
+                    What benefit rate <span className="font-extrabold text-lg">should</span> you have been receiving on this date?
                   </label>
+
+
                   <select
                     className="mt-2 w-full rounded border p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white-light"
                     value={smcLevel}
@@ -478,8 +478,8 @@ export default function VABackPayCalculator() {
                   </select>
                 </div>
                 <div className="mb-6 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700 dark:text-white-light">
-                  <label className="text-md block  font-bold">
-                    What was the benefit rate you were actually receiving on this
+                  <label className="text-md block  font-semibold">
+                    What was the benefit rate you were <span className="font-extrabold text-lg">actually</span> receiving on this
                     date?
                   </label>
                   <select
@@ -505,7 +505,7 @@ export default function VABackPayCalculator() {
             </h1>
             {/* Marital / Children / Parents */}
             <div className="mb-6 space-y-4 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700">
-              <label className="text-md flex items-center gap-2  font-bold dark:text-white-light">
+              <label className="text-md flex items-center gap-2  font-semibold dark:text-white-light">
                 <input
                   type="checkbox"
                   checked={isMarried}
@@ -519,7 +519,7 @@ export default function VABackPayCalculator() {
               </label>
 
               {isMarried && (
-                <label className="text-md ml-4 flex items-center gap-2  font-bold dark:text-white-light">
+                <label className="text-md ml-4 flex items-center gap-2  font-semibold dark:text-white-light">
                   <input
                     type="checkbox"
                     checked={spouseNeedAid}
@@ -532,7 +532,7 @@ export default function VABackPayCalculator() {
             </div>
 
             <div className="mb-6 space-y-4 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700">
-              <label className="text-md flex items-center gap-2  font-bold dark:text-white-light">
+              <label className="text-md flex items-center gap-2  font-semibold dark:text-white-light">
                 <input
                   type="checkbox"
                   checked={hasDependentChildren}
@@ -550,7 +550,7 @@ export default function VABackPayCalculator() {
 
               {hasDependentChildren && (
                 <div className="ml-4 space-y-2 dark:text-white-light">
-                  <label className="text-md  font-bold">
+                  <label className="text-md  font-semibold">
                     Number of children under 18
                   </label>
                   <input
@@ -573,7 +573,7 @@ export default function VABackPayCalculator() {
                     }}
                     placeholder="Children under 18"
                   />
-                  <label className="text-md  mt-2 font-bold">
+                  <label className="text-md  mt-2 font-semibold">
                     Number of children over 18
                   </label>
                   <input
@@ -601,7 +601,7 @@ export default function VABackPayCalculator() {
             </div>
 
             <div className="mb-6 space-y-4 rounded border bg-gray-100 p-4 dark:border-0 dark:bg-gray-700">
-              <label className="text-md flex items-center gap-2  font-bold dark:text-white-light">
+              <label className="text-md flex items-center gap-2  font-semibold dark:text-white-light">
                 <input
                   type="checkbox"
                   checked={hasDependentParents}
