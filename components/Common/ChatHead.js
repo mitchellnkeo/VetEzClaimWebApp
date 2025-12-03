@@ -4,6 +4,7 @@ import ChatWindow from './ChatWindow';
 
 export default function FloatingChat() {
   const [open, setOpen] = useState(false);
+  const [isExtended, setIsExtended] = useState(false);
   const winRef = useRef();
 
   useEffect(() => {
@@ -23,6 +24,7 @@ export default function FloatingChat() {
         onClick={(e) => {
           e.stopPropagation();
           setOpen(!open);
+          setIsExtended(false);
         }}
         className="fixed bottom-5 right-5 z-[9999] cursor-pointer"
       >
@@ -33,7 +35,7 @@ export default function FloatingChat() {
         </div>
       </div>
 
-      <ChatWindow open={open} setOpen={setOpen} />
+      <ChatWindow open={open} setOpen={setOpen} isExtended={isExtended} setIsExtended={setIsExtended} />
     </>
   );
 }
