@@ -15615,27 +15615,6 @@ export const CompensationRateData = [
           spouse_aid_and_attendance: 58,
         },
       },
-      '90%': {
-        base: {
-          veteran_alone: 1016,
-          veteran_spouse: 1057,
-          veteran_spouse_one_parent: 1025,
-          veteran_spouse_two_parents: 1088,
-          veteran_one_parent: 946,
-          veteran_two_parents: 1009,
-          veteran_one_child: 1019,
-          veteran_spouse_one_child: 1057,
-          veteran_spouse_one_parent_one_child: 1079,
-          veteran_spouse_two_parents_one_child: 1142,
-          veteran_one_parent_one_child: 1000,
-          veteran_two_parents_one_child: 1063,
-        },
-        addons: {
-          additional_child_under_18: 41,
-          additional_child_over_18_school: 122,
-          spouse_aid_and_attendance: 65,
-        },
-      },
       '100%': {
         base: {
           veteran_alone: 1616,
