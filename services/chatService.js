@@ -2,8 +2,8 @@
 import ApiService from '@/utils/apiService';
 
 export const sendChatMessage = async ({ message, userId, sessionId, file }) => {
-  if (!message || !userId) {
-    throw new Error('message and userId are required');
+  if (!userId) {
+    throw new Error('User Id is required');
   }
 
   const formData = new FormData();
