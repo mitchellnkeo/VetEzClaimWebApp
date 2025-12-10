@@ -24,6 +24,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
   const [loadingText, setLoadingText] = useState('Processing...');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [addInstructions, setAddInstructions] = useState(true);
   const dispatch = useDispatch();
   const didFetchMessages = useRef(false);
 
@@ -99,13 +100,17 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
   };
 
   const handleSend = async () => {
-    if (!message.trim() || isThinking) return;
+    let trimmed = message.trim();
+    if ((!trimmed && !selectedFile) || isThinking) return;
     const hasFile = selectedFile ? true : false;
     const fileName = selectedFile ? selectedFile.name : null;
+    if(hasFile && !trimmed) {
+      trimmed = fileName;
+    }
     try {
       const userMessage = {
         role: 'user',
-        content: message.trim(),
+        content: trimmed,
         hasFile: hasFile,
         fileName: fileName,
       };
@@ -116,7 +121,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
       setSelectedFile(null);
 
       const response = await sendChatMessage({
-        message: message.trim(),
+        message: trimmed,
         userId: uid,
         sessionId: sessionId,
         file: fileContent,
@@ -518,6 +523,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedFile(null);
+                setAddInstructions(true);
               }}
               className="ml-2 text-red-500 hover:text-red-700"
             >
@@ -527,55 +533,85 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
         )}
 
         {/* Actual Input Row */}
-        <div className="flex items-end gap-2">
-          {/* + File Upload Button */}
-          <label
-            className={`flex h-8 w-8 cursor-pointer items-center justify-center text-gray-700 dark:text-white ${
-              selectedFile || isThinking ? 'cursor-not-allowed opacity-50' : ''
-            }`}
-          >
-            <PlusIcon />
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf,.doc,.docx,.txt"
-              className="hidden"
-              disabled={!!selectedFile || isThinking}
-              onChange={(e) => {
-                if (e.target.files.length > 0) {
-                  setSelectedFile(e.target.files[0]);
-                  if (fileInputRef.current) {
-                    fileInputRef.current.value = null;
+        { addInstructions && (
+          <div className="flex items-end gap-2">
+            {/* + File Upload Button */}
+            <label
+              className={`flex h-8 w-8 cursor-pointer items-center justify-center text-gray-700 dark:text-white ${
+                selectedFile || isThinking ? 'cursor-not-allowed opacity-50' : ''
+              }`}
+            >
+              <PlusIcon />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx,.txt"
+                className="hidden"
+                disabled={!!selectedFile || isThinking}
+                onChange={(e) => {
+                  if (e.target.files.length > 0) {
+                    setSelectedFile(e.target.files[0]);
+                    setAddInstructions(false);
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = null;
+                    }
                   }
-                }
+                }}
+              />
+            </label>
+
+            {/* Textarea */}
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyPress}
+              disabled={isThinking}
+              rows={1}
+              placeholder="Type a message..."
+              className="max-h-20 flex-1 resize-none rounded-md border-none bg-gray-200 p-2 text-gray-900 placeholder-gray-500 outline-none focus:ring-1 focus:ring-blue-500 dark:bg-neutral-800/60 dark:text-white dark:placeholder-gray-400"
+              onInput={(e) => {
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
               }}
             />
-          </label>
 
-          {/* Textarea */}
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyPress}
-            disabled={isThinking}
-            rows={1}
-            placeholder="Type a message..."
-            className="max-h-20 flex-1 resize-none rounded-md border-none bg-gray-200 p-2 text-gray-900 placeholder-gray-500 outline-none focus:ring-1 focus:ring-blue-500 dark:bg-neutral-800/60 dark:text-white dark:placeholder-gray-400"
-            onInput={(e) => {
-              e.target.style.height = 'auto';
-              e.target.style.height = e.target.scrollHeight + 'px';
-            }}
-          />
+            {/* Send Button */}
+            <button
+              onClick={handleSend}
+              disabled={isThinking}
+              className="mb-1 rounded-md px-1 py-1 text-sm font-medium transition disabled:opacity-50"
+            >
+              <SendIcon />
+            </button>
+          </div>
+        )}
 
-          {/* Send Button */}
-          <button
-            onClick={handleSend}
-            disabled={isThinking}
-            className="mb-1 rounded-md px-1 py-1 text-sm font-medium transition disabled:opacity-50"
-          >
-            <SendIcon />
-          </button>
-        </div>
+        { !addInstructions && (
+            <div className="flex gap-2 w-full">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAddInstructions(true);
+                }}
+                className="w-1/2 rounded-md px-3 py-2 text-sm font-medium bg-primary text-white hover:bg-blue-700 transition"
+              > 
+                Add Instructions
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAddInstructions(true);
+                  handleSend();
+                }}
+                className="w-1/2 rounded-md px-3 py-2 text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition"
+              >
+                Analyze Document
+              </button>
+            </div>
+          )
+        }
+
       </div>
     </div>
   );
