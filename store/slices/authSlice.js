@@ -5,12 +5,34 @@ import {
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
+  signInAnonymously,
+  setPersistence,
+  browserLocalPersistence,
 } from 'firebase/auth';
 import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { auth, db, provider } from '@/firebase/firebase';
 import { sendOtp, verifyOtp } from '@/services/auth';
 import { seed, deltCookie } from '@/helpers/sessionHelper';
 import { signInWithPopup, signOut } from 'firebase/auth';
+
+
+
+export const loginAnnonymousUser = createAsyncThunk(
+  "auth/loginAnnonymousUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+      const result = await signInAnonymously(auth);
+      const uid = result.user.uid;
+      console.log("annon - uid >>>", uid, auth.currentUser);
+      localStorage.setItem("anonUid", uid);
+      return { uid, user: auth.currentUser, isNew: true };
+    } catch (error) {
+      return rejectWithValue(error.message || "Anonymous login failed");
+    }
+  }
+);
+
 
 export const loginUser = createAsyncThunk(
   'auth/login',
@@ -201,12 +223,15 @@ export const verifyOtpToUser = createAsyncThunk(
 );
 
 export const logoutUser = createAsyncThunk(
-  'auth/logout',
+  "auth/logout",
   async (_, thunkAPI) => {
     try {
-      return thunkAPI.dispatch(logout());
+      await signOut(auth);   
+      console.log("current user >>>", auth.currentUser);
+      thunkAPI.dispatch(logout());
+      return true;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error?.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -241,6 +266,18 @@ export const updateSessionId = createAsyncThunk(
   }
 );
 
+export const updateLocalSessionId = createAsyncThunk(
+  'auth/updateLocalSessionId ',
+  async (sessionId, { rejectWithValue }) => {
+    try {
+      localStorage.setItem('chatSessionId', sessionId);
+      return sessionId;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Session ID update failed');
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -250,6 +287,7 @@ export const authSlice = createSlice({
     sessionId: null,
     accessToken: null,
     isLoading: false,
+    tempUser: {}, 
     error: {},
   },
   reducers: {
@@ -289,6 +327,7 @@ export const authSlice = createSlice({
       state.isLoggedIn = true;
       state.accessToken = action.payload.accessToken;
       state.error = {};
+      state.tempUser = {};
     });
     builder.addCase(verifyOtpToUser.rejected, (state, action) => {
       state.isLoading = false;
@@ -310,6 +349,7 @@ export const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.sessionId = action.payload.profileData.sessionId;
       state.error = null;
+      state.tempUser = {};
     });
     builder.addCase(googleLogin.rejected, (state, action) => {
       state.isLoading = false;
@@ -349,6 +389,38 @@ export const authSlice = createSlice({
     builder.addCase(updateSessionId.rejected, (state, action) => {
       state.isLoading = false;
       state.error = 'Session ID update failed';
+    });
+    // update local session id
+    builder.addCase(updateLocalSessionId.pending, (state) => {
+      state.isLoading = true;
+      state.sessionId = null;
+      state.error = null;
+    });
+    builder.addCase(updateLocalSessionId.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.sessionId = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateLocalSessionId.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = 'Session ID update failed';
+    });
+    // loginAnnonymousUser
+    builder.addCase(loginAnnonymousUser.pending, (state) => {
+      state.isLoading = true;
+      state.tempUser = {};
+      state.error = null;
+    });
+    builder.addCase(loginAnnonymousUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.tempUser = action.payload.user;
+      state.sessionId = null;
+      state.error = null;
+    });
+    builder.addCase(loginAnnonymousUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.tempUser = {};
+      state.error = action.payload;
     });
   },
 });
