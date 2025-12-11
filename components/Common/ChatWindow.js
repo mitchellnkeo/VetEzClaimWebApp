@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { SendIcon, PlusIcon } from '../icons/SvgIcons';
 import { sendChatMessage, getChatMessages } from '@/services/chatService';
 import { useSelector } from 'react-redux';
-import { updateSessionId } from '@/store/slices/authSlice';
+import { updateSessionId, updateLocalSessionId } from '@/store/slices/authSlice';
 import { useDispatch } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
 import { AiOutlineFile } from 'react-icons/ai';
@@ -13,11 +13,11 @@ import { RiChatNewLine } from 'react-icons/ri';
 import { RxCross2 } from 'react-icons/rx';
 import { FaExpand, FaCompress } from 'react-icons/fa';
 
-export default function ChatWindow({ open, setOpen, isExtended, setIsExtended }) {
+export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, isAiAssistant = false }) {
   const winRef = useRef(null);
   const fileInputRef = useRef(null);
   const bodyRef = useRef(null);
-  const { user, uid, sessionId } = useSelector((state) => state.auth);
+  const { uid, sessionId, tempUser } = useSelector((state) => state.auth);
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
@@ -47,14 +47,14 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
 
   useEffect(() => {
     const fetchMessages = async () => {
-      if (!uid || !sessionId) return;
+      if ((!uid || !tempUser) && !sessionId) return;
       if (didFetchMessages.current) return; // ensure called only once
       didFetchMessages.current = true;
       setIsLoading(true);
       setLoadingText('Fetching chat history...');
 
       try {
-        const userId = uid;
+        const userId = isAiAssistant ? tempUser.uid : uid;
         const response = await getChatMessages({ userId, sessionId });
         const messages = response.data;
 
@@ -122,13 +122,16 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
 
       const response = await sendChatMessage({
         message: trimmed,
-        userId: uid,
+        userId: isAiAssistant ? tempUser.uid : uid,
         sessionId: sessionId,
         file: fileContent,
       });
-      await dispatch(
-        updateSessionId({ uid, sessionId: response.data.sessionId })
-      ).unwrap();
+      if (isAiAssistant) {
+        await dispatch(updateLocalSessionId(response.data.sessionId)).unwrap();
+      } else {
+        await dispatch(updateSessionId({ uid, sessionId: response.data.sessionId })).unwrap();
+      }
+
       if (response.data.response.type === 'chat') {
         const aiMessage = {
           role: 'assistant',
@@ -206,24 +209,41 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
     }
   };
 
-  console.log("isExtended >>>", isExtended);
+  // console.log("isExtended >>>", isExtended);
 
 
   return (
     <div
       ref={winRef}
-      className={`fixed bottom-24 right-5 z-[9998] flex ${isExtended ? 'h-[650px]' : 'h-[600px]'} ${isExtended ? 'w-4/5' : 'w-96'} transform flex-col overflow-hidden rounded-2xl
-    bg-white/90 from-white/90 to-gray-100 text-gray-900
-    shadow-2xl ring-1 ring-gray-300/50 backdrop-blur-sm
-    transition-all duration-300 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black
-    dark:text-white dark:ring-white/10
-    ${
-      open
-        ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
-        : 'pointer-events-none translate-y-2 scale-95 opacity-0'
-    }`}
+      className={`
+        ${isAiAssistant
+          ?
+            `relative mx-auto my-2 flex
+             ${isExtended ? 'h-[650px]' : 'h-[650px]'}
+             ${isExtended ? 'w-full' : 'w-full max-w-5xl'}
+             flex-col overflow-hidden rounded-2xl`
+          :
+            `fixed bottom-24 right-5 z-[9998] flex
+             ${isExtended ? 'h-[650px]' : 'h-[600px]'}
+             ${isExtended ? 'w-4/5' : 'w-96'}
+             transform flex-col overflow-hidden rounded-2xl
+             ${
+               open
+                 ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
+                 : 'pointer-events-none translate-y-2 scale-95 opacity-0'
+             }`
+        }
+    
+        /* ⭐ Common shared styles */
+        bg-white/90 from-white/90 to-gray-100 text-gray-900
+        shadow-2xl ring-1 ring-gray-300/50 backdrop-blur-sm
+        transition-all duration-300 
+        dark:bg-gradient-to-b dark:from-gray-900 dark:to-black
+        dark:text-white dark:ring-white/10
+      `}
     >
       {/* Header */}
+      { !isAiAssistant && (
       <div className="flex items-center justify-between border-b border-gray-300/50 bg-gray-800 p-3 backdrop-blur dark:border-white/10 dark:bg-neutral-900/60">
         {/* Left: Chatbot title with icon */}
         <span className="flex items-center gap-2 font-semibold text-white dark:text-white">
@@ -265,6 +285,15 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
 
         </div>
       </div>
+      )}
+
+      { isAiAssistant && chat.length > 0 && (
+        <div className="flex items-center justify-center text-center border-b border-gray-300/50 bg-gray-800 p-3 backdrop-blur dark:border-white/10 dark:bg-neutral-900/60">
+          <h2 className="text-xl font-semibold text-white">
+            VetEZ AI Assistant
+          </h2>
+        </div>
+      )}
 
       <Loader loading={isLoading} text={loadingText} />
       {/* Body */}
@@ -283,7 +312,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
             </div>
 
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              VetEZ ChatBot
+              VetEZ { isAiAssistant ? 'AI Assistant' : 'ChatBot' }
             </h2>
             <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
               Ask me anything about VetEZ services and get instant help!
@@ -431,9 +460,15 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended })
                                                           <button
                                                             key={recIdx}
                                                             onClick={() => {
+                                                              if (isAiAssistant) {
+                                                                localStorage.setItem('redirect-to', `${window.location.origin}${matchedForm.formUrl}`);
+                                                                window.location.href = `${window.location.origin}/registration?ai-assistant=true`; 
+                                                                return;
+                                                              } 
                                                               if (
                                                                 matchedForm?.formUrl
                                                               ) {
+
                                                                 window.open(
                                                                   `${window.location.origin}${matchedForm.formUrl}`,
                                                                   '_blank'
