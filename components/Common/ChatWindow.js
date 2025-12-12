@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { SendIcon, PlusIcon } from '../icons/SvgIcons';
 import { sendChatMessage, getChatMessages } from '@/services/chatService';
 import { useSelector } from 'react-redux';
-import { updateSessionId, updateLocalSessionId } from '@/store/slices/authSlice';
+import { updateSessionId, updateLocalSessionId, updateRedirectTo } from '@/store/slices/authSlice';
 import { useDispatch } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
 import { AiOutlineFile } from 'react-icons/ai';
@@ -17,7 +17,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
   const winRef = useRef(null);
   const fileInputRef = useRef(null);
   const bodyRef = useRef(null);
-  const { uid, sessionId, tempUser } = useSelector((state) => state.auth);
+  const { uid, sessionId, reloadChat} = useSelector((state) => state.auth);
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
@@ -27,6 +27,58 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
   const [addInstructions, setAddInstructions] = useState(true);
   const dispatch = useDispatch();
   const didFetchMessages = useRef(false);
+
+
+  const fetchMessages = async () => {
+    // console.log("[ChatWindow] fetchMessages >>>", uid, sessionId);
+    if (!uid || !sessionId) return;
+    if (didFetchMessages.current) return; 
+    didFetchMessages.current = true;
+    setIsLoading(true);
+    setLoadingText('Fetching chat history...');
+
+    try {
+      const userId = uid;
+      setChat([]);
+      const response = await getChatMessages({ userId, sessionId });
+      const messages = response.data;
+      // console.log("[ChatWindow] messages >>>", messages);
+
+      messages.forEach((message) => {
+        if (message.role === 'user') {
+          const hasFile = message.text && message.text !== '';
+          const userMessage = {
+            role: 'user',
+            content: message.content,
+            hasFile,
+            fileName: '',
+          };
+          setChat((prev) => [...prev, userMessage]);
+        } else {
+          const hasAnalysis = message.text && message.text === 'analysis';
+          const aiMessage = {
+            role: 'assistant',
+            content: hasAnalysis
+              ? message.content.va_analysis_json
+              : message.content,
+            hasFile: hasAnalysis,
+            fileName: '',
+          };
+          setChat((prev) => [...prev, aiMessage]);
+        }
+      });
+    } catch (error) {
+      process.env.NODE_ENV === 'development' &&
+        console.error('Error fetching messages:', error);
+    } finally {
+      setIsLoading(false);
+      setLoadingText('Processing...');
+    }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, [reloadChat]);
 
   useEffect(() => {
     const onDocClick = (e) => {
@@ -46,52 +98,8 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
   }, [chat]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      if ((!uid || !tempUser) && !sessionId) return;
-      if (didFetchMessages.current) return; // ensure called only once
-      didFetchMessages.current = true;
-      setIsLoading(true);
-      setLoadingText('Fetching chat history...');
-
-      try {
-        const userId = isAiAssistant ? tempUser.uid : uid;
-        const response = await getChatMessages({ userId, sessionId });
-        const messages = response.data;
-
-        messages.forEach((message) => {
-          if (message.role === 'user') {
-            const hasFile = message.text && message.text !== '';
-            const userMessage = {
-              role: 'user',
-              content: message.content,
-              hasFile,
-              fileName: '',
-            };
-            setChat((prev) => [...prev, userMessage]);
-          } else {
-            const hasAnalysis = message.text && message.text === 'analysis';
-            const aiMessage = {
-              role: 'assistant',
-              content: hasAnalysis
-                ? message.content.va_analysis_json
-                : message.content,
-              hasFile: hasAnalysis,
-              fileName: '',
-            };
-            setChat((prev) => [...prev, aiMessage]);
-          }
-        });
-      } catch (error) {
-        process.env.NODE_ENV === 'development' &&
-          console.error('Error fetching messages:', error);
-      } finally {
-        setIsLoading(false);
-        setLoadingText('Processing...');
-      }
-    };
-
     fetchMessages();
-  }, []); // empty dependency array ensures it runs once
+  }, []); 
 
   const scrollToBottom = () => {
     if (bodyRef.current) {
@@ -122,7 +130,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
 
       const response = await sendChatMessage({
         message: trimmed,
-        userId: isAiAssistant ? tempUser.uid : uid,
+        userId: uid,
         sessionId: sessionId,
         file: fileContent,
       });
@@ -295,7 +303,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
         </div>
       )}
 
-      <Loader loading={isLoading} text={loadingText} />
+      <Loader loading={isLoading} text={isAiAssistant ? '' : loadingText} />
       {/* Body */}
       <div
         ref={bodyRef}
@@ -459,10 +467,17 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                                                         return (
                                                           <button
                                                             key={recIdx}
-                                                            onClick={() => {
+                                                            onClick={async () => {
                                                               if (isAiAssistant) {
-                                                                localStorage.setItem('redirect-to', `${window.location.origin}${matchedForm.formUrl}`);
-                                                                window.location.href = `${window.location.origin}/registration?ai-assistant=true`; 
+                                                                if (matchedForm?.formUrl) {
+                                                                  await dispatch(updateRedirectTo(matchedForm.formUrl)).unwrap();
+                                                                  window.location.href = `${window.location.origin}/registration?assist=true`; 
+                                                                } else {
+                                                                  toast.warning(
+                                                                    rec.explanation ||
+                                                                      'Form route not found for this action.'
+                                                                  );
+                                                                }
                                                                 return;
                                                               } 
                                                               if (
