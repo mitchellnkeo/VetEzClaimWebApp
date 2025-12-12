@@ -6,8 +6,6 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
   signInAnonymously,
-  setPersistence,
-  browserLocalPersistence,
 } from 'firebase/auth';
 import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { auth, db, provider } from '@/firebase/firebase';
@@ -15,24 +13,20 @@ import { sendOtp, verifyOtp } from '@/services/auth';
 import { seed, deltCookie } from '@/helpers/sessionHelper';
 import { signInWithPopup, signOut } from 'firebase/auth';
 
-
-
 export const loginAnnonymousUser = createAsyncThunk(
   "auth/loginAnnonymousUser",
   async (_, { rejectWithValue }) => {
     try {
-      await setPersistence(auth, browserLocalPersistence);
       const result = await signInAnonymously(auth);
       const uid = result.user.uid;
-      console.log("annon - uid >>>", uid, auth.currentUser);
-      localStorage.setItem("anonUid", uid);
-      return { uid, user: auth.currentUser, isNew: true };
+      localStorage.setItem('anonymousUid', uid);
+      // console.log("[loginAnnonymousUser] uid >>>", uid,);
+      return uid;
     } catch (error) {
       return rejectWithValue(error.message || "Anonymous login failed");
     }
   }
 );
-
 
 export const loginUser = createAsyncThunk(
   'auth/login',
@@ -255,6 +249,8 @@ export const updateSessionId = createAsyncThunk(
   'auth/updateSessionId ',
   async ({ uid, sessionId }, { rejectWithValue }) => {
     try {
+      // console.log("[updateSessionId] uid >>>", uid);
+      // console.log("[updateSessionId] sessionId >>>", sessionId);
       const docRef = doc(db, 'profile', uid);
       await updateDoc(docRef, { sessionId: sessionId });
 
@@ -278,6 +274,30 @@ export const updateLocalSessionId = createAsyncThunk(
   }
 );
 
+export const updateRedirectTo = createAsyncThunk(
+  'auth/updateRedirectTo ',
+  async (redirectTo, { rejectWithValue }) => {
+    try {
+      localStorage.setItem('redirectTo', redirectTo);
+      return redirectTo;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Redirect To update failed');
+    }
+  }
+);
+
+export const updateReloadChat = createAsyncThunk(
+  'auth/updateReloadChat ',
+  async (reloadChat, { rejectWithValue }) => {
+    try {
+      return reloadChat;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Reload Chat update failed');
+    }
+  }
+);
+
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -287,7 +307,8 @@ export const authSlice = createSlice({
     sessionId: null,
     accessToken: null,
     isLoading: false,
-    tempUser: {}, 
+    redirectTo: null,
+    reloadChat: false,
     error: {},
   },
   reducers: {
@@ -297,6 +318,8 @@ export const authSlice = createSlice({
       state.sessionId = null;
       state.accessToken = null;
       state.isLoggedIn = false;
+      state.redirectTo = null;
+      state.reloadChat = false;
       deltCookie();
     },
   },
@@ -327,7 +350,6 @@ export const authSlice = createSlice({
       state.isLoggedIn = true;
       state.accessToken = action.payload.accessToken;
       state.error = {};
-      state.tempUser = {};
     });
     builder.addCase(verifyOtpToUser.rejected, (state, action) => {
       state.isLoading = false;
@@ -349,7 +371,6 @@ export const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.sessionId = action.payload.profileData.sessionId;
       state.error = null;
-      state.tempUser = {};
     });
     builder.addCase(googleLogin.rejected, (state, action) => {
       state.isLoading = false;
@@ -408,19 +429,49 @@ export const authSlice = createSlice({
     // loginAnnonymousUser
     builder.addCase(loginAnnonymousUser.pending, (state) => {
       state.isLoading = true;
-      state.tempUser = {};
       state.error = null;
     });
     builder.addCase(loginAnnonymousUser.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.tempUser = action.payload.user;
-      state.sessionId = null;
+      state.uid = action.payload;
       state.error = null;
     });
     builder.addCase(loginAnnonymousUser.rejected, (state, action) => {
       state.isLoading = false;
-      state.tempUser = {};
+      state.uid = null;
       state.error = action.payload;
+    });
+    // update redirect to
+    builder.addCase(updateRedirectTo.pending, (state) => {
+      state.isLoading = true;
+      state.redirectTo = null;
+      state.error = null;
+    });
+    builder.addCase(updateRedirectTo.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.redirectTo = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateRedirectTo.rejected, (state, action) => {
+      state.isLoading = false;
+      state.redirectTo = null;
+      state.error = 'Redirect To update failed';
+    });
+    // update reload chat
+    builder.addCase(updateReloadChat.pending, (state) => {
+      state.isLoading = true;
+      state.reloadChat = false;
+      state.error = null;
+    });
+    builder.addCase(updateReloadChat.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.reloadChat = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateReloadChat.rejected, (state, action) => {
+      state.isLoading = false;
+      state.reloadChat = false;
+      state.error = 'Reload Chat update failed';
     });
   },
 });

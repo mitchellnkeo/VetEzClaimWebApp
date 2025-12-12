@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import HeaderPublic from '../../components/Common/HeaderPublic';
 import FooterPublic from '../../components/Common/FooterPublic';
