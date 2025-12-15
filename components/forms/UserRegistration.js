@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { object, string } from 'yup';
 import { useRouter } from 'next/router';
@@ -23,6 +23,10 @@ const UserRegistration = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const { 'assist': aiAssistant } = router.query; // get ?ai-assistant=true
+  const isAiAssistant = aiAssistant === 'true';
+
+  console.log("[UserRegistration] isAiAssistant >>>", isAiAssistant);
 
   useEffect(() => {
     dispatch(setPageTitle('VetEZ - Registration'));
@@ -100,7 +104,11 @@ const UserRegistration = () => {
               className="rounded-md bg-blue-600 px-4 py-2 text-white"
               onClick={() => {
                 setShowSuccess(false);
-                router.push('/login');
+                if (isAiAssistant) {
+                  router.push(`/login?assist=true`);
+                } else {
+                  router.push('/login');
+                }
               }}
             >
               OK

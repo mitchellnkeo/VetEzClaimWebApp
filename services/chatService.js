@@ -44,3 +44,20 @@ export const getChatMessages = async ({ userId, sessionId }) => {
     throw error;
   }
 };
+
+export const transferChatSession = async ({ userId, anonymousUid, anonymousSessionId }) => {
+  if (!userId || !anonymousUid || !anonymousSessionId) {
+    throw new Error('userId, anonymousUid and anonymousSessionId are required-Local');
+  }
+
+  try {
+    const response = await ApiService.post('/chatbot/swap-messages', { userId, anonymousUid, anonymousSessionId }, {
+      noAuth: true,
+    });
+    return response;
+  } catch (error) {
+    process.env.NODE_ENV === 'development' &&
+      console.error('Chatbot swapMessages API Error:', error);
+    throw error;
+  }
+};

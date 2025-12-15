@@ -17,9 +17,11 @@ import { getBrowserName, getOS, getPlatform } from '@/utils';
 import { FaRegUser } from 'react-icons/fa';
 import { GoLock } from 'react-icons/go';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 const LoginForm = () => {
   const { uid } = useSelector((state) => state.auth);
+  const router = useRouter();
   const [error, setError] = useState(null);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const dispatch = useDispatch();
@@ -28,6 +30,10 @@ const LoginForm = () => {
   const deviceModel = `${getOS()}-${getPlatform()} ${getBrowserName()}`;
   const formikRef = useRef(null);
   const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const { 'assist': aiAssistant } = router.query; // get ?ai-assistant=true
+  const isAiAssistant = aiAssistant === 'true';
+
+  console.log("[UserLogin] isAiAssistant >>>", isAiAssistant);
 
   const rememberInfo = getCookie('rememberInfo');
   let isRemember = rememberInfo && JSON.parse(rememberInfo);
@@ -127,7 +133,11 @@ const LoginForm = () => {
       const result = await dispatch(googleLogin()).unwrap();
       toast.success('Login Success!');
       setTimeout(() => {
-        window.location.replace('/');
+        if (isAiAssistant) {
+          window.location.replace(`/?assist=true`);
+        } else {
+          window.location.replace('/');
+        }
       }, 500);
       process.env.NODE_ENV === 'development' && console.log('User:', result);
     } catch (err) {
@@ -159,7 +169,11 @@ const LoginForm = () => {
       await dispatch(verifyOtpToUser(postBody)).unwrap();
       toast.success('OTP verified successfully');
       setTimeout(() => {
-        window.location.replace('/');
+        if (isAiAssistant) {
+          window.location.replace(`/?assist=true`);
+        } else {
+          window.location.replace('/');
+        }
       }, 500);
     } catch (error) {
       setError(error);

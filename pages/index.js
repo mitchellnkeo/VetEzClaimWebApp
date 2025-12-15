@@ -2,51 +2,85 @@
 import FrontLayout from '@/components/layouts/FrontLayout';
 import { useEffect, useState, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { isUserOver18 } from '@/utils/common';
+import { updateRedirectTo, updateSessionId, updateReloadChat } from '../store/slices/authSlice';
+import { transferChatSession } from '@/services/chatService';
+import Loader from '@/components/Common/Loader';
+import { getProfileStatus } from '@/utils/common';
+
+
 
 const Dashboard = () => {
   const [profileStatus, setProfileStatus] = useState(0);
-  const { user } = useSelector((state) => state.auth);
-
-  const isRtl =
-    useSelector((state) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-
-  const isProfileComplete = async () => {
-    if (
-      user.firstName &&
-      user.lastName &&
-      user.email &&
-      user.birthday &&
-      user.phone &&
-      user.ssn &&
-      user.branchOfService &&
-      user.street &&
-      user.city &&
-      user.province &&
-      user.zipCode &&
-      user.country &&
-      user.signature
-    ) {
-      const isOver18 = await isUserOver18(user.birthday);
-      if (isOver18) {
-        setProfileStatus(2);
-      } else {
-        setProfileStatus(1);
-      }
-    }
-  };
+  const { user, redirectTo } = useSelector((state) => state.auth);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { 'assist': aiAssistant } = router.query; // get ?ai-assistant=true
+  const isAiAssistant = aiAssistant === 'true';
+  const anonymousUid = localStorage.getItem('anonymousUid');
+  const localSessionId = localStorage.getItem('chatSessionId');
 
   useEffect(() => {
-    process.env.NODE_ENV === 'development' && console.log('user Info: ', user);
-    if (user) {
-      isProfileComplete();
-    }
+    console.log('[Dashboard] I am mounted');
   }, []);
+
+  useEffect(() => {
+    const doTransfer = async () => {
+      setIsLoading(true);
+      const profileStatus = getProfileStatus(user);
+      try {
+        const isReady =
+          isAiAssistant &&
+          anonymousUid &&
+          localSessionId &&
+          redirectTo;
+  
+        if (!isReady) return;
+  
+        const response = await transferChatSession({
+          userId: user.uid,
+          anonymousUid: anonymousUid,
+          anonymousSessionId: localSessionId,
+        });
+  
+        if (response?.data) {
+          localStorage.removeItem("chatSessionId");
+          localStorage.removeItem("anonymousUid");
+  
+          await dispatch(
+            updateSessionId({ uid: user.uid, sessionId: response.data })
+          ).unwrap();
+          await dispatch(updateRedirectTo(null)).unwrap();
+          await dispatch(updateReloadChat(true)).unwrap();
+
+          if (redirectTo && profileStatus === 2) {
+            router.push(redirectTo);
+          }
+        }
+      } catch (error) {
+        console.error("[doTransfer] Error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    doTransfer();
+  }, [anonymousUid, localSessionId, isAiAssistant, redirectTo, user]);
+  
+
+  useEffect(() => {
+    // process.env.NODE_ENV === 'development' && console.log('user Info: ', user);
+    if (user) {
+        const profileStatus = getProfileStatus(user);
+        setProfileStatus(profileStatus);
+    }
+  }, [user]);
 
   return (
     <FrontLayout title="Dashboard">
+      <Loader show={isLoading} />
       <div className="h-[450px]">
         <p className="mb-5 border-b-2 border-gray-200 pb-2 text-2xl dark:border-gray-600 dark:text-white-light">
           Welcome{', '}

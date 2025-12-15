@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 // List of paths that don't require authentication
-const authExemptPaths = ['/login', '/registration', '/forgot-password', '/reset-password','/va-calculators', '/va-rating-calculator', '/va-back-pay-calculator'];
+const authExemptPaths = ['/login', '/registration', '/forgot-password', '/reset-password','/va-calculators', '/va-rating-calculator', '/va-back-pay-calculator', '/ai-assistant'];
 
 export async function middleware(request) {
   const path = request.nextUrl.pathname;

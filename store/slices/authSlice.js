@@ -5,12 +5,29 @@ import {
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
+  signInAnonymously,
 } from 'firebase/auth';
 import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { auth, db, provider } from '@/firebase/firebase';
 import { sendOtp, verifyOtp } from '@/services/auth';
 import { seed, deltCookie } from '@/helpers/sessionHelper';
 import { signInWithPopup, signOut } from 'firebase/auth';
+import { getSubscriptionStatus } from './revenueCatSlice';
+
+export const loginAnnonymousUser = createAsyncThunk(
+  "auth/loginAnnonymousUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const result = await signInAnonymously(auth);
+      const uid = result.user.uid;
+      localStorage.setItem('anonymousUid', uid);
+      // console.log("[loginAnnonymousUser] uid >>>", uid,);
+      return uid;
+    } catch (error) {
+      return rejectWithValue(error.message || "Anonymous login failed");
+    }
+  }
+);
 
 export const loginUser = createAsyncThunk(
   'auth/login',
@@ -201,12 +218,15 @@ export const verifyOtpToUser = createAsyncThunk(
 );
 
 export const logoutUser = createAsyncThunk(
-  'auth/logout',
+  "auth/logout",
   async (_, thunkAPI) => {
     try {
-      return thunkAPI.dispatch(logout());
+      await signOut(auth);   
+      console.log("current user >>>", auth.currentUser);
+      thunkAPI.dispatch(logout());
+      return true;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error?.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -230,6 +250,8 @@ export const updateSessionId = createAsyncThunk(
   'auth/updateSessionId ',
   async ({ uid, sessionId }, { rejectWithValue }) => {
     try {
+      // console.log("[updateSessionId] uid >>>", uid);
+      // console.log("[updateSessionId] sessionId >>>", sessionId);
       const docRef = doc(db, 'profile', uid);
       await updateDoc(docRef, { sessionId: sessionId });
 
@@ -241,6 +263,42 @@ export const updateSessionId = createAsyncThunk(
   }
 );
 
+export const updateLocalSessionId = createAsyncThunk(
+  'auth/updateLocalSessionId ',
+  async (sessionId, { rejectWithValue }) => {
+    try {
+      localStorage.setItem('chatSessionId', sessionId);
+      return sessionId;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Session ID update failed');
+    }
+  }
+);
+
+export const updateRedirectTo = createAsyncThunk(
+  'auth/updateRedirectTo ',
+  async (redirectTo, { rejectWithValue }) => {
+    try {
+      localStorage.setItem('redirectTo', redirectTo);
+      return redirectTo;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Redirect To update failed');
+    }
+  }
+);
+
+export const updateReloadChat = createAsyncThunk(
+  'auth/updateReloadChat ',
+  async (reloadChat, { rejectWithValue }) => {
+    try {
+      return reloadChat;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Reload Chat update failed');
+    }
+  }
+);
+
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -250,6 +308,8 @@ export const authSlice = createSlice({
     sessionId: null,
     accessToken: null,
     isLoading: false,
+    redirectTo: null,
+    reloadChat: false,
     error: {},
   },
   reducers: {
@@ -259,6 +319,8 @@ export const authSlice = createSlice({
       state.sessionId = null;
       state.accessToken = null;
       state.isLoggedIn = false;
+      state.redirectTo = null;
+      state.reloadChat = false;
       deltCookie();
     },
   },
@@ -321,24 +383,20 @@ export const authSlice = createSlice({
     // update profile
     builder.addCase(updateProfile.pending, (state) => {
       state.isLoading = true;
-      state.sessionId = null;
       state.error = null;
     });
     builder.addCase(updateProfile.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
-      state.sessionId = action.payload.profileData.sessionId;
       state.error = null;
     });
     builder.addCase(updateProfile.rejected, (state, action) => {
       state.isLoading = false;
       state.error = 'Update failed';
-      state.sessionId = null;
     });
     // update session id
     builder.addCase(updateSessionId.pending, (state) => {
       state.isLoading = true;
-      state.sessionId = null;
       state.error = null;
     });
     builder.addCase(updateSessionId.fulfilled, (state, action) => {
@@ -350,6 +408,76 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.error = 'Session ID update failed';
     });
+    // update local session id
+    builder.addCase(updateLocalSessionId.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateLocalSessionId.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.sessionId = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateLocalSessionId.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = 'Session ID update failed';
+    });
+    // loginAnnonymousUser
+    builder.addCase(loginAnnonymousUser.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(loginAnnonymousUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.uid = action.payload;
+      state.error = null;
+    });
+    builder.addCase(loginAnnonymousUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.uid = null;
+      state.error = action.payload;
+    });
+    // update redirect to
+    builder.addCase(updateRedirectTo.pending, (state) => {
+      state.isLoading = true;
+      state.redirectTo = null;
+      state.error = null;
+    });
+    builder.addCase(updateRedirectTo.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.redirectTo = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateRedirectTo.rejected, (state, action) => {
+      state.isLoading = false;
+      state.redirectTo = null;
+      state.error = 'Redirect To update failed';
+    });
+    // update reload chat
+    builder.addCase(updateReloadChat.pending, (state) => {
+      state.isLoading = true;
+      state.reloadChat = false;
+      state.error = null;
+    });
+    builder.addCase(updateReloadChat.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.reloadChat = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateReloadChat.rejected, (state, action) => {
+      state.isLoading = false;
+      state.reloadChat = false;
+      state.error = 'Reload Chat update failed';
+    });
+
+    // get subscription status
+    builder.addCase(getSubscriptionStatus.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user = action.payload;
+      state.sessionId = action.payload.sessionId;
+      state.error = null;
+    });
+   
   },
 });
 
