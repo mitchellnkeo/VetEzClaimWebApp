@@ -70,7 +70,7 @@ export const getSubscriptionStatus = createAsyncThunk(
         return false; // or null if you prefer
       }
       const data = docSnap.data();
-      return data.subscriptionStatus || false;
+      return data ; // data.subscriptionStatus || false;
     } catch (error) {
       return rejectWithValue(
         error.message || 'Subscription status retrieval failed'
@@ -121,7 +121,7 @@ const revenueCatSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(getSubscriptionStatus.fulfilled, (state, action) => {
-        state.isSubscribed = action.payload;
+        state.isSubscribed = action.payload.subscriptionStatus || false;
         state.error = null;
       })
       .addCase(getSubscriptionStatus.rejected, (state, action) => {

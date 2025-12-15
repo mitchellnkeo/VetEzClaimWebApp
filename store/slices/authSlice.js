@@ -12,6 +12,7 @@ import { auth, db, provider } from '@/firebase/firebase';
 import { sendOtp, verifyOtp } from '@/services/auth';
 import { seed, deltCookie } from '@/helpers/sessionHelper';
 import { signInWithPopup, signOut } from 'firebase/auth';
+import { getSubscriptionStatus } from './revenueCatSlice';
 
 export const loginAnnonymousUser = createAsyncThunk(
   "auth/loginAnnonymousUser",
@@ -382,24 +383,20 @@ export const authSlice = createSlice({
     // update profile
     builder.addCase(updateProfile.pending, (state) => {
       state.isLoading = true;
-      state.sessionId = null;
       state.error = null;
     });
     builder.addCase(updateProfile.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
-      state.sessionId = action.payload.profileData.sessionId;
       state.error = null;
     });
     builder.addCase(updateProfile.rejected, (state, action) => {
       state.isLoading = false;
       state.error = 'Update failed';
-      state.sessionId = null;
     });
     // update session id
     builder.addCase(updateSessionId.pending, (state) => {
       state.isLoading = true;
-      state.sessionId = null;
       state.error = null;
     });
     builder.addCase(updateSessionId.fulfilled, (state, action) => {
@@ -414,7 +411,6 @@ export const authSlice = createSlice({
     // update local session id
     builder.addCase(updateLocalSessionId.pending, (state) => {
       state.isLoading = true;
-      state.sessionId = null;
       state.error = null;
     });
     builder.addCase(updateLocalSessionId.fulfilled, (state, action) => {
@@ -473,6 +469,15 @@ export const authSlice = createSlice({
       state.reloadChat = false;
       state.error = 'Reload Chat update failed';
     });
+
+    // get subscription status
+    builder.addCase(getSubscriptionStatus.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user = action.payload;
+      state.sessionId = action.payload.sessionId;
+      state.error = null;
+    });
+   
   },
 });
 
