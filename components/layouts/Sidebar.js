@@ -7,9 +7,8 @@ import AnimateHeight from 'react-animate-height';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import MenuItem from './MenuItem';
-import { isUserOver18 } from '@/utils/common';
-import { FaFile, FaFileAlt, FaFileExport } from 'react-icons/fa';
-import { FaFileInvoice, FaFileCircleExclamation } from 'react-icons/fa6';
+import { getProfileStatus } from '@/utils/common';
+
 
 import {
   DashboardIcon,
@@ -28,43 +27,20 @@ const Sidebar = () => {
   const router = useRouter();
   const { user } = useSelector((state) => state.auth);
   const [currentMenu, setCurrentMenu] = useState('');
-  const themeConfig = useSelector((state) => state.themeConfig);
   const semidark = useSelector((state) => state.themeConfig.semidark);
   const [buttonStatus, setButtonStatus] = useState(0);
 
 
+
   const toggleMenu = (value) => setCurrentMenu(value);
 
-  const isProfileComplete = async () => {
-    if (
-      user.firstName &&
-      user.lastName &&
-      user.email &&
-      user.birthday &&
-      user.phone &&
-      user.ssn &&
-      user.branchOfService &&
-      user.street &&
-      user.city &&
-      user.province &&
-      user.zipCode &&
-      user.country &&
-      user.signature
-    ) {
-      const isOver18 = await isUserOver18(user.birthday);
-      if (isOver18) {
-        setButtonStatus(2);
-      } else {
-        setButtonStatus(1);
-      }
-    } else {
-      setButtonStatus(0);
-    }
-  };
 
   useEffect(() => {
+    // console.log('[Sidebar] user:', user);
     if (user) {
-      isProfileComplete();
+      const profileStatus = getProfileStatus(user);
+      setButtonStatus(profileStatus);
+      // console.log('[Sidebar] profileStatus:', profileStatus);
     }
   }, [user]);
 
