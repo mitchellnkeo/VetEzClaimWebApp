@@ -12,12 +12,13 @@ import { FaRobot } from 'react-icons/fa';
 import { RiChatNewLine } from 'react-icons/ri';
 import { RxCross2 } from 'react-icons/rx';
 import { FaExpand, FaCompress } from 'react-icons/fa';
+import { getProfileStatus } from '@/utils/common';
 
 export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, isAiAssistant = false }) {
   const winRef = useRef(null);
   const fileInputRef = useRef(null);
   const bodyRef = useRef(null);
-  const { uid, sessionId, reloadChat} = useSelector((state) => state.auth);
+  const { uid, sessionId, reloadChat, user} = useSelector((state) => state.auth);
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
@@ -479,11 +480,15 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                                                                   );
                                                                 }
                                                                 return;
-                                                              } 
+                                                              }
                                                               if (
                                                                 matchedForm?.formUrl
                                                               ) {
-
+                                                                const profileStatus = getProfileStatus(user);
+                                                                if (profileStatus < 2) {
+                                                                  toast.error('Please complete your profile to access this form.'); 
+                                                                  return;
+                                                                }
                                                                 window.open(
                                                                   `${window.location.origin}${matchedForm.formUrl}`,
                                                                   '_blank'

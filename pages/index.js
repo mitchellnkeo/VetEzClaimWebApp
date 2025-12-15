@@ -7,6 +7,7 @@ import { isUserOver18 } from '@/utils/common';
 import { updateRedirectTo, updateSessionId, updateReloadChat } from '../store/slices/authSlice';
 import { transferChatSession } from '@/services/chatService';
 import Loader from '@/components/Common/Loader';
+import { getProfileStatus } from '@/utils/common';
 
 
 
@@ -21,19 +22,14 @@ const Dashboard = () => {
   const anonymousUid = localStorage.getItem('anonymousUid');
   const localSessionId = localStorage.getItem('chatSessionId');
 
-  const isValidUser = () => {
-    const isValid = user.firstName && user.lastName && user.email && user.birthday && user.phone && user.ssn && user.branchOfService && user.street && user.city && user.province && user.zipCode && user.country && user.signature;
-    if(isValid){
-      return true;
-    } else {
-      return false;
-    }
-  }
+  useEffect(() => {
+    console.log('[Dashboard] I am mounted');
+  }, []);
 
   useEffect(() => {
     const doTransfer = async () => {
       setIsLoading(true);
-      const profileStatus = await isProfileComplete();
+      const profileStatus = getProfileStatus(user);
       try {
         const isReady =
           isAiAssistant &&
@@ -74,26 +70,11 @@ const Dashboard = () => {
   }, [anonymousUid, localSessionId, isAiAssistant, redirectTo, user]);
   
 
-  const isProfileComplete = async () => {
-    if (isValidUser()) {
-      const isOver18 = await isUserOver18(user.birthday);
-      if (isOver18) {
-        return 2; 
-      } else {
-        return 1; 
-      }
-    }
-    return 0;
-  };
-
   useEffect(() => {
-    process.env.NODE_ENV === 'development' && console.log('user Info: ', user);
+    // process.env.NODE_ENV === 'development' && console.log('user Info: ', user);
     if (user) {
-      const run = async () => {
-        const profileStatus = await isProfileComplete();
+        const profileStatus = getProfileStatus(user);
         setProfileStatus(profileStatus);
-      };
-      run();
     }
   }, [user]);
 
