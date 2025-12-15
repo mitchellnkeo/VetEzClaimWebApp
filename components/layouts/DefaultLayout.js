@@ -57,9 +57,9 @@ const DefaultLayout = ({ children, title }) => {
   }, [themeConfig.animation]);
 
   useEffect(() => {
-    if (!user) {
-      router.replace('/');
-    }
+    // if (!user) {
+    //   router.replace('/');
+    // }
     setTimeout(() => {
       setAnimation('');
     }, 1100);

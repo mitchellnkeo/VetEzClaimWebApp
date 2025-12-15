@@ -27,3 +27,33 @@ export const isUserOver18 = async (dob) => {
   }
   return age >= 18;
 };
+
+
+export const getProfileStatus = (user) => {
+  if (!user) return 0;
+  const requiredFields = [
+    'firstName',
+    'lastName',
+    'email',
+    'birthday',
+    'phone',
+    'ssn',
+    'branchOfService',
+    'street',
+    'city',
+    'province',
+    'zipCode',
+    'country',
+    'signature',
+  ];
+
+  const isComplete = requiredFields.every(
+    (field) => Boolean(user[field])
+  );
+
+  if (!isComplete) {
+    return 0;
+  }
+
+  return isUserOver18(user.birthday) ? 2 : 1;
+};
