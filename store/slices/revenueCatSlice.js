@@ -120,12 +120,19 @@ const revenueCatSlice = createSlice({
       .addCase(updateSubscriptionStatus.rejected, (state, action) => {
         state.error = action.payload;
       })
-      .addCase(getSubscriptionStatus.fulfilled, (state, action) => {
-        state.isSubscribed = action.payload.subscriptionStatus || false;
+      .addCase(getSubscriptionStatus.pending, (state, action) => {
+        state.isSubscribed = state.isSubscribed || false;
         state.error = null;
       })
+      .addCase(getSubscriptionStatus.fulfilled, (state, action) => {
+        state.isSubscribed = action.payload?.subscriptionStatus || false;
+        state.error = null;
+        // console.log("[getSubscriptionStatus.isSubscribed]  >>>", state.isSubscribed);
+      })
       .addCase(getSubscriptionStatus.rejected, (state, action) => {
+        // console.log("[getSubscriptionStatus.rejected] action.payload >>>", action.payload);
         state.error = action.payload;
+        state.isSubscribed = false;
       });
   },
 });
