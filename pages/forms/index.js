@@ -31,7 +31,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'submit_claim' }));
         router.push('/forms/menu');
       },
-      disabled: !isSubscribed,
+      disabled: isSubscribed == true ? false : true,
     },
     {
       name: 'File An Appeal',
@@ -39,7 +39,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'file_appeal' }));
         router.push('/forms/menu');
       },
-      disabled: !isSubscribed,
+      disabled: isSubscribed == true ? false : true,
     },
     {
       name: 'Sworn Statements and Misc Forms',
@@ -47,7 +47,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'misc_forms' }));
         router.push('/forms/menu');
       },
-      disabled: !isSubscribed,
+      disabled: isSubscribed == true ? false : true,
     },
     {
       name: 'Request C-file/DD 214',
@@ -55,7 +55,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'request_cfile' }));
         router.push('/forms/menu');
       },
-      disabled: !isSubscribed,
+      disabled: isSubscribed == true ? false : true,
     },
     {
       name: 'Request Buddy Statement (Form 21-10210)',
@@ -63,7 +63,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'buddy_statement' }));
         router.push('/forms/buddy-requests');
       },
-      disabled: !isSubscribed,
+      disabled: isSubscribed == true ? false : true,
     },
   ];
 

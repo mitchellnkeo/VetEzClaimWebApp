@@ -224,7 +224,7 @@ export default function TDIUForm() {
         preTitle="Form Menu"
         currentTitle={formTitle}
       />
-      {!isSubscribed && <SubscriptionRequired />}
+      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={TDIUFormValidationSchema}

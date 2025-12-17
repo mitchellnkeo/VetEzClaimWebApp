@@ -170,7 +170,7 @@ export default function HigherLevelReviewForm() {
         preTitle="Form Menu"
         currentTitle={formTitle}
       />
-      {!isSubscribed && <SubscriptionRequired />}
+      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={HigherLevelReviewValidationSchema}

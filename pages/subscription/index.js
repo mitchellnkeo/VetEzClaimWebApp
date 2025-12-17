@@ -14,30 +14,24 @@ export default function Subscription() {
   const [isloading, setIsLoading] = useState(false);
   const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [isOpen, setIsOpen] = useState(false);
-  const [isSubscribedStatus, setIsSubscribedStatus] = useState(false);
+  const [isSubscribedStatus, setIsSubscribedStatus] = useState(isSubscribed == true ? true : false);
 
   process.env.NODE_ENV === 'development' &&
-    console.log('>> Subscription :: isSubscribed:', isSubscribed);
-  process.env.NODE_ENV === 'development' &&
-    console.log('>> Subscription :: user:', user);
-  process.env.NODE_ENV === 'development' &&
-    console.log('>> Subscription :: uid:', uid);
+    console.log('[Subscription] :: isSubscribed:', isSubscribedStatus);
+  // process.env.NODE_ENV === 'development' &&
+  //   console.log('>> Subscription :: user:', user);
+  // process.env.NODE_ENV === 'development' &&
+  //   console.log('>> Subscription :: uid:', uid);
 
   const openDialog = () => setIsOpen(true);
   const closeDialog = () => setIsOpen(false);
-
-  useEffect(() => {
-    if (isSubscribed) {
-      setIsSubscribedStatus(true);
-    }
-  }, [isSubscribed]);
 
   const handleSubscribeClick = async () => {
     setIsLoading(true);
     try {
       // Call the singleton purchase function
       await revenueCatManager.handleSubscribe();
-      setIsSubscribedStatus(true);
+      // setIsSubscribedStatus(true);
       openDialog();
     } catch (err) {
       process.env.NODE_ENV === 'development' && console.error('>> err:', err);
@@ -127,7 +121,7 @@ export default function Subscription() {
 
       {isOpen && subscriptionDialog}
 
-      {isSubscribedStatus && subscribedMessage}
+      {isSubscribedStatus == true && subscribedMessage}
       <div className=" mx-auto mt-8 max-w-4xl rounded-lg bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-white-light">
         <div className="rounded-lg bg-primary p-6 text-white">
           <h3 className="mb-4 text-lg font-semibold">Includes ability to:</h3>
@@ -197,7 +191,7 @@ export default function Subscription() {
           <p className="text-sm">Description: Basic Subscription Package</p>
         </div>
 
-        {!isSubscribed && (
+        {isSubscribedStatus == false && (
           <button
             className="mt-4 w-full rounded-lg bg-primary py-3 font-semibold text-white transition-colors hover:bg-primaryHover"
             onClick={handleSubscribeClick}

@@ -4,12 +4,14 @@ import {
   toggleTheme,
 } from '@/store/slices/themeConfigSlice';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { DarkThemeIcon, ToggleThemeIcon } from '../icons/SvgIcons';
 
 
 export default function HeaderPublic() {
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.themeConfig.theme);
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(toggleTheme(theme));
@@ -19,6 +21,9 @@ export default function HeaderPublic() {
     <header className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-primary dark:bg-gray-800 shadow-sm">
       <div className="flex items-center space-x-2">
         <div className="w-24 h-8 flex items-center justify-center">
+          <button onClick={() => {
+            router.push('/');
+          }}>
           <Image
             src="/assets/images/vetez-sidelogo.png"
             alt="VetEZ Logo"
@@ -26,6 +31,7 @@ export default function HeaderPublic() {
             height={100}
             className="rounded"
           />
+          </button>
         </div>
       </div>
 

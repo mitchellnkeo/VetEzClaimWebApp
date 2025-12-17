@@ -183,7 +183,7 @@ const AnalyzeUI = () => {
     <FrontLayout title="Document Analyzer">
       <Breadcrumb preUrl="/" preTitle="Home" currentTitle="Document Analyzer" />
       <Loader show={isLoading} />
-      {!isSubscribed && <SubscriptionRequired />}
+      {isSubscribed != true && <SubscriptionRequired />}
 
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">

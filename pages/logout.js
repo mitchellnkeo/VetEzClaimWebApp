@@ -16,6 +16,8 @@ const Logout = () => {
     dispatch(logoutUser({}))
       .then(() => {
         dispatch(logoutRevenueCat());
+        localStorage.removeItem("chatSessionId");
+        localStorage.removeItem("anonymousUid");
         window.location.replace(
           redirectUrl ? `/login?redirectUrl=${redirectUrl}` : `/login`
         );
