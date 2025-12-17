@@ -243,7 +243,7 @@ export default function SubmitToIntentForm() {
         preTitle="Form Menu"
         currentTitle="Request C-File/DD 214 (Form 20-10206)"
       />
-      {!isSubscribed && <SubscriptionRequired />}
+      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={RequestCFileValidation}

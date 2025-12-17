@@ -192,6 +192,8 @@ export default function NewClaimForm() {
   const router = useRouter();
   const { ['in-progress']: inProgress } = router.query;
 
+  console.log("[NewClaimForm] isSubscribed >>>", isSubscribed);
+
   const [initialValues, setInitialValues] = useState({
     program: '',
     firstName: '',
@@ -344,7 +346,7 @@ export default function NewClaimForm() {
         preTitle="Form Menu"
         currentTitle="New Claim or Increase (Form 21-526EZ)"
       />
-      {!isSubscribed && <SubscriptionRequired />}
+      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={NewClaimFileValidation}

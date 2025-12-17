@@ -222,7 +222,7 @@ export const logoutUser = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       await signOut(auth);   
-      console.log("current user >>>", auth.currentUser);
+      console.log("[logoutUser] current user >>>", auth.currentUser);
       thunkAPI.dispatch(logout());
       return true;
     } catch (error) {
@@ -314,13 +314,14 @@ export const authSlice = createSlice({
   },
   reducers: {
     logout: (state) => {
+      state.sessionId = null;
       state.user = {};
       state.uid = null;
-      state.sessionId = null;
       state.accessToken = null;
       state.isLoggedIn = false;
       state.redirectTo = null;
       state.reloadChat = false;
+      console.log("[logout] state >>>", state.sessionId, state.user, state.uid, state.accessToken, state.isLoggedIn, state.redirectTo, state.reloadChat);
       deltCookie();
     },
   },
@@ -473,8 +474,10 @@ export const authSlice = createSlice({
     // get subscription status
     builder.addCase(getSubscriptionStatus.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.user = action.payload;
-      state.sessionId = action.payload.sessionId;
+      if( state.isLoggedIn == true ) {
+        state.user = action.payload;
+        state.sessionId = action.payload.sessionId;
+      }
       state.error = null;
     });
    

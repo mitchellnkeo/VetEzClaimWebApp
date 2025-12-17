@@ -407,7 +407,7 @@ export default function BuddyForm() {
         currentTitle={formTitle}
       />
       {reviewModal}
-      {!isSubscribed && <SubscriptionRequired />}
+      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={BuddyFormValidationSchema}

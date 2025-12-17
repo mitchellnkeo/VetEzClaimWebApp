@@ -31,7 +31,7 @@ export default function MenuPage() {
         preTitle="Forms"
         currentTitle={`${menuItem ? menuItem.title : ''} Menu`}
       />
-      {!isSubscribed && selectedForm.id !== 'court_appeal' && (
+      {isSubscribed != true && selectedForm.id !== 'court_appeal' && (
         <SubscriptionRequired />
       )}
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">

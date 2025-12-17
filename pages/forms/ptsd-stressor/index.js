@@ -134,7 +134,7 @@ export default function PTSDStressorForm() {
         preTitle="Form Menu"
         currentTitle={formTitle}
       />
-      {!isSubscribed && <SubscriptionRequired />}
+      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={PTSDStressorValidationSchema}

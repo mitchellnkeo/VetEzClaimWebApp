@@ -339,7 +339,13 @@ const UserRegistration = () => {
             <p className="forgot-password flex items-center justify-end gap-1 text-right">
               <span>Already registered?</span>
               <a
-                href="/login"
+                onClick={() => {
+                  if (isAiAssistant) {
+                    router.push(`/login?assist=true`);
+                  } else {
+                    router.push('/login');
+                  }
+                }}
                 className="font-bold text-green-400  hover:no-underline"
               >
                 Login

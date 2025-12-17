@@ -24,10 +24,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     console.log('[Dashboard] I am mounted');
+    console.log('[Dashboard] redirectTo >>>', redirectTo);
   }, []);
 
   useEffect(() => {
     const doTransfer = async () => {
+      console.log('[Dashboard] doTransfer >>>', redirectTo);
+      console.log('[Dashboard] anonymousUid >>>', anonymousUid);
+      console.log('[Dashboard] localSessionId >>>', localSessionId);
+      console.log('[Dashboard] user >>>', user);
       setIsLoading(true);
       const profileStatus = getProfileStatus(user);
       try {
@@ -43,22 +48,23 @@ const Dashboard = () => {
           userId: user.uid,
           anonymousUid: anonymousUid,
           anonymousSessionId: localSessionId,
-        });
+        }); 
+        console.log('[Dashboard] response >>>', response.data);
   
         if (response?.data) {
-          localStorage.removeItem("chatSessionId");
-          localStorage.removeItem("anonymousUid");
-  
           await dispatch(
             updateSessionId({ uid: user.uid, sessionId: response.data })
           ).unwrap();
           await dispatch(updateRedirectTo(null)).unwrap();
           await dispatch(updateReloadChat(true)).unwrap();
-
-          if (redirectTo && profileStatus === 2) {
-            router.push(redirectTo);
-          }
         }
+        
+        if (redirectTo && profileStatus === 2) {
+          router.push(redirectTo);
+        }
+        localStorage.removeItem("chatSessionId");
+        localStorage.removeItem("anonymousUid");
+
       } catch (error) {
         console.error("[doTransfer] Error:", error);
       } finally {
