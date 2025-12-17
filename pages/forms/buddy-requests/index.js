@@ -762,7 +762,7 @@ export default function BuddyRequests() {
         isOpen={outerToastOpen}
         onClose={() => setOuterToastOpen(false)}
       />
-      {!isSubscribed && <SubscriptionRequired />}
+      {isSubscribed != true && <SubscriptionRequired />}
       <FrontLayout title={pageTitle}>
         <Loader show={isloading} />
         <Breadcrumb preUrl="/forms" preTitle="Forms" currentTitle={pageTitle} />
