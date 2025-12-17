@@ -14,7 +14,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { FaExpand, FaCompress } from 'react-icons/fa';
 import { getProfileStatus } from '@/utils/common';
 
-export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, isAiAssistant = false }) {
+export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, isAiAssistant = false, showAuthRequiredModal = () => {}}) {
   const winRef = useRef(null);
   const fileInputRef = useRef(null);
   const bodyRef = useRef(null);
@@ -31,7 +31,8 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
 
 
   const fetchMessages = async () => {
-    // console.log("[ChatWindow] fetchMessages >>>", uid, sessionId);
+    console.log("[ChatWindow] fetchMessages >>>", uid, sessionId);
+    if( isAiAssistant ) return;
     if (!uid || !sessionId) return;
     if (didFetchMessages.current) return; 
     didFetchMessages.current = true;
@@ -226,29 +227,35 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
       ref={winRef}
       className={`
         ${isAiAssistant
-          ?
-            `relative mx-auto my-2 flex
-             ${isExtended ? 'h-[650px]' : 'h-[650px]'}
-             ${isExtended ? 'w-full' : 'w-full max-w-5xl'}
-             flex-col overflow-hidden rounded-2xl`
-          :
-            `fixed bottom-24 right-5 z-[9998] flex
-             ${isExtended ? 'h-[650px]' : 'h-[600px]'}
-             ${isExtended ? 'w-4/5' : 'w-96'}
-             transform flex-col overflow-hidden rounded-2xl
-             ${
-               open
-                 ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
-                 : 'pointer-events-none translate-y-2 scale-95 opacity-0'
-             }`
+          ? `
+            relative mx-auto my-2 flex h-[650px] w-full max-w-5xl
+            flex-col overflow-hidden
+            bg-white/10 dark:backdrop-blur-xl
+            ring-1 ring-white/20 dark:ring-0
+            `
+          : `
+            fixed bottom-24 right-5 z-[9998] flex
+            ${isExtended ? 'h-[650px]' : 'h-[600px]'}
+            ${isExtended ? 'w-4/5' : 'w-96'}
+            transform flex-col overflow-hidden rounded-2xl
+            ${
+              open
+                ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
+                : 'pointer-events-none translate-y-2 scale-95 opacity-0'
+            }
+            `
         }
-    
-        /* ⭐ Common shared styles */
-        bg-white/90 from-white/90 to-gray-100 text-gray-900
-        shadow-2xl ring-1 ring-gray-300/50 backdrop-blur-sm
-        transition-all duration-300 
-        dark:bg-gradient-to-b dark:from-gray-900 dark:to-black
-        dark:text-white dark:ring-white/10
+      
+        /* ⭐ Common shared styles (unchanged) */
+        ${!isAiAssistant ? `
+          bg-white/90 from-white/90 to-gray-100 text-gray-900
+          shadow-2xl ring-1 ring-gray-300/50 backdrop-blur-sm
+          dark:bg-gradient-to-b dark:from-gray-900 dark:to-black
+          dark:text-white dark:ring-white/10
+        ` : `
+          text-gray-900 dark:text-white
+        `}
+        transition-all duration-300
       `}
     >
       {/* Header */}
@@ -472,7 +479,8 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                                                               if (isAiAssistant) {
                                                                 if (matchedForm?.formUrl) {
                                                                   await dispatch(updateRedirectTo(matchedForm.formUrl)).unwrap();
-                                                                  window.location.href = `${window.location.origin}/registration?assist=true`; 
+                                                                 // window.location.href = `${window.location.origin}/registration?assist=true`; 
+                                                                  showAuthRequiredModal();
                                                                 } else {
                                                                   toast.warning(
                                                                     rec.explanation ||
@@ -569,7 +577,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
       </div>
 
       {/* Input Area Wrapper */}
-      <div className="flex flex-col border-t border-gray-300/50 bg-gray-100/70 p-2 dark:border-white/10 dark:bg-neutral-900/70">
+      <div className={`flex flex-col border-t border-gray-300/50 ${isAiAssistant ? 'bg-gray-200 dark:bg-gray' : 'bg-gray-100/70'} p-2 dark:border-white/10 dark:bg-neutral-900/70`}>
         {/* File banner above the input row */}
         {selectedFile && (
           <div className="mb-1 flex items-center justify-between rounded-md bg-gray-200 px-3 py-1 text-sm dark:bg-neutral-800/60">
@@ -623,7 +631,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
               disabled={isThinking}
               rows={1}
               placeholder="Type a message..."
-              className="max-h-20 flex-1 resize-none rounded-md border-none bg-gray-200 p-2 text-gray-900 placeholder-gray-500 outline-none focus:ring-1 focus:ring-blue-500 dark:bg-neutral-800/60 dark:text-white dark:placeholder-gray-400"
+              className={`max-h-20 flex-1 resize-none rounded-md border-none ${isAiAssistant ? 'bg-gray-50' : 'bg-gray-200'} p-2 text-gray-900 placeholder-gray-500 outline-none focus:ring-1 focus:ring-blue-500 dark:bg-neutral-800/60 dark:text-white dark:placeholder-gray-400`}
               onInput={(e) => {
                 e.target.style.height = 'auto';
                 e.target.style.height = e.target.scrollHeight + 'px';
