@@ -1,9 +1,14 @@
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage, isSupported } from 'firebase/messaging';
 import app from './firebase';
 
 const getMessagingClient = () => {
   if (typeof window === 'undefined') return null; // SSR check
   try {
+    if (!isSupported()) {
+      process.env.NODE_ENV === 'development' &&
+        console.warn('Messaging not supported in this browser');
+      return null;
+    }
     return getMessaging(app);
   } catch (err) {
     process.env.NODE_ENV === 'development' &&
