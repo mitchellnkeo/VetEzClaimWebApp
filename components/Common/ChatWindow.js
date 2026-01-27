@@ -13,9 +13,12 @@ import { RiChatNewLine } from 'react-icons/ri';
 import { RxCross2 } from 'react-icons/rx';
 import { FaExpand, FaCompress } from 'react-icons/fa';
 import { getProfileStatus } from '@/utils/common';
+import { getRandomSuggestedPrompts } from '@/utils/suggestedPrompts';
+
 
 export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, isAiAssistant = false, showAuthRequiredModal = () => {}}) {
   const winRef = useRef(null);
+  const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
   const bodyRef = useRef(null);
   const { uid, sessionId, reloadChat, user} = useSelector((state) => state.auth);
@@ -28,6 +31,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
   const [addInstructions, setAddInstructions] = useState(true);
   const dispatch = useDispatch();
   const didFetchMessages = useRef(false);
+  const [suggestedPrompts, setSuggestedPrompts] = useState([]);
 
 
   const fetchMessages = async () => {
@@ -79,6 +83,15 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
   };
 
   useEffect(() => {
+      const ta = textareaRef.current;
+      if (ta) {
+        ta.style.height = 'auto';
+        ta.style.height = ta.scrollHeight + 'px';
+        ta.scrollTop = ta.scrollHeight;
+      }
+    }, [message]);
+
+  useEffect(() => {
     fetchMessages();
   }, [reloadChat]);
 
@@ -100,7 +113,8 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
   }, [chat]);
 
   useEffect(() => {
-    fetchMessages();
+    const randomPrompts = getRandomSuggestedPrompts();
+    setSuggestedPrompts(randomPrompts);
   }, []); 
 
   const scrollToBottom = () => {
@@ -221,6 +235,10 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
 
   // console.log("isExtended >>>", isExtended);
 
+  const handleSuggestionClick = (text) => {
+    setMessage(text);
+    setAddInstructions(true);
+  };
 
   return (
     <div
@@ -579,6 +597,25 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
       {/* Input Area Wrapper */}
       <div className={`flex flex-col border-t border-gray-300/50 ${isAiAssistant ? 'bg-gray-200 dark:bg-gray' : 'bg-gray-100/70'} p-2 dark:border-white/10 dark:bg-neutral-900/70`}>
         {/* File banner above the input row */}
+
+        {/* Suggestions Bar */}
+        <div className="h-12 overflow-x-auto no-scrollbar">
+          <div className="flex h-full items-center gap-2 px-2  no-scrollbar  shadow-[0_-1px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_-1px_6px_rgba(0,0,0,0.35)]">
+            {suggestedPrompts.map((prompt) => (
+              <button
+                key={prompt}
+                onClick={() => handleSuggestionClick(prompt)}
+                disabled={isThinking}
+                className="whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-blue-100 hover:text-blue-700 disabled:opacity-50 dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+
+
         {selectedFile && (
           <div className="mb-1 flex items-center justify-between rounded-md bg-gray-200 px-3 py-1 text-sm dark:bg-neutral-800/60">
             <span className="truncate">{selectedFile.name}</span>
@@ -614,7 +651,9 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                 onChange={(e) => {
                   if (e.target.files.length > 0) {
                     setSelectedFile(e.target.files[0]);
-                    setAddInstructions(false);
+                    if(!message) {
+                      setAddInstructions(false);
+                    }
                     if (fileInputRef.current) {
                       fileInputRef.current.value = null;
                     }
@@ -623,20 +662,24 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
               />
             </label>
 
-            {/* Textarea */}
             <textarea
+            ref={textareaRef}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyPress}
               disabled={isThinking}
               rows={1}
               placeholder="Type a message..."
-              className={`max-h-20 flex-1 resize-none rounded-md border-none ${isAiAssistant ? 'bg-gray-50' : 'bg-gray-200'} p-2 text-gray-900 placeholder-gray-500 outline-none focus:ring-1 focus:ring-blue-500 dark:bg-neutral-800/60 dark:text-white dark:placeholder-gray-400`}
+              className={`max-h-20 flex-1 resize-none rounded-md border-none ${isAiAssistant ? 'bg-gray-50' : 'bg-gray-200'} p-2 text-gray-900 placeholder-gray-500 outline-none focus:ring-1 focus:ring-blue-500 dark:bg-neutral-800/60 dark:text-white dark:placeholder-gray-400 overflow-y-auto`}
               onInput={(e) => {
-                e.target.style.height = 'auto';
-                e.target.style.height = e.target.scrollHeight + 'px';
+                e.target.style.height = 'auto'; // reset height
+                e.target.style.height = e.target.scrollHeight + 'px'; // expand to fit
+                if (e.target.scrollHeight > e.target.clientHeight) {
+                  e.target.scrollTop = e.target.scrollHeight;
+                }
               }}
             />
+
 
             {/* Send Button */}
             <button

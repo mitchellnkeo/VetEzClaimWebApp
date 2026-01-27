@@ -24,7 +24,7 @@ const monthData = [
 ];
 
 const currentYear = new Date().getFullYear();
-const yearData = Array.from({ length: 48 }, (_, i) =>
+const yearData = Array.from({ length: 49 }, (_, i) =>
   (currentYear - i).toString()
 );
 const ratingPercentageData = [
