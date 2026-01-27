@@ -63,6 +63,15 @@
     body.dark {
         @apply bg-[#060818];
     }
+    /* global.css */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE & Edge */
+        scrollbar-width: none;     /* Firefox */
+    }
 
     /* Panel */
     .panel {
