@@ -3,12 +3,11 @@ import FrontLayout from '@/components/layouts/FrontLayout';
 import { useEffect, useState, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { isUserOver18 } from '@/utils/common';
 import { updateRedirectTo, updateSessionId, updateReloadChat } from '../store/slices/authSlice';
 import { transferChatSession } from '@/services/chatService';
 import Loader from '@/components/Common/Loader';
 import { getProfileStatus } from '@/utils/common';
-
+import { updateProfile, updateChatbotConsent } from '@/store/slices/authSlice';
 
 
 const Dashboard = () => {
@@ -83,6 +82,37 @@ const Dashboard = () => {
         setProfileStatus(profileStatus);
     }
   }, [user]);
+
+
+  
+  useEffect(() => {
+    if (!user) return;
+    const syncConsent = async () => {
+      try {
+        console.log('[Dashboard] user.hasChatbotConsent >>>', user.hasChatbotConsent);
+        console.log('[Dashboard] isAiAssistant >>>', isAiAssistant);
+        if(user.hasChatbotConsent === undefined) {
+          console.log('[Dashboard] updating chatbot consent based on isAiAssistant');
+          await dispatch(
+            updateProfile({
+              uid: user.uid,
+              hasChatbotConsent: isAiAssistant,
+            })
+          ).unwrap();
+          dispatch(updateChatbotConsent(isAiAssistant));
+        }else {
+          console.log('[Dashboard] updating chatbot consent based on user.hasChatbotConsent');
+          dispatch(updateChatbotConsent(user.hasChatbotConsent));
+        }
+      } catch (err) {
+        console.error('Failed to sync chatbot consent', err);
+      }
+    };
+  
+    syncConsent();
+  }, [user, isAiAssistant]);
+
+
 
   return (
     <FrontLayout title="Dashboard">

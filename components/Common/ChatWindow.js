@@ -14,6 +14,8 @@ import { RxCross2 } from 'react-icons/rx';
 import { FaExpand, FaCompress } from 'react-icons/fa';
 import { getProfileStatus } from '@/utils/common';
 import { getRandomSuggestedPrompts } from '@/utils/suggestedPrompts';
+import { MessagePopup } from '@/utils/toastHelper';
+import { stripMarkdown } from '@/utils/utils';
 
 
 export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, isAiAssistant = false, showAuthRequiredModal = () => {}}) {
@@ -32,6 +34,16 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
   const dispatch = useDispatch();
   const didFetchMessages = useRef(false);
   const [suggestedPrompts, setSuggestedPrompts] = useState([]);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+
+
+  const showMessage = (msg) => {
+    setPopupMessage(msg);
+    setShowPopup(true);
+  };
+
+  const handleClose = () => setShowPopup(false);
 
 
   const fetchMessages = async () => {
@@ -92,7 +104,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
     }, [message]);
 
   useEffect(() => {
-    fetchMessages();
+    // fetchMessages();
   }, [reloadChat]);
 
   useEffect(() => {
@@ -240,6 +252,72 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
     setAddInstructions(true);
   };
 
+
+  const handleFileInput = (e) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+  
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    // Clear input so user can select the same file again if needed
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
+    }
+  };
+
+  const GetStarted = async () => {
+    let trimmed = message.trim();
+    if ((!trimmed && !selectedFile) || isThinking) return;
+    const hasFile = selectedFile ? true : false;
+    const fileName = selectedFile ? selectedFile.name : null;
+    if(hasFile && !trimmed) {
+      trimmed = fileName;
+    }
+    try {
+      setIsLoading(true);
+      const userMessage = {
+        role: 'user',
+        content: trimmed,
+        hasFile: hasFile,
+        fileName: fileName,
+      };
+
+      const response = await sendChatMessage({
+        message: trimmed,
+        userId: uid,
+        sessionId: sessionId,
+        file: selectedFile,
+      });
+      setSelectedFile(null);
+      if (isAiAssistant) {
+        await dispatch(updateLocalSessionId(response.data.sessionId)).unwrap();
+      } else {
+        await dispatch(updateSessionId({ uid, sessionId: response.data.sessionId })).unwrap();
+      }
+
+      if (response.data.response.type === 'chat') {
+        const plainText = stripMarkdown(response.data.response.message);
+        showMessage(plainText);
+        setSelectedFile(null)
+        console.log(response.data.response.message);
+      } else {
+        const aiMessage = {
+          role: 'assistant',
+          content: response.data.response.data.va_analysis_json,
+          hasFile: true,
+          fileName: fileName,
+        };
+        setChat((prev) => [...prev, userMessage, aiMessage]);
+        scrollToBottom();
+      }
+    } catch (err) {
+      process.env.NODE_ENV === 'development' && console.error(err);  
+      toast.error(err.message);
+    } finally {
+        setIsLoading(false);
+    }
+  };
+  
+
   return (
     <div
       ref={winRef}
@@ -263,8 +341,6 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
             }
             `
         }
-      
-        /* ⭐ Common shared styles (unchanged) */
         ${!isAiAssistant ? `
           bg-white/90 from-white/90 to-gray-100 text-gray-900
           shadow-2xl ring-1 ring-gray-300/50 backdrop-blur-sm
@@ -276,6 +352,13 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
         transition-all duration-300
       `}
     >
+
+      <MessagePopup
+        message={popupMessage}
+        open={showPopup}
+        onClose={handleClose}
+      />
+
       {/* Header */}
       { !isAiAssistant && (
       <div className="flex items-center justify-between border-b border-gray-300/50 bg-gray-800 p-3 backdrop-blur dark:border-white/10 dark:bg-neutral-900/60">
@@ -349,8 +432,77 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
               VetEZ { isAiAssistant ? 'AI Assistant' : 'ChatBot' }
             </h2>
             <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-              Ask me anything about VetEZ services and get instant help!
+              {/* Ask me anything about VetEZ services and get instant help! */}
+              Please upload a VA decision document to get started
             </p>
+
+            {/* new file upload section */}
+            <div className="w-full flex flex-col items-center mt-6">
+              {/* <p className="mb-2 text-gray-700 dark:text-gray-300 text-sm text-center">
+                Please upload a VA decision document to get started
+              </p> */}
+
+              {/* Upload / Replace Button */}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isLoading}
+                  className={`flex items-center gap-2 rounded-lg border border-dashed border-gray-400 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${
+                    isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  <PlusIcon className="h-5 w-5" />
+                  {selectedFile ? 'Replace VA Decision Document' : 'Upload VA Decision Document'}
+                </button>
+
+                {/* Clear button appears only if a file is selected */}
+                {selectedFile && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedFile(null);
+                    }}
+                    disabled={isLoading}
+                    className="flex items-center gap-2 rounded-lg border border-gray-300 bg-red-100 dark:bg-red-700 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-600 transition-colors"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx,.txt"
+                className="hidden"
+                disabled={isLoading}
+                onChange={(e) => handleFileInput(e)}
+              />
+
+              {/* Show selected file name */}
+              {selectedFile && (
+                <span className="mt-2 text-xs text-gray-600 dark:text-gray-300">
+                  Selected file: {selectedFile.name}
+                </span>
+              )}
+
+              {/* Get Started button */}
+              <button
+                type="button"
+                // disabled={!selectedFile || isLoading}
+                onClick={GetStarted} 
+                className={`mt-4 w-full max-w-xs rounded-lg bg-primary text-white px-4 py-3 font-medium text-sm hover:bg-blue-600 transition-colors ${
+                  !selectedFile || isLoading ? 'hidden opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                Get Started
+              </button>
+            </div>
+
+
           </div>
         ) : (
           <>
@@ -595,130 +747,132 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
       </div>
 
       {/* Input Area Wrapper */}
-      <div className={`flex flex-col border-t border-gray-300/50 ${isAiAssistant ? 'bg-gray-200 dark:bg-gray' : 'bg-gray-100/70'} p-2 dark:border-white/10 dark:bg-neutral-900/70`}>
-        {/* File banner above the input row */}
+      {chat.length !== 0 && (
+        <div className={`flex flex-col border-t border-gray-300/50 ${isAiAssistant ? 'bg-gray-200 dark:bg-gray' : 'bg-gray-100/70'} p-2 dark:border-white/10 dark:bg-neutral-900/70`}>
+          {/* File banner above the input row */}
 
-        {/* Suggestions Bar */}
-        <div className="h-12 overflow-x-auto no-scrollbar">
-          <div className="flex h-full items-center gap-2 px-2  no-scrollbar  shadow-[0_-1px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_-1px_6px_rgba(0,0,0,0.35)]">
-            {suggestedPrompts.map((prompt) => (
+          {/* Suggestions Bar */}
+          <div className="h-12 overflow-x-auto no-scrollbar">
+            <div className="flex h-full items-center gap-2 px-2  no-scrollbar  shadow-[0_-1px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_-1px_6px_rgba(0,0,0,0.35)]">
+              {suggestedPrompts.map((prompt) => (
+                <button
+                  key={prompt}
+                  onClick={() => handleSuggestionClick(prompt)}
+                  disabled={isThinking}
+                  className="whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-blue-100 hover:text-blue-700 disabled:opacity-50 dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+
+
+          {selectedFile && (
+            <div className="mb-1 flex items-center justify-between rounded-md bg-gray-200 px-3 py-1 text-sm dark:bg-neutral-800/60">
+              <span className="truncate">{selectedFile.name}</span>
               <button
-                key={prompt}
-                onClick={() => handleSuggestionClick(prompt)}
-                disabled={isThinking}
-                className="whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-blue-100 hover:text-blue-700 disabled:opacity-50 dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedFile(null);
+                  setAddInstructions(true);
+                }}
+                className="ml-2 text-red-500 hover:text-red-700"
               >
-                {prompt}
+                ✕
               </button>
-            ))}
-          </div>
-        </div>
+            </div>
+          )}
 
-
-
-        {selectedFile && (
-          <div className="mb-1 flex items-center justify-between rounded-md bg-gray-200 px-3 py-1 text-sm dark:bg-neutral-800/60">
-            <span className="truncate">{selectedFile.name}</span>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedFile(null);
-                setAddInstructions(true);
-              }}
-              className="ml-2 text-red-500 hover:text-red-700"
-            >
-              ✕
-            </button>
-          </div>
-        )}
-
-        {/* Actual Input Row */}
-        { addInstructions && (
-          <div className="flex items-end gap-2">
-            {/* + File Upload Button */}
-            <label
-              className={`flex h-8 w-8 cursor-pointer items-center justify-center text-gray-700 dark:text-white ${
-                selectedFile || isThinking ? 'cursor-not-allowed opacity-50' : ''
-              }`}
-            >
-              <PlusIcon />
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf,.doc,.docx,.txt"
-                className="hidden"
-                disabled={!!selectedFile || isThinking}
-                onChange={(e) => {
-                  if (e.target.files.length > 0) {
-                    setSelectedFile(e.target.files[0]);
-                    if(!message) {
-                      setAddInstructions(false);
+          {/* Actual Input Row */}
+          { addInstructions && (
+            <div className="flex items-end gap-2">
+              {/* + File Upload Button */}
+              {/* <label
+                className={`flex h-8 w-8 cursor-pointer items-center justify-center text-gray-700 dark:text-white ${
+                  selectedFile || isThinking ? 'cursor-not-allowed opacity-50' : ''
+                }`}
+              >
+                <PlusIcon />
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.doc,.docx,.txt"
+                  className="hidden"
+                  disabled={!!selectedFile || isThinking}
+                  onChange={(e) => {
+                    if (e.target.files.length > 0) {
+                      setSelectedFile(e.target.files[0]);
+                      if(!message) {
+                        setAddInstructions(false);
+                      }
+                      if (fileInputRef.current) {
+                        fileInputRef.current.value = null;
+                      }
                     }
-                    if (fileInputRef.current) {
-                      fileInputRef.current.value = null;
-                    }
+                  }}
+                />
+              </label> */}
+
+              <textarea
+              ref={textareaRef}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyPress}
+                disabled={isThinking}
+                rows={1}
+                placeholder="Type a message..."
+                className={`max-h-20 flex-1 resize-none rounded-md border-none ${isAiAssistant ? 'bg-gray-50' : 'bg-gray-200'} p-2 text-gray-900 placeholder-gray-500 outline-none focus:ring-1 focus:ring-blue-500 dark:bg-neutral-800/60 dark:text-white dark:placeholder-gray-400 overflow-y-auto`}
+                onInput={(e) => {
+                  e.target.style.height = 'auto'; // reset height
+                  e.target.style.height = e.target.scrollHeight + 'px'; // expand to fit
+                  if (e.target.scrollHeight > e.target.clientHeight) {
+                    e.target.scrollTop = e.target.scrollHeight;
                   }
                 }}
               />
-            </label>
-
-            <textarea
-            ref={textareaRef}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={handleKeyPress}
-              disabled={isThinking}
-              rows={1}
-              placeholder="Type a message..."
-              className={`max-h-20 flex-1 resize-none rounded-md border-none ${isAiAssistant ? 'bg-gray-50' : 'bg-gray-200'} p-2 text-gray-900 placeholder-gray-500 outline-none focus:ring-1 focus:ring-blue-500 dark:bg-neutral-800/60 dark:text-white dark:placeholder-gray-400 overflow-y-auto`}
-              onInput={(e) => {
-                e.target.style.height = 'auto'; // reset height
-                e.target.style.height = e.target.scrollHeight + 'px'; // expand to fit
-                if (e.target.scrollHeight > e.target.clientHeight) {
-                  e.target.scrollTop = e.target.scrollHeight;
-                }
-              }}
-            />
 
 
-            {/* Send Button */}
-            <button
-              onClick={handleSend}
-              disabled={isThinking}
-              className="mb-1 rounded-md px-1 py-1 text-sm font-medium transition disabled:opacity-50"
-            >
-              <SendIcon />
-            </button>
-          </div>
-        )}
-
-        { !addInstructions && (
-            <div className="flex gap-2 w-full">
+              {/* Send Button */}
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setAddInstructions(true);
-                }}
-                className="w-1/2 rounded-md px-3 py-2 text-sm font-medium bg-primary text-white hover:bg-blue-700 transition"
-              > 
-                Add Instructions
-              </button>
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setAddInstructions(true);
-                  handleSend();
-                }}
-                className="w-1/2 rounded-md px-3 py-2 text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition"
+                onClick={handleSend}
+                disabled={isThinking}
+                className="mb-1 rounded-md px-1 py-1 text-sm font-medium transition disabled:opacity-50"
               >
-                Analyze Document
+                <SendIcon />
               </button>
             </div>
-          )
-        }
+          )}
 
-      </div>
+          { !addInstructions && (
+              <div className="flex gap-2 w-full">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setAddInstructions(true);
+                  }}
+                  className="w-1/2 rounded-md px-3 py-2 text-sm font-medium bg-primary text-white hover:bg-blue-700 transition"
+                > 
+                  Add Instructions
+                </button>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setAddInstructions(true);
+                    handleSend();
+                  }}
+                  className="w-1/2 rounded-md px-3 py-2 text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition"
+                >
+                  Analyze Document
+                </button>
+              </div>
+            )
+          }
+
+        </div>
+      )}
     </div>
   );
 }
