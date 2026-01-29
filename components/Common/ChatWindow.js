@@ -60,11 +60,10 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
       setChat([]);
       const response = await getChatMessages({ userId, sessionId });
       const messages = response.data;
-      // console.log("[ChatWindow] messages >>>", messages);
-
+      console.log("[ChatWindow] messages >>>", messages);
       messages.forEach((message) => {
         if (message.role === 'user') {
-          const hasFile = message.text && message.text !== '';
+          const hasFile = message.anyFileAttached || false;
           const userMessage = {
             role: 'user',
             content: message.content,
@@ -72,8 +71,9 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
             fileName: '',
           };
           setChat((prev) => [...prev, userMessage]);
+          return userMessage;
         } else {
-          const hasAnalysis = message.text && message.text === 'analysis';
+          const hasAnalysis = (message.type && message.type === 'analysis') || false;
           const aiMessage = {
             role: 'assistant',
             content: hasAnalysis
@@ -83,8 +83,10 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
             fileName: '',
           };
           setChat((prev) => [...prev, aiMessage]);
+          return aiMessage;
         }
       });
+      console.log("[ChatWindow] updated messages >>>", messages);
     } catch (error) {
       process.env.NODE_ENV === 'development' &&
         console.error('Error fetching messages:', error);
@@ -168,24 +170,16 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
         await dispatch(updateSessionId({ uid, sessionId: response.data.sessionId })).unwrap();
       }
 
-      if (response.data.response.type === 'chat') {
-        const aiMessage = {
+      const isChatting = response.data.result.type === 'chat'
+      const contentReturned = isChatting ? response.data.result.llmResponse : response.data.result.llmResponse.va_analysis_json; 
+      const aiMessage = {
           role: 'assistant',
-          content: response.data.response.message,
-          hasFile: false,
+          content: contentReturned,
+          hasFile: !isChatting,
           fileName: fileName,
-        };
-        setChat((prev) => [...prev, aiMessage]);
-      } else {
-        const aiMessage = {
-          role: 'assistant',
-          content: response.data.response.data.va_analysis_json,
-          hasFile: true,
-          fileName: fileName,
-        };
-        setChat((prev) => [...prev, aiMessage]);
-      }
-
+      };
+      setChat((prev) => [...prev, aiMessage]);
+    
       scrollToBottom();
     } catch (err) {
       process.env.NODE_ENV === 'development' && console.error(err);
@@ -269,9 +263,6 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
     if ((!trimmed && !selectedFile) || isThinking) return;
     const hasFile = selectedFile ? true : false;
     const fileName = selectedFile ? selectedFile.name : null;
-    if(hasFile && !trimmed) {
-      trimmed = fileName;
-    }
     try {
       setIsLoading(true);
       const userMessage = {
@@ -287,6 +278,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
         sessionId: sessionId,
         file: selectedFile,
       });
+      console.log("[Get Started Resposne:: ]", response.data)
       setSelectedFile(null);
       if (isAiAssistant) {
         await dispatch(updateLocalSessionId(response.data.sessionId)).unwrap();
@@ -294,15 +286,21 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
         await dispatch(updateSessionId({ uid, sessionId: response.data.sessionId })).unwrap();
       }
 
-      if (response.data.response.type === 'chat') {
-        const plainText = stripMarkdown(response.data.response.message);
-        showMessage(plainText);
+      if (response.data.result.docType === 'OTHER') {
+        const plainText = stripMarkdown(response.data.result.llmResponse.message_md);
+        if(isAiAssistant){
+          showMessage(plainText);
+        }else {
+          toast.warning(plainText);
+        }
         setSelectedFile(null)
-        console.log(response.data.response.message);
+        console.log(response.data.result.llmResponse);
       } else {
+        const isChatting = response.data.result.type === 'chat'
+        const llmContent = isChatting ?  response.data.result.llmResponse : response.data.result.llmResponse.va_analysis_json
         const aiMessage = {
           role: 'assistant',
-          content: response.data.response.data.va_analysis_json,
+          content: llmContent,
           hasFile: true,
           fileName: fileName,
         };
@@ -316,6 +314,12 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
         setIsLoading(false);
     }
   };
+
+  const handleFollowUpPrompt = (promptText) => {
+    if (!promptText) return;
+    console.log(promptText)
+  };
+  
   
 
   return (
@@ -716,6 +720,49 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                                       </ul>
                                     </div>
                                   )}
+
+
+                                {/* Guided Follow-Up Prompts */}
+                                {Array.isArray(msg.content.guided_follow_up_prompts) &&
+                                  msg.content.guided_follow_up_prompts.length > 0 && (
+                                    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-md dark:border-gray-700 dark:bg-gray-800">
+                                      <h2 className="mb-3 text-xl font-semibold text-gray-800 dark:text-white">
+                                        Suggested Next Questions
+                                      </h2>
+
+                                      <div className="flex flex-wrap gap-3">
+                                        {msg.content.guided_follow_up_prompts.map((item, idx) => (
+                                          <div key={idx} className="group relative">
+                                            <button
+                                              onClick={() => handleFollowUpPrompt(item.prompt)}
+                                              className="rounded-lg border border-primary bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition
+                                                        hover:bg-primary hover:text-white
+                                                        dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white"
+                                            >
+                                              {item.prompt}
+                                            </button>
+
+                                            {/* Hover Tooltip */}
+                                            {item.why_relevant && (
+                                              <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 w-72 -translate-x-1/2
+                                                              rounded-md bg-gray-900 p-3 text-xs text-white opacity-0 shadow-lg
+                                                              transition-opacity group-hover:opacity-100">
+                                                <p className="font-semibold mb-1">Why this matters</p>
+                                                <p className="text-gray-200">{item.why_relevant}</p>
+
+                                                {item.confidence && (
+                                                  <p className="mt-2 text-[11px] italic text-gray-400">
+                                                    Confidence: {item.confidence}
+                                                  </p>
+                                                )}
+                                              </div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                )}
+
                               </div>
                             ) : (
                               <div className="mt-2 space-y-6">
@@ -725,7 +772,37 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                           </>
                         ) : (
                           <div className="p-2">
-                            <ReactMarkdown>{msg.content}</ReactMarkdown>
+                              {/* Render the Markdown message */}
+                              {msg.content?.message_md && (
+                                <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800">
+                                  <ReactMarkdown>{msg.content.message_md}</ReactMarkdown>
+                                </div>
+                              )}
+
+                              {/* Render guided follow-up prompts as buttons */}
+                              {Array.isArray(msg.content?.guided_follow_up_prompts) &&
+                                msg.content.guided_follow_up_prompts.length > 0 && (
+                                  <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800">
+                                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                                      Suggested Next Questions
+                                    </h2>
+                                    <div className="flex flex-wrap gap-3">
+                                      {msg.content.guided_follow_up_prompts.map((prompt, idx) => (
+                                        <button
+                                          key={idx}
+                                          onClick={() => {
+                                            // Handle click, e.g., send the prompt text as new user message
+                                            handleFollowUpPrompt(prompt.prompt);
+                                          }}
+                                          className="rounded-lg bg-primary px-4 py-2 text-white transition hover:bg-primaryHover"
+                                          title={prompt.why_relevant || ""}
+                                        >
+                                          {prompt.prompt}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  </div>
+                              )}
                           </div>
                         )}
                       </>
@@ -752,7 +829,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
           {/* File banner above the input row */}
 
           {/* Suggestions Bar */}
-          <div className="h-12 overflow-x-auto no-scrollbar">
+          {/* <div className="h-12 overflow-x-auto no-scrollbar">
             <div className="flex h-full items-center gap-2 px-2  no-scrollbar  shadow-[0_-1px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_-1px_6px_rgba(0,0,0,0.35)]">
               {suggestedPrompts.map((prompt) => (
                 <button
@@ -765,11 +842,11 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
 
 
 
-          {selectedFile && (
+          {/* {selectedFile && (
             <div className="mb-1 flex items-center justify-between rounded-md bg-gray-200 px-3 py-1 text-sm dark:bg-neutral-800/60">
               <span className="truncate">{selectedFile.name}</span>
               <button
@@ -783,7 +860,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                 ✕
               </button>
             </div>
-          )}
+          )} */}
 
           {/* Actual Input Row */}
           { addInstructions && (
@@ -845,7 +922,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
             </div>
           )}
 
-          { !addInstructions && (
+          {/* { !addInstructions && (
               <div className="flex gap-2 w-full">
                 <button
                   onClick={(e) => {
@@ -869,7 +946,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                 </button>
               </div>
             )
-          }
+          } */}
 
         </div>
       )}
