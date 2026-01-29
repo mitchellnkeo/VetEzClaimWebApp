@@ -22,16 +22,16 @@ const Dashboard = () => {
   const localSessionId = localStorage.getItem('chatSessionId');
 
   useEffect(() => {
-    console.log('[Dashboard] I am mounted');
-    console.log('[Dashboard] redirectTo >>>', redirectTo);
+    // console.log('[Dashboard] I am mounted');
+    // console.log('[Dashboard] redirectTo >>>', redirectTo);
   }, []);
 
   useEffect(() => {
     const doTransfer = async () => {
-      console.log('[Dashboard] doTransfer >>>', redirectTo);
-      console.log('[Dashboard] anonymousUid >>>', anonymousUid);
-      console.log('[Dashboard] localSessionId >>>', localSessionId);
-      console.log('[Dashboard] user >>>', user);
+      // console.log('[Dashboard] doTransfer >>>', redirectTo);
+      // console.log('[Dashboard] anonymousUid >>>', anonymousUid);
+      // console.log('[Dashboard] localSessionId >>>', localSessionId);
+      // console.log('[Dashboard] user >>>', user);
       setIsLoading(true);
       const profileStatus = getProfileStatus(user);
       try {
@@ -48,7 +48,7 @@ const Dashboard = () => {
           anonymousUid: anonymousUid,
           anonymousSessionId: localSessionId,
         }); 
-        console.log('[Dashboard] response >>>', response.data);
+        // console.log('[Dashboard] response >>>', response.data);
   
         if (response?.data) {
           await dispatch(
@@ -89,10 +89,10 @@ const Dashboard = () => {
     if (!user) return;
     const syncConsent = async () => {
       try {
-        console.log('[Dashboard] user.hasChatbotConsent >>>', user.hasChatbotConsent);
-        console.log('[Dashboard] isAiAssistant >>>', isAiAssistant);
+        // console.log('[Dashboard] user.hasChatbotConsent >>>', user.hasChatbotConsent);
+        // console.log('[Dashboard] isAiAssistant >>>', isAiAssistant);
         if(user.hasChatbotConsent === undefined) {
-          console.log('[Dashboard] updating chatbot consent based on isAiAssistant');
+          // console.log('[Dashboard] updating chatbot consent based on isAiAssistant');
           await dispatch(
             updateProfile({
               uid: user.uid,
@@ -101,7 +101,7 @@ const Dashboard = () => {
           ).unwrap();
           dispatch(updateChatbotConsent(isAiAssistant));
         }else {
-          console.log('[Dashboard] updating chatbot consent based on user.hasChatbotConsent');
+          // console.log('[Dashboard] updating chatbot consent based on user.hasChatbotConsent');
           dispatch(updateChatbotConsent(user.hasChatbotConsent));
         }
       } catch (err) {

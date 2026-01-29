@@ -29,8 +29,8 @@ const RevenueCatInitializer = ({ children }) => {
     setInterval(async () => {
       try {
         const status = await dispatch(getSubscriptionStatus(uid)).unwrap();
-        process.env.NODE_ENV === 'development' &&
-          console.log('>> Polling status:', status);
+        // process.env.NODE_ENV === 'development' &&
+        //   console.log('>> Polling status:', status);
       } catch (error) {
         process.env.NODE_ENV === 'development' &&
           console.error('Error polling subscription status:', error);
