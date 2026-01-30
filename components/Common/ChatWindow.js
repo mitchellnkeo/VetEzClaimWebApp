@@ -47,7 +47,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
 
 
   const fetchMessages = async () => {
-    console.log("[ChatWindow] fetchMessages >>>", uid, sessionId);
+    // console.log("[ChatWindow] fetchMessages >>>", uid, sessionId);
     if( isAiAssistant ) return;
     if (!uid || !sessionId) return;
     if (didFetchMessages.current) return; 
@@ -60,33 +60,53 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
       setChat([]);
       const response = await getChatMessages({ userId, sessionId });
       const messages = response.data;
-      console.log("[ChatWindow] messages >>>", messages);
-      messages.forEach((message) => {
-        if (message.role === 'user') {
-          const hasFile = message.anyFileAttached || false;
-          const userMessage = {
-            role: 'user',
-            content: message.content,
-            hasFile,
-            fileName: '',
-          };
-          setChat((prev) => [...prev, userMessage]);
-          return userMessage;
-        } else {
-          const hasAnalysis = (message.type && message.type === 'analysis') || false;
-          const aiMessage = {
+      // console.log("[ChatWindow] messages >>>", messages);
+      messages.forEach((msg, index) => {
+        const isLastMessage = index === messages.length - 1;
+        // console.log("[ChatWindow] msg >>>", msg);
+        const userMessage = {
+          role: 'user',
+          content: msg.message || '',
+          fileAttached: msg.fileAttached || false,
+          fileName: msg.fileName || '',
+          responseType: 'chat',
+          error: null,
+        };
+
+        // console.log("[ChatWindow] userMessage >>>", userMessage);
+      
+        setChat((prev) => [...prev, userMessage]);
+        if (msg.response) {
+          const responseType = msg.response.type === 'chat' ? 'chat' : 'analysis';
+          const content = msg.response.type === 'chat' ? msg.response : msg.response.va_analysis_json;
+          const assistantMessage = {
             role: 'assistant',
-            content: hasAnalysis
-              ? message.content.va_analysis_json
-              : message.content,
-            hasFile: hasAnalysis,
+            content:  content,
+            fileAttached: false,
             fileName: '',
+            responseType: responseType,
+            error: null,
           };
-          setChat((prev) => [...prev, aiMessage]);
-          return aiMessage;
+          // console.log("[ChatWindow] assistantMessage:: response >>>", assistantMessage);
+          if( isLastMessage && Array.isArray(content.guided_follow_up_prompts) && content.guided_follow_up_prompts.length > 0){
+            console.log("[ChatWindow] guided_follow_up_prompts >>>", content.guided_follow_up_prompts);
+            setSuggestedPrompts(content.guided_follow_up_prompts);
+          }
+          setChat((prev) => [...prev, assistantMessage]);
+        }else {
+          const assistantMessage = {
+            role: 'assistant',
+            content: 'Something went wrong, please try again.',
+            fileAttached: false,
+            fileName: '',
+            responseType: 'chat',
+            error: msg.error,
+          };
+          // console.log("[ChatWindow] assistantMessage:: no response >>>", assistantMessage);
+          setChat((prev) => [...prev, assistantMessage]);
         }
       });
-      console.log("[ChatWindow] updated messages >>>", messages);
+
     } catch (error) {
       process.env.NODE_ENV === 'development' &&
         console.error('Error fetching messages:', error);
@@ -106,7 +126,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
     }, [message]);
 
   useEffect(() => {
-    // fetchMessages();
+    fetchMessages();
   }, [reloadChat]);
 
   useEffect(() => {
@@ -126,10 +146,10 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
     scrollToBottom();
   }, [chat]);
 
-  useEffect(() => {
-    const randomPrompts = getRandomSuggestedPrompts();
-    setSuggestedPrompts(randomPrompts);
-  }, []); 
+  // useEffect(() => {
+  //   const randomPrompts = getRandomSuggestedPrompts();
+  //   setSuggestedPrompts(randomPrompts);
+  // }, []); 
 
   const scrollToBottom = () => {
     if (bodyRef.current) {
@@ -139,58 +159,59 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
 
   const handleSend = async () => {
     let trimmed = message.trim();
-    if ((!trimmed && !selectedFile) || isThinking) return;
-    const hasFile = selectedFile ? true : false;
-    const fileName = selectedFile ? selectedFile.name : null;
-    if(hasFile && !trimmed) {
-      trimmed = fileName;
-    }
+    if (!trimmed || isThinking) return;
+    setSuggestedPrompts([]);
     try {
-      const userMessage = {
+      setChat((prev) => [...prev, {
         role: 'user',
         content: trimmed,
-        hasFile: hasFile,
-        fileName: fileName,
-      };
-      setChat((prev) => [...prev, userMessage]);
+        fileAttached: false,
+        fileName: '',
+        responseType: 'chat',
+        error: null,
+      }]);
+      scrollToBottom();
       setMessage('');
       setIsThinking(true);
-      const fileContent = selectedFile ? selectedFile : null;
-      setSelectedFile(null);
-
-      const response = await sendChatMessage({
+      const resp = await sendChatMessage({
         message: trimmed,
         userId: uid,
         sessionId: sessionId,
-        file: fileContent,
+        file: null,
       });
       if (isAiAssistant) {
-        await dispatch(updateLocalSessionId(response.data.sessionId)).unwrap();
+        await dispatch(updateLocalSessionId(resp.data.sessionId)).unwrap();
       } else {
-        await dispatch(updateSessionId({ uid, sessionId: response.data.sessionId })).unwrap();
+        await dispatch(updateSessionId({ uid, sessionId: resp.data.sessionId })).unwrap();
       }
 
-      const isChatting = response.data.result.type === 'chat'
-      const contentReturned = isChatting ? response.data.result.llmResponse : response.data.result.llmResponse.va_analysis_json; 
-      const aiMessage = {
+      const isChatting = resp.data.response.type === 'chat'
+      const contentReturned = isChatting ? resp.data.response.llmResponse : resp.data.response.llmResponse.va_analysis_json; 
+      setChat((prev) => [...prev, {
           role: 'assistant',
           content: contentReturned,
-          hasFile: !isChatting,
-          fileName: fileName,
-      };
-      setChat((prev) => [...prev, aiMessage]);
+          fileAttached: false,
+          fileName: '',
+          responseType: resp.data.response.type,
+          error: null,
+      }]);
+      if(Array.isArray(contentReturned.guided_follow_up_prompts)){
+        setSuggestedPrompts(contentReturned.guided_follow_up_prompts);
+      } 
     
       scrollToBottom();
     } catch (err) {
       process.env.NODE_ENV === 'development' && console.error(err);
-      const aiMessage = {
+      setChat((prev) => [...prev, {
         role: 'assistant',
         content: 'Something went wrong, please try again.',
-        hasFile: false,
+        fileAttached: false,
         fileName: '',
-      };
-      setChat((prev) => [...prev, aiMessage]);
+        responseType: 'chat',
+        error: err.message,
+      }]);
       toast.error(err.message);
+      // console.log(err);
     } finally {
       setIsThinking(false);
     }
@@ -241,9 +262,10 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
 
   // console.log("isExtended >>>", isExtended);
 
-  const handleSuggestionClick = (text) => {
-    setMessage(text);
+  const handleSuggestionClick = (item) => {
+    setMessage(item.prompt);
     setAddInstructions(true);
+    console.log("[ChatWindow] item >>>", item);
   };
 
 
@@ -259,66 +281,68 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
   };
 
   const GetStarted = async () => {
-    let trimmed = message.trim();
-    if ((!trimmed && !selectedFile) || isThinking) return;
-    const hasFile = selectedFile ? true : false;
-    const fileName = selectedFile ? selectedFile.name : null;
+    if (!selectedFile || isThinking) return;
+    const fileName = selectedFile.name;
     try {
       setIsLoading(true);
-      const userMessage = {
-        role: 'user',
-        content: trimmed,
-        hasFile: hasFile,
-        fileName: fileName,
-      };
-
-      const response = await sendChatMessage({
-        message: trimmed,
+      const resp = await sendChatMessage({
+        message: '',
         userId: uid,
         sessionId: sessionId,
         file: selectedFile,
       });
-      console.log("[Get Started Resposne:: ]", response.data)
+      console.log("[Get Started Resposne:: ]", resp.data)
       setSelectedFile(null);
       if (isAiAssistant) {
-        await dispatch(updateLocalSessionId(response.data.sessionId)).unwrap();
+        await dispatch(updateLocalSessionId(resp.data.sessionId)).unwrap();
       } else {
-        await dispatch(updateSessionId({ uid, sessionId: response.data.sessionId })).unwrap();
+        await dispatch(updateSessionId({ uid, sessionId: resp.data.sessionId })).unwrap();
       }
 
-      if (response.data.result.docType === 'OTHER') {
-        const plainText = stripMarkdown(response.data.result.llmResponse.message_md);
+      if (resp.data.response.fileName) {
+        const isChatting = resp.data.response.type === 'chat'
+        const llmContent = isChatting ?  resp.data.response.llmResponse : resp.data.response.llmResponse.va_analysis_json
+        console.log("[Get Started] resp.data.response >>>", resp.data.response);
+        console.log("[Get Started] llmContent >>>", llmContent);
+        setChat((prev) => [...prev, {
+          role: 'user',
+          content: '',
+          fileAttached: true,
+          fileName: fileName,
+          responseType: 'chat',
+          error: null,
+        }, {
+          role: 'assistant',
+          content: llmContent,
+          fileAttached: true,
+          fileName: fileName,
+          responseType: resp.data.response.type,
+          error: null,
+        }]);
+        if(Array.isArray(llmContent.guided_follow_up_prompts)){
+          setSuggestedPrompts(llmContent.guided_follow_up_prompts);
+        }
+        scrollToBottom();
+      }else {
+        const plainText = stripMarkdown(resp.data.response.llmResponse.message_md);
         if(isAiAssistant){
           showMessage(plainText);
         }else {
           toast.warning(plainText);
         }
         setSelectedFile(null)
-        console.log(response.data.result.llmResponse);
-      } else {
-        const isChatting = response.data.result.type === 'chat'
-        const llmContent = isChatting ?  response.data.result.llmResponse : response.data.result.llmResponse.va_analysis_json
-        const aiMessage = {
-          role: 'assistant',
-          content: llmContent,
-          hasFile: true,
-          fileName: fileName,
-        };
-        setChat((prev) => [...prev, userMessage, aiMessage]);
-        scrollToBottom();
+        // console.log(resp.data.response.llmResponse);
       }
     } catch (err) {
       process.env.NODE_ENV === 'development' && console.error(err);  
       toast.error(err.message);
+      // console.log(err);
+      setSelectedFile(null)
     } finally {
         setIsLoading(false);
     }
   };
 
-  const handleFollowUpPrompt = (promptText) => {
-    if (!promptText) return;
-    console.log(promptText)
-  };
   
   
 
@@ -524,285 +548,219 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
                     className={`max-w-[75%] break-words rounded-lg px-1 py-2 text-sm leading-relaxed ${
                       msg.role === 'user'
                         ? 'bg-primary text-white'
-                        : `${msg.hasFile ? 'bg-transparent' : 'bg-gray-300 dark:bg-white/10'} text-gray-900 dark:text-white`
+                        :  'bg-transparent'
                     }`}
                   >
                     {msg.role === 'user' ? (
                       <div className="flex items-center gap-2 p-2">
-                        <span>{msg.content}</span>
-                        {msg.hasFile && (
-                          <AiOutlineFile className="text-2xl text-white" />
+                        {!msg.fileAttached && (
+                          <span>{msg.content}</span>
+                        )}
+                        {msg.fileAttached && (
+                          <> 
+                            <AiOutlineFile className="text-2xl text-white" />
+                            <span>{msg.fileName}</span>
+                          </>
                         )}
                       </div>
                     ) : (
                       <>
-                        {msg.hasFile ? (
-                          <>
-                            {msg.content ? (
-                              <div className="mt-1 space-y-3">
-                                {/* General Info */}
-                                {msg.content.general_info && (
-                                  <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800">
-                                    <h2 className="mb-3 text-xl font-semibold text-gray-800 dark:text-white">
-                                      General Information
-                                    </h2>
-                                    <div className="space-y-2 text-gray-700 dark:text-gray-300">
-                                      <p>
-                                        <span className="font-bold">
-                                          Decision Type:
-                                        </span>{' '}
-                                        {msg.content.general_info
-                                          .decision_type || 'N/A'}
-                                      </p>
-                                      <p>
-                                        <span className="font-bold">Date:</span>{' '}
-                                        {msg.content.general_info.date || 'N/A'}
-                                      </p>
-                                      <p>
-                                        <span className="font-bold">
-                                          Issuing Authority:
-                                        </span>{' '}
-                                        {msg.content.general_info
-                                          .issuing_authority || 'N/A'}
-                                      </p>
-                                      {msg.content.general_info.summary && (
-                                        <p className="mt-4">
-                                          {msg.content.general_info.summary}
-                                        </p>
-                                      )}
-                                    </div>
-                                  </div>
+                        {msg.error && (
+                          <div className="mt-2 space-y-4 p-2 rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800">
+                            {msg.content}
+                          </div>
+                        )}
+
+                        {!msg.error && msg.responseType === 'chat' && (
+                          <div className="space-y-4 p-2 rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800">
+                              {msg.content?.message_md && (
+                                <ReactMarkdown>{msg.content.message_md}</ReactMarkdown>
+                              )}
+                          </div>
+                        )}
+
+                        {!msg.error && msg.responseType === 'analysis' && ( 
+                          <div >
+                          {/* General Info */}
+                          {msg.content.general_info && (
+                            <div className="mb-3 rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800">
+                              <h2 className="mb-3 text-xl font-semibold text-gray-800 dark:text-white">
+                                General Information
+                              </h2>
+                              <div className="space-y-2 text-gray-700 dark:text-gray-300">
+                                <p>
+                                  <span className="font-bold">
+                                    Decision Type:
+                                  </span>{' '}
+                                  {msg.content.general_info
+                                    .decision_type || 'N/A'}
+                                </p>
+                                <p>
+                                  <span className="font-bold">Date:</span>{' '}
+                                  {msg.content.general_info.date || 'N/A'}
+                                </p>
+                                <p>
+                                  <span className="font-bold">
+                                    Issuing Authority:
+                                  </span>{' '}
+                                  {msg.content.general_info
+                                    .issuing_authority || 'N/A'}
+                                </p>
+                                {msg.content.general_info.summary && (
+                                  <p className="mt-4">
+                                    {msg.content.general_info.summary}
+                                  </p>
                                 )}
+                              </div>
+                            </div>
+                          )}
 
-                                {/* Issues */}
-                                {Array.isArray(msg.content.issues) &&
-                                  msg.content.issues.length > 0 && (
-                                    <div className="space-y-5 rounded-xl border border-gray-200 bg-white p-1 shadow-md dark:border-gray-700 dark:bg-gray-800">
-                                      <h2 className="p-2 text-xl font-semibold text-gray-800 dark:text-white">
-                                        Issues
-                                      </h2>
+                          {/* Issues */}
+                          {Array.isArray(msg.content.issues) &&
+                            msg.content.issues.length > 0 && (
+                              <div className=" mb-3 space-y-5 rounded-xl border border-gray-200 bg-white p-1 shadow-md dark:border-gray-700 dark:bg-gray-800">
+                                <h2 className="p-2 text-xl font-semibold text-gray-800 dark:text-white">
+                                  Issues
+                                </h2>
 
-                                      {msg.content.issues.map((issue, idx2) => (
-                                        <div
-                                          key={idx2}
-                                          className="rounded-xl border border-gray-200 bg-gray-50 p-2 shadow-sm dark:border-gray-700 dark:bg-gray-900"
-                                        >
-                                          <div className="mb-2">
-                                            <h3 className="mb-2 text-lg font-semibold text-primary dark:text-blue-400">
-                                              {issue.condition ||
-                                                'Unnamed Condition'}
-                                            </h3>
-                                            <p
-                                              className={`my-2 inline-block rounded-md px-2 py-1 text-sm font-medium italic ${
-                                                issue.status === 'Granted'
-                                                  ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
-                                                  : issue.status === 'Denied'
-                                                  ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
-                                                  : issue.status === 'Deferred'
-                                                  ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300'
-                                                  : 'bg-gray-100 text-gray-600 dark:bg-gray-800/40 dark:text-gray-300'
-                                              }`}
-                                            >
-                                              Status:{' '}
-                                              {issue.status || 'Unknown'}
-                                            </p>
-                                          </div>
+                                {msg.content.issues.map((issue, idx2) => (
+                                  <div
+                                    key={idx2}
+                                    className="rounded-xl border border-gray-200 bg-gray-50 p-2 shadow-sm dark:border-gray-700 dark:bg-gray-900"
+                                  >
+                                    <div className="mb-2">
+                                      <h3 className="mb-2 text-lg font-semibold text-primary dark:text-blue-400">
+                                        {issue.condition ||
+                                          'Unnamed Condition'}
+                                      </h3>
+                                      <p
+                                        className={`my-2 inline-block rounded-md px-2 py-1 text-sm font-medium italic ${
+                                          issue.status === 'Granted'
+                                            ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
+                                            : issue.status === 'Denied'
+                                            ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
+                                            : issue.status === 'Deferred'
+                                            ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300'
+                                            : 'bg-gray-100 text-gray-600 dark:bg-gray-800/40 dark:text-gray-300'
+                                        }`}
+                                      >
+                                        Status:{' '}
+                                        {issue.status || 'Unknown'}
+                                      </p>
+                                    </div>
 
-                                          {/* Reason */}
-                                          {issue.reason && (
-                                            <p className="mb-4 whitespace-pre-line text-gray-700 dark:text-gray-300">
-                                              {issue.reason}
-                                            </p>
-                                          )}
+                                    {/* Reason */}
+                                    {issue.reason && (
+                                      <p className="mb-4 whitespace-pre-line text-gray-700 dark:text-gray-300">
+                                        {issue.reason}
+                                      </p>
+                                    )}
 
-                                          {/* Evidence Considered */}
-                                          {issue.evidence_considered && (
+                                    {/* Evidence Considered */}
+                                    {issue.evidence_considered && (
+                                      <div className="mb-3 rounded-md bg-gray-100 p-3 text-sm dark:bg-gray-700">
+                                        <span className="font-semibold">
+                                          Evidence Considered:
+                                        </span>
+                                        <p className="whitespace-pre-line">
+                                          {issue.evidence_considered}
+                                        </p>
+                                      </div>
+                                    )}
+
+                                    {/* Recommendations */}
+                                    {Array.isArray(
+                                      issue.recommendations
+                                    ) &&
+                                      issue.recommendations.length >
+                                        0 && (
                                             <div className="mb-3 rounded-md bg-gray-100 p-3 text-sm dark:bg-gray-700">
                                               <span className="font-semibold">
-                                                Evidence Considered:
+                                                Recommendate Form to fill:
                                               </span>
-                                              <p className="whitespace-pre-line">
-                                                {issue.evidence_considered}
-                                              </p>
-                                            </div>
-                                          )}
-
-                                          {/* Recommendations */}
-                                          {Array.isArray(
-                                            issue.recommendations
-                                          ) &&
-                                            issue.recommendations.length >
-                                              0 && (
-                                                  <div className="mb-3 rounded-md bg-gray-100 p-3 text-sm dark:bg-gray-700">
-                                                    <span className="font-semibold">
-                                                      Recommendate Form to fill:
-                                                    </span>
-                                                  <div className="flex flex-wrap gap-3 mt-3">
-                                                    {issue.recommendations.map(
-                                                      (rec, recIdx) => {
-                                                        const matchedForm =
-                                                          formsIdList.find(
-                                                            (f) =>
-                                                              f.formId ===
-                                                              rec.formId
+                                            <div className="flex flex-wrap gap-3 mt-3">
+                                              {issue.recommendations.map(
+                                                (rec, recIdx) => {
+                                                  const matchedForm =
+                                                    formsIdList.find(
+                                                      (f) =>
+                                                        f.formId ===
+                                                        rec.formId
+                                                    );
+                                                  return (
+                                                    <button
+                                                      key={recIdx}
+                                                      onClick={async () => {
+                                                        if (isAiAssistant) {
+                                                          if (matchedForm?.formUrl) {
+                                                            await dispatch(updateRedirectTo(matchedForm.formUrl)).unwrap();
+                                                          // window.location.href = `${window.location.origin}/registration?assist=true`; 
+                                                            showAuthRequiredModal();
+                                                          } else {
+                                                            toast.warning(
+                                                              rec.explanation ||
+                                                                'Form route not found for this action.'
+                                                            );
+                                                          }
+                                                          return;
+                                                        }
+                                                        if (
+                                                          matchedForm?.formUrl
+                                                        ) {
+                                                          const profileStatus = getProfileStatus(user);
+                                                          if (profileStatus < 2) {
+                                                            toast.error('Please complete your profile to access this form.'); 
+                                                            return;
+                                                          }
+                                                          window.open(
+                                                            `${window.location.origin}${matchedForm.formUrl}`,
+                                                            '_blank'
                                                           );
-                                                        return (
-                                                          <button
-                                                            key={recIdx}
-                                                            onClick={async () => {
-                                                              if (isAiAssistant) {
-                                                                if (matchedForm?.formUrl) {
-                                                                  await dispatch(updateRedirectTo(matchedForm.formUrl)).unwrap();
-                                                                 // window.location.href = `${window.location.origin}/registration?assist=true`; 
-                                                                  showAuthRequiredModal();
-                                                                } else {
-                                                                  toast.warning(
-                                                                    rec.explanation ||
-                                                                      'Form route not found for this action.'
-                                                                  );
-                                                                }
-                                                                return;
-                                                              }
-                                                              if (
-                                                                matchedForm?.formUrl
-                                                              ) {
-                                                                const profileStatus = getProfileStatus(user);
-                                                                if (profileStatus < 2) {
-                                                                  toast.error('Please complete your profile to access this form.'); 
-                                                                  return;
-                                                                }
-                                                                window.open(
-                                                                  `${window.location.origin}${matchedForm.formUrl}`,
-                                                                  '_blank'
-                                                                );
-                                                              } else {
-                                                                toast.warning(
-                                                                  rec.explanation ||
-                                                                    'Form route not found for this action.'
-                                                                );
-                                                              }
-                                                            }}
-                                                            className="rounded-lg bg-primary px-4 py-2 text-white transition hover:bg-primaryHover"
-                                                          >
-                                                            {rec.formTitle ||
-                                                              matchedForm?.formTitle ||
-                                                              `Form ${rec.formId}`}
-                                                          </button>
-                                                        );
-                                                      }
-                                                    )}
-                                                  </div>
-                                                  </div>
-                                            )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-
-                                {/* Important Dates */}
-                                {Array.isArray(msg.content.important_dates) &&
-                                  msg.content.important_dates.length > 0 && (
-                                    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-md dark:border-gray-700 dark:bg-gray-800">
-                                      <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                                        Important Dates
-                                      </h2>
-                                      <ul className="list-inside list-disc text-gray-700 dark:text-gray-300">
-                                        {msg.content.important_dates.map(
-                                          (d, idx3) => (
-                                            <li key={idx3}>
-                                              <span className="font-semibold">
-                                                {d.date || 'Unknown'}:
-                                              </span>{' '}
-                                              {d.description || ''}
-                                            </li>
-                                          )
-                                        )}
-                                      </ul>
-                                    </div>
-                                  )}
-
-
-                                {/* Guided Follow-Up Prompts */}
-                                {Array.isArray(msg.content.guided_follow_up_prompts) &&
-                                  msg.content.guided_follow_up_prompts.length > 0 && (
-                                    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-md dark:border-gray-700 dark:bg-gray-800">
-                                      <h2 className="mb-3 text-xl font-semibold text-gray-800 dark:text-white">
-                                        Suggested Next Questions
-                                      </h2>
-
-                                      <div className="flex flex-wrap gap-3">
-                                        {msg.content.guided_follow_up_prompts.map((item, idx) => (
-                                          <div key={idx} className="group relative">
-                                            <button
-                                              onClick={() => handleFollowUpPrompt(item.prompt)}
-                                              className="rounded-lg border border-primary bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition
-                                                        hover:bg-primary hover:text-white
-                                                        dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white"
-                                            >
-                                              {item.prompt}
-                                            </button>
-
-                                            {/* Hover Tooltip */}
-                                            {item.why_relevant && (
-                                              <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 w-72 -translate-x-1/2
-                                                              rounded-md bg-gray-900 p-3 text-xs text-white opacity-0 shadow-lg
-                                                              transition-opacity group-hover:opacity-100">
-                                                <p className="font-semibold mb-1">Why this matters</p>
-                                                <p className="text-gray-200">{item.why_relevant}</p>
-
-                                                {item.confidence && (
-                                                  <p className="mt-2 text-[11px] italic text-gray-400">
-                                                    Confidence: {item.confidence}
-                                                  </p>
-                                                )}
-                                              </div>
-                                            )}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                )}
-
-                              </div>
-                            ) : (
-                              <div className="mt-2 space-y-6">
-                                Something went wrong
+                                                        } else {
+                                                          toast.warning(
+                                                            rec.explanation ||
+                                                              'Form route not found for this action.'
+                                                          );
+                                                        }
+                                                      }}
+                                                      className="rounded-lg bg-primary px-4 py-2 text-white transition hover:bg-primaryHover"
+                                                    >
+                                                      {rec.formTitle ||
+                                                        matchedForm?.formTitle ||
+                                                        `Form ${rec.formId}`}
+                                                    </button>
+                                                  );
+                                                }
+                                              )}
+                                            </div>
+                                            </div>
+                                      )}
+                                  </div>
+                                ))}
                               </div>
                             )}
-                          </>
-                        ) : (
-                          <div className="p-2">
-                              {/* Render the Markdown message */}
-                              {msg.content?.message_md && (
-                                <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800">
-                                  <ReactMarkdown>{msg.content.message_md}</ReactMarkdown>
-                                </div>
-                              )}
 
-                              {/* Render guided follow-up prompts as buttons */}
-                              {Array.isArray(msg.content?.guided_follow_up_prompts) &&
-                                msg.content.guided_follow_up_prompts.length > 0 && (
-                                  <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800">
-                                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-                                      Suggested Next Questions
-                                    </h2>
-                                    <div className="flex flex-wrap gap-3">
-                                      {msg.content.guided_follow_up_prompts.map((prompt, idx) => (
-                                        <button
-                                          key={idx}
-                                          onClick={() => {
-                                            // Handle click, e.g., send the prompt text as new user message
-                                            handleFollowUpPrompt(prompt.prompt);
-                                          }}
-                                          className="rounded-lg bg-primary px-4 py-2 text-white transition hover:bg-primaryHover"
-                                          title={prompt.why_relevant || ""}
-                                        >
-                                          {prompt.prompt}
-                                        </button>
-                                      ))}
-                                    </div>
-                                  </div>
-                              )}
+                          {/* Important Dates */}
+                          {Array.isArray(msg.content.important_dates) &&
+                            msg.content.important_dates.length > 0 && (
+                              <div className="mb-3 rounded-xl border border-gray-200 bg-white p-5 shadow-md dark:border-gray-700 dark:bg-gray-800">
+                                <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                                  Important Dates
+                                </h2>
+                                <ul className="list-inside list-disc text-gray-700 dark:text-gray-300">
+                                  {msg.content.important_dates.map(
+                                    (d, idx3) => (
+                                      <li key={idx3}>
+                                        <span className="font-semibold">
+                                          {d.date || 'Unknown'}:
+                                        </span>{' '}
+                                        {d.description || ''}
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              </div>
+                            )}
                           </div>
                         )}
                       </>
@@ -829,21 +787,22 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
           {/* File banner above the input row */}
 
           {/* Suggestions Bar */}
-          {/* <div className="h-12 overflow-x-auto no-scrollbar">
-            <div className="flex h-full items-center gap-2 px-2  no-scrollbar  shadow-[0_-1px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_-1px_6px_rgba(0,0,0,0.35)]">
-              {suggestedPrompts.map((prompt) => (
-                <button
-                  key={prompt}
-                  onClick={() => handleSuggestionClick(prompt)}
-                  disabled={isThinking}
-                  className="whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-blue-100 hover:text-blue-700 disabled:opacity-50 dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700"
-                >
-                  {prompt}
-                </button>
-              ))}
+          {suggestedPrompts.length > 0 && (
+            <div className="h-12 overflow-x-auto no-scrollbar">
+              <div className="flex h-full items-center gap-2 px-2  no-scrollbar  shadow-[0_-1px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_-1px_6px_rgba(0,0,0,0.35)]">
+                {suggestedPrompts.map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSuggestionClick(item)}
+                    disabled={isThinking}
+                    className="whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-blue-100 hover:text-blue-700 disabled:opacity-50 dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700"
+                  >
+                    {item.prompt}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div> */}
-
+          )}
 
 
           {/* {selectedFile && (
