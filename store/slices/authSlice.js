@@ -246,6 +246,23 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+
+export const updateProfileConsent = createAsyncThunk(
+  'auth/updateProfileConsent',
+  async (profileData, { rejectWithValue }) => {
+    try {
+      const docRef = doc(db, 'profile', profileData.uid);
+      await updateDoc(docRef, { ...profileData });
+      return; 
+    } catch (error) {
+      // process.env.NODE_ENV === 'development' && console.error('error while updating profile', error);
+      return rejectWithValue(error.message || 'Profile update failed');
+    }
+  }
+);
+
+
+
 export const updateSessionId = createAsyncThunk(
   'auth/updateSessionId ',
   async ({ uid, sessionId }, { rejectWithValue }) => {
@@ -298,6 +315,17 @@ export const updateReloadChat = createAsyncThunk(
   }
 );
 
+export const updateChatbotConsent = createAsyncThunk(
+  'auth/updateChatbotConsent ',
+  async (hasChatbotConsent, { rejectWithValue }) => {
+    try {
+      return hasChatbotConsent;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Chatbot consent update failed');
+    }
+  }
+);
+
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -310,6 +338,7 @@ export const authSlice = createSlice({
     isLoading: false,
     redirectTo: null,
     reloadChat: false,
+    hasChatbotConsent: false,
     error: {},
   },
   reducers: {
@@ -480,7 +509,24 @@ export const authSlice = createSlice({
       }
       state.error = null;
     });
-   
+
+
+    // update chatbot consent
+    builder.addCase(updateChatbotConsent.pending, (state) => {
+      state.isLoading = true;
+      state.hasChatbotConsent = false;
+      state.error = null;
+    });
+    builder.addCase(updateChatbotConsent.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.hasChatbotConsent = action.payload;
+      state.error = null;
+    });
+    builder.addCase(updateChatbotConsent.rejected, (state, action) => {
+      state.isLoading = false;
+      state.hasChatbotConsent = false;
+      state.error = 'Chatbot consent update failed';
+    }); 
   },
 });
 

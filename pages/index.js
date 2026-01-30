@@ -3,12 +3,11 @@ import FrontLayout from '@/components/layouts/FrontLayout';
 import { useEffect, useState, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { isUserOver18 } from '@/utils/common';
 import { updateRedirectTo, updateSessionId, updateReloadChat } from '../store/slices/authSlice';
 import { transferChatSession } from '@/services/chatService';
 import Loader from '@/components/Common/Loader';
 import { getProfileStatus } from '@/utils/common';
-
+import { updateProfile, updateChatbotConsent } from '@/store/slices/authSlice';
 
 
 const Dashboard = () => {
@@ -23,16 +22,16 @@ const Dashboard = () => {
   const localSessionId = localStorage.getItem('chatSessionId');
 
   useEffect(() => {
-    console.log('[Dashboard] I am mounted');
-    console.log('[Dashboard] redirectTo >>>', redirectTo);
+    // console.log('[Dashboard] I am mounted');
+    // console.log('[Dashboard] redirectTo >>>', redirectTo);
   }, []);
 
   useEffect(() => {
     const doTransfer = async () => {
-      console.log('[Dashboard] doTransfer >>>', redirectTo);
-      console.log('[Dashboard] anonymousUid >>>', anonymousUid);
-      console.log('[Dashboard] localSessionId >>>', localSessionId);
-      console.log('[Dashboard] user >>>', user);
+      // console.log('[Dashboard] doTransfer >>>', redirectTo);
+      // console.log('[Dashboard] anonymousUid >>>', anonymousUid);
+      // console.log('[Dashboard] localSessionId >>>', localSessionId);
+      // console.log('[Dashboard] user >>>', user);
       setIsLoading(true);
       const profileStatus = getProfileStatus(user);
       try {
@@ -49,7 +48,7 @@ const Dashboard = () => {
           anonymousUid: anonymousUid,
           anonymousSessionId: localSessionId,
         }); 
-        console.log('[Dashboard] response >>>', response.data);
+        // console.log('[Dashboard] response >>>', response.data);
   
         if (response?.data) {
           await dispatch(
@@ -83,6 +82,37 @@ const Dashboard = () => {
         setProfileStatus(profileStatus);
     }
   }, [user]);
+
+
+  
+  useEffect(() => {
+    if (!user) return;
+    const syncConsent = async () => {
+      try {
+        // console.log('[Dashboard] user.hasChatbotConsent >>>', user.hasChatbotConsent);
+        // console.log('[Dashboard] isAiAssistant >>>', isAiAssistant);
+        if(user.hasChatbotConsent === undefined) {
+          // console.log('[Dashboard] updating chatbot consent based on isAiAssistant');
+          await dispatch(
+            updateProfile({
+              uid: user.uid,
+              hasChatbotConsent: isAiAssistant,
+            })
+          ).unwrap();
+          dispatch(updateChatbotConsent(isAiAssistant));
+        }else {
+          // console.log('[Dashboard] updating chatbot consent based on user.hasChatbotConsent');
+          dispatch(updateChatbotConsent(user.hasChatbotConsent));
+        }
+      } catch (err) {
+        console.error('Failed to sync chatbot consent', err);
+      }
+    };
+  
+    syncConsent();
+  }, [user, isAiAssistant]);
+
+
 
   return (
     <FrontLayout title="Dashboard">

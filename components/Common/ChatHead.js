@@ -1,11 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatHeadIcon } from '../icons/SvgIcons';
 import ChatWindow from './ChatWindow';
+import { useSelector, useDispatch } from 'react-redux';
+import ChatBotTermsModal from './ChatBotTermsModal';
+import {updateProfileConsent, updateChatbotConsent} from '@/store/slices/authSlice';
+import Loader from '../Common/Loader';
+
+
 
 export default function FloatingChat() {
+  const winRef = useRef();
   const [open, setOpen] = useState(false);
   const [isExtended, setIsExtended] = useState(false);
-  const winRef = useRef();
+  const dispatch = useDispatch();
+  const { hasChatbotConsent, user } = useSelector((state) => state.auth);
+  const [showTerms, setShowTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     function onDocClick(e) {
@@ -17,14 +27,57 @@ export default function FloatingChat() {
     return () => document.removeEventListener('click', onDocClick);
   }, []);
 
+
+  const acceptTerms = async () => {
+    if (!user) {
+      setShowTerms(false);
+      setOpen(true);
+      return;
+    }
+  
+    setIsLoading(true);
+  
+    try {
+      await dispatch(
+        updateProfileConsent({
+          uid: user.uid,
+          hasChatbotConsent: true,
+        })
+      ).unwrap();
+  
+      await dispatch(updateChatbotConsent(true)).unwrap();
+  
+      setShowTerms(false);
+      setOpen(true);
+    } catch (err) {
+      console.error('Failed to accept chatbot terms:', err);
+    } finally {
+      setIsLoading(false); // always reset loading
+    }
+  };
+
+  const declineTerms = () => {
+    setShowTerms(false);
+  };
+
   return (
     <>
+      <Loader show={isLoading} />
+      <ChatBotTermsModal
+        open={showTerms}
+        onAccept={acceptTerms}
+        onDecline={declineTerms}
+      />
       <div
         id="chat-head"
         onClick={(e) => {
           e.stopPropagation();
-          setOpen(!open);
-          setIsExtended(false);
+          if(hasChatbotConsent){
+            setOpen(!open);
+            setIsExtended(false);
+          }else {
+            setShowTerms(true);
+          }
         }}
         className="fixed bottom-5 right-5 z-[9999] cursor-pointer"
       >
@@ -34,8 +87,9 @@ export default function FloatingChat() {
           </div>
         </div>
       </div>
-
-      <ChatWindow open={open} setOpen={setOpen} isExtended={isExtended} setIsExtended={setIsExtended} />
+      
+      <ChatWindow open={open} setOpen={setOpen} isExtended={isExtended} setIsExtended={setIsExtended}/>
+    
     </>
   );
 }

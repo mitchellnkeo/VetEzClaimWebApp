@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import { object, string } from 'yup';
 import { useRouter } from 'next/router';
 import Button from '../FormInputs/Button';
-import { showAlert } from '@/utils';
 import { setPageTitle } from '@/store/slices/themeConfigSlice';
 import { CutIcon } from '../icons/SvgIcons';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -13,6 +11,7 @@ import { setDoc, doc } from 'firebase/firestore';
 import { SignUpValidationSchema } from '@/utils/validators';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { getCookie } from 'cookies-next';
 import moment from 'moment';
 import DateSelector from '../Common/DateSelector';
 
@@ -25,8 +24,8 @@ const UserRegistration = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const { 'assist': aiAssistant } = router.query; // get ?ai-assistant=true
   const isAiAssistant = aiAssistant === 'true';
+  const hasChatbotConsent = getCookie('vetez_chatbot_consent') === true;
 
-  console.log("[UserRegistration] isAiAssistant >>>", isAiAssistant);
 
   useEffect(() => {
     dispatch(setPageTitle('VetEZ - Registration'));
@@ -42,6 +41,7 @@ const UserRegistration = () => {
     confirmPassword: '',
     agreeToTerms: false,
     agreeToPolicies: false,
+    hasChatbotConsent: hasChatbotConsent || false,
   };
   const validationSchema = SignUpValidationSchema;
 
@@ -73,6 +73,7 @@ const UserRegistration = () => {
         isAccountLive: true,
         deletionDate: '',
         uid: userCred.user.uid,
+        hasChatbotConsent: values.hasChatbotConsent,
       });
       resetForm();
       setShowSuccess(true);

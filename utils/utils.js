@@ -28,3 +28,20 @@ export const IsValidDateRange = (initialMonth, initialYear, finalMonth, finalYea
   return finalDate >= initialDate;
 };
 
+
+
+export const stripMarkdown = (markdownText) => {
+  if (!markdownText) return '';
+  return markdownText
+    .replace(/\*\*(.*?)\*\*/g, '$1') // bold
+    .replace(/\*(.*?)\*/g, '$1')     // italic
+    .replace(/__([^_]+)__/g, '$1')   // underline-ish
+    .replace(/`([^`]+)`/g, '$1')     // inline code
+    .replace(/!\[.*?\]\(.*?\)/g, '') // images
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1') // links
+    .replace(/#+\s?(.*)/g, '$1')     // headings
+    .replace(/>\s?(.*)/g, '$1')      // blockquotes
+    .replace(/[-*]\s+(.*)/g, '$1')   // lists
+    .replace(/\n{2,}/g, '\n')        // multiple newlines to single
+    .trim();
+};
