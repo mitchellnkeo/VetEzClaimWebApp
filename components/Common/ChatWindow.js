@@ -89,7 +89,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
           };
           // console.log("[ChatWindow] assistantMessage:: response >>>", assistantMessage);
           if( isLastMessage && Array.isArray(content.guided_follow_up_prompts) && content.guided_follow_up_prompts.length > 0){
-            console.log("[ChatWindow] guided_follow_up_prompts >>>", content.guided_follow_up_prompts);
+            // console.log("[ChatWindow] guided_follow_up_prompts >>>", content.guided_follow_up_prompts);
             setSuggestedPrompts(content.guided_follow_up_prompts);
           }
           setChat((prev) => [...prev, assistantMessage]);
@@ -146,10 +146,6 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
     scrollToBottom();
   }, [chat]);
 
-  // useEffect(() => {
-  //   const randomPrompts = getRandomSuggestedPrompts();
-  //   setSuggestedPrompts(randomPrompts);
-  // }, []); 
 
   const scrollToBottom = () => {
     if (bodyRef.current) {
@@ -265,7 +261,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
   const handleSuggestionClick = (item) => {
     setMessage(item.prompt);
     setAddInstructions(true);
-    console.log("[ChatWindow] item >>>", item);
+    // console.log("[ChatWindow] item >>>", item);
   };
 
 
@@ -291,7 +287,7 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
         sessionId: sessionId,
         file: selectedFile,
       });
-      console.log("[Get Started Resposne:: ]", resp.data)
+      // console.log("[Get Started Resposne:: ]", resp.data)
       setSelectedFile(null);
       if (isAiAssistant) {
         await dispatch(updateLocalSessionId(resp.data.sessionId)).unwrap();
@@ -299,11 +295,11 @@ export default function ChatWindow({ open, setOpen, isExtended, setIsExtended, i
         await dispatch(updateSessionId({ uid, sessionId: resp.data.sessionId })).unwrap();
       }
 
-      if (resp.data.response.fileName) {
+      if (resp.data.response.docType != 'OTHER') {
         const isChatting = resp.data.response.type === 'chat'
         const llmContent = isChatting ?  resp.data.response.llmResponse : resp.data.response.llmResponse.va_analysis_json
-        console.log("[Get Started] resp.data.response >>>", resp.data.response);
-        console.log("[Get Started] llmContent >>>", llmContent);
+        // console.log("[Get Started] resp.data.response >>>", resp.data.response);
+        // console.log("[Get Started] llmContent >>>", llmContent);
         setChat((prev) => [...prev, {
           role: 'user',
           content: '',
