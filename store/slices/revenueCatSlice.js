@@ -126,6 +126,7 @@ const revenueCatSlice = createSlice({
       })
       .addCase(getSubscriptionStatus.fulfilled, (state, action) => {
         state.isSubscribed = action.payload?.subscriptionStatus || false;
+        state.hasChatbotConsent = action.payload?.hasChatbotConsent || false;
         state.error = null;
         // console.log("[getSubscriptionStatus.isSubscribed]  >>>", state.isSubscribed);
       })
