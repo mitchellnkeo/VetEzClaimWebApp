@@ -12,7 +12,7 @@ export const getFaxBodyData = async (filename, isCourtForm = false) => {
     sCallerID: process.env.NEXT_PUBLIC_FAX_SCALLER_ID,
     sSenderEmail: process.env.NEXT_PUBLIC_FAX_SSENDER_EMAIL,
     sFaxType: process.env.NEXT_PUBLIC_FAX_SFAX_TYPE,
-    sToFaxNumber: process.env.NEXT_PUBLIC_FAX_DUMMY_STOFAX_NUMBER,
+    sToFaxNumber: faxNumber,
     sFileName_1: `${filename}`,
   };
   return bodyData;
