@@ -1,0 +1,14 @@
+{
+  "dashboard": "Dashboard",
+  "venues": "Venues",
+  "create_venue": "Create new Venue",
+
+  "login": "Login",
+  "lockscreen": "Lockscreen",
+  "password_recovery": "Password Recovery",
+  "register": "Register",
+  "404": "404",
+  "500": "500",
+  "503": "503",
+  "copyright": "VetEZ All rights reserved."
+}
