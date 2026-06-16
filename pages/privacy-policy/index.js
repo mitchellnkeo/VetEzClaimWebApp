@@ -92,7 +92,7 @@ export default function PrivacyPolicy() {
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
             <div className="flex flex-col gap-2">
                 <h1 className="text-2xl dark:text-white-light">Privacy Policy</h1>
-                <p className="text-center text-gray-600 mb-8 dark:text-white-light">Last updated August 30, 2024</p>
+                <p className="text-center text-gray-600 mb-8 dark:text-white-light">Last updated June 10, 2026</p>
 
             </div>
           </div>

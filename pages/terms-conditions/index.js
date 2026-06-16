@@ -134,7 +134,7 @@ export default function TermsConditions() {
           <div className="flex flex-col gap-2">
             
             <h1 className="text-2xl dark:text-white-light">Terms and Conditions</h1>
-            <p className="text-gray-600 mb-8 dark:text-white-light">Last updated August 30, 2024</p>
+            <p className="text-gray-600 mb-8 dark:text-white-light">Last updated June 10, 2026</p>
 
          </div>
           </div>
