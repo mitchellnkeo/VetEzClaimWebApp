@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import { toast } from 'react-toastify';
 import { NONPROFIT_TAGLINE } from '@/constants/branding';
-import ZeffyDonateButton from '@/components/Common/ZeffyDonateButton';
 import {
   DONATE_SUPPORT,
   ZEFFY_DONATION_FORM_URL,
@@ -15,7 +14,7 @@ export default function DonatePage() {
   const router = useRouter();
   const donateDisclaimer = getDonateDisclaimer();
 
-  const handleDonateFallback = () => {
+  const handleDonateNow = () => {
     if (openDonationUrl(ZEFFY_DONATION_FORM_URL)) {
       return;
     }
@@ -104,20 +103,24 @@ export default function DonatePage() {
           </p>
         </div>
 
-        <ZeffyDonateButton
-          className="mt-4 w-full rounded-lg bg-primary py-3 font-semibold text-white transition-colors hover:bg-primaryHover"
-          onFallback={handleDonateFallback}
-        >
-          Donate Now
-        </ZeffyDonateButton>
-
-        <button
-          type="button"
-          className="mt-3 w-full rounded-lg border border-primary bg-white py-2 text-sm font-semibold text-primary transition-colors hover:bg-gray-50 dark:bg-gray"
-          onClick={handleDonateFallback}
-        >
-          Open donation page in a new tab
-        </button>
+        {ZEFFY_DONATION_FORM_URL ? (
+          <a
+            href={ZEFFY_DONATION_FORM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 block w-full rounded-lg bg-primary py-3 text-center font-semibold text-white transition-colors hover:bg-primaryHover"
+          >
+            Donate Now
+          </a>
+        ) : (
+          <button
+            type="button"
+            className="mt-4 w-full rounded-lg bg-primary py-3 font-semibold text-white transition-colors hover:bg-primaryHover"
+            onClick={handleDonateNow}
+          >
+            Donate Now
+          </button>
+        )}
 
         <div className="mt-6 rounded-lg border border-gray-200 p-4 text-center dark:border-gray-600">
           <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
