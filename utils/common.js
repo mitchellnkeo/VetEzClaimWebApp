@@ -1,4 +1,4 @@
-export const isUserOver18 = async (dob) => {
+export const isUserOver18 = (dob) => {
   if (!dob || typeof dob !== 'string') {
     return false;
   }

@@ -1,9 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import AnimateHeight from 'react-animate-height';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 const MenuItem = ({
   path,
@@ -19,17 +20,45 @@ const MenuItem = ({
   active = false,
 }) => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [errorSubMenu, setErrorSubMenu] = useState(false);
   const supportWaitingCount = 0;
 
-  const handleClick = (e) => {
+  const promptCompleteProfile = () => {
+    toast.info('Complete your profile in Settings to unlock this section.', {
+      toastId: 'profile-required',
+    });
+    router.push('/profile/settings');
+  };
+
+  const handleSubmenuToggle = (e) => {
     if (disabled) {
       e.preventDefault();
+      promptCompleteProfile();
+      return;
+    }
+    toggleMenu(keyID);
+  };
+
+  const handleNavClick = (e) => {
+    if (disabled) {
+      e.preventDefault();
+      promptCompleteProfile();
       return;
     }
     if (!submenu) return;
-    // process.env.NODE_ENV === 'development' && console.log('>> keyID: ', keyID);
     toggleMenu(keyID);
+  };
+
+  const handleSubmenuClick = (e, itemPath) => {
+    if (disabled) {
+      e.preventDefault();
+      promptCompleteProfile();
+      return;
+    }
+    if (!itemPath) {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -37,9 +66,14 @@ const MenuItem = ({
       className={`menu nav-item ${
         disabled ? 'cursor-not-allowed opacity-50' : ''
       } ${active ? 'rounded-md bg-[#005985] text-white dark:bg-gray-600' : ''}`}
+      title={
+        disabled
+          ? 'Complete your profile in Settings to unlock this section'
+          : undefined
+      }
     >
       {!submenu ? (
-        <Link href={disabled ? '#' : path} className="group">
+        <Link href={path || '/'} onClick={handleNavClick} className="group">
           <div className="flex items-center">
             {icon}
             <span className="text-white dark:text-[#ccc] dark:group-hover:text-white-dark ltr:pl-3 rtl:pr-3">
@@ -56,7 +90,7 @@ const MenuItem = ({
             } nav-link group w-full ${
               disabled ? 'cursor-not-allowed opacity-50' : ''
             }`}
-            onClick={handleClick}
+            onClick={handleSubmenuToggle}
             disabled={disabled}
           >
             <div className="flex items-center">
@@ -104,7 +138,10 @@ const MenuItem = ({
               {submenu &&
                 submenu.map((item, id) => (
                   <li key={id}>
-                    <Link href={disabled ? '#' : item?.path}>
+                    <Link
+                      href={item?.path || '/'}
+                      onClick={(e) => handleSubmenuClick(e, item?.path)}
+                    >
                       {t(item?.title)}
                     </Link>
                   </li>
@@ -158,7 +195,10 @@ const MenuItem = ({
                       {deepSubMenu &&
                         deepSubMenu.map((item, id) => (
                           <li key={id}>
-                            <Link href={disabled ? '#' : item?.path}>
+                            <Link
+                              href={item?.path || '/'}
+                              onClick={(e) => handleSubmenuClick(e, item?.path)}
+                            >
                               {t(item?.title)}
                             </Link>
                           </li>
