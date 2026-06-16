@@ -18,6 +18,15 @@ const nextConfig = {
     access_id: process.env.ACCESS_ID,
     access_password: process.env.ACCESS_PASSWORD,
   },
+  async redirects() {
+    return [
+      {
+        source: '/subscription',
+        destination: '/donate',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

@@ -80,7 +80,7 @@ const Sidebar = () => {
       disabled: false,
     },
     {
-      path: '/subscription',
+      path: '/donate',
       title: 'Donate',
       icon: <SubscriptionIcon />,
       keyID: 'Donate',

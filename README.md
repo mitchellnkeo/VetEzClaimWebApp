@@ -78,7 +78,7 @@ Firebase Console → **Authentication** → **Settings** → **Authorized domain
 1. Vercel → Project → **Settings** → **Domains** → add `app.vetezclaim.com`
 2. Update DNS (Google Domains / Cloudflare): change `app` CNAME from  
    `frontend-web-qbdpk.ondigitalocean.app` → Vercel’s CNAME target
-3. Wait for SSL, then smoke-test `/login` and `/subscription`
+3. Wait for SSL, then smoke-test `/login` and `/donate`
 
 See also [WEB-DEPLOY-GUIDE.md](../WEB-DEPLOY-GUIDE.md) in the monorepo root.
 
