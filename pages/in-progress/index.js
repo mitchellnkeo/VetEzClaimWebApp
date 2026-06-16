@@ -11,7 +11,6 @@ import { toast } from 'react-toastify';
 export default function InProgressForms() {
   const router = useRouter();
   const { user, uid } = useSelector((state) => state.auth);
-  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [inprogressForms, setInprogressForms] = useState([]);
   const [isloading, setIsLoading] = useState(false);
 
@@ -35,15 +34,6 @@ export default function InProgressForms() {
   }, [uid]);
 
   const onDraft = async (item) => {
-    if (
-      !isSubscribed &&
-      item.formId !== 'financial_hardship' &&
-      item.formId !== 'courtform' &&
-      item.formId !== 'fillform'
-    ) {
-      toast.info('Subscribe Now');
-      return;
-    }
     let routerBody = { pathname: item.formUrl };
     if (item.formId !== 'buddy_statement') {
       routerBody.query = { 'in-progress': true };
@@ -52,15 +42,6 @@ export default function InProgressForms() {
   };
 
   const onDiscard = async (item) => {
-    if (
-      !isSubscribed &&
-      item.formId !== 'financial_hardship' &&
-      item.formId !== 'courtform' &&
-      item.formId !== 'fillform'
-    ) {
-      toast.info('Subscribe Now');
-      return;
-    }
     setIsLoading(true);
     await postFormData({
       docName: item.formId,

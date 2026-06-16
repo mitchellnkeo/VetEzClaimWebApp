@@ -22,7 +22,6 @@ import { generatePdfService } from '@/services/pdfGenerationService';
 import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import Breadcrumb from '@/components/Common/Breadcrumb';
-import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const yesNoData = ['Yes', 'No'];
 const claimantTypeData = [
@@ -82,7 +81,6 @@ export default function SupplementalClaimForm({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
-  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [recordExists, setRecordsExists] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
@@ -136,7 +134,6 @@ export default function SupplementalClaimForm({
         preTitle="Form Menu"
         currentTitle={formTitle}
       />
-      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={SupplementalClaimValidationSchema}
@@ -235,7 +232,6 @@ export default function SupplementalClaimForm({
           };
 
           useEffect(() => {
-            if (!isSubscribed) return;
             loadData();
           }, [uid]);
 

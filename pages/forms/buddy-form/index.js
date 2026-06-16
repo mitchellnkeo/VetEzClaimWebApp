@@ -28,7 +28,6 @@ import Divider from '@/components/Common/Divider';
 import { StateData } from '@/utils/staticData';
 import Modal from '@/components/Common/Modal';
 import { deleteBuddyRequestData } from '@/firebase/firebaseOperations';
-import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const receivingEmail = [
   {
@@ -50,7 +49,6 @@ export default function BuddyForm() {
   const buddyStatement = useSelector(
     (state) => state.form.selectedBuddyStatement
   );
-  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [buddyData, setBuddyData] = useState(buddyStatement);
   const [recordExists, setRecordsExists] = useState(false);
   const [openReviewModal, setOpenReviewModal] = useState(false);
@@ -407,7 +405,6 @@ export default function BuddyForm() {
         currentTitle={formTitle}
       />
       {reviewModal}
-      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={BuddyFormValidationSchema}
@@ -498,7 +495,6 @@ export default function BuddyForm() {
 
           useEffect(() => {
             if (!buddyStatement.docId) return;
-            if (!isSubscribed) return;
             loadData();
           }, [uid, buddyStatement.docId]);
 

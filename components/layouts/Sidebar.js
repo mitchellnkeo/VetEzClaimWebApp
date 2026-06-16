@@ -20,6 +20,7 @@ import {
   CalculatorIcon,
   DocumentAnalyzerIcon,
 } from '../icons/SvgIcons';
+import NonprofitTagline from '../Common/NonprofitTagline';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -80,9 +81,9 @@ const Sidebar = () => {
     },
     {
       path: '/subscription',
-      title: 'Subscription',
+      title: 'Donate',
       icon: <SubscriptionIcon />,
-      keyID: 'Subscription',
+      keyID: 'Donate',
       disabled: buttonStatus < 2,
     },
     {
@@ -121,6 +122,7 @@ const Sidebar = () => {
               <SideToggleCloseIcon />
             </button>
           </div>
+          <NonprofitTagline className="px-2 pb-3" />
 
           <PerfectScrollbar className="relative h-[calc(100vh-80px)]">
             <ul className="relative space-y-0.5 p-4 py-0 font-semibold">

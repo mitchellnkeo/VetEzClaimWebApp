@@ -12,13 +12,11 @@ import {
   getAnalyzerRecordsByUser,
 } from '@/firebase/firebaseOperations';
 import { FaFilePdf, FaHistory, FaArrowRight } from 'react-icons/fa';
-import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 import { doc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 
 const AnalyzeUI = () => {
   const router = useRouter();
-  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const { user, uid } = useSelector((state) => state.auth);
   const [progress, setProgress] = useState(0);
   const [fileName, setFileName] = useState('');
@@ -183,7 +181,6 @@ const AnalyzeUI = () => {
     <FrontLayout title="Document Analyzer">
       <Breadcrumb preUrl="/" preTitle="Home" currentTitle="Document Analyzer" />
       <Loader show={isLoading} />
-      {isSubscribed != true && <SubscriptionRequired />}
 
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">

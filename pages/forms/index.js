@@ -4,12 +4,9 @@ import FrontLayout from '@/components/layouts/FrontLayout';
 import { useDispatch } from 'react-redux';
 import { setSelectedForm } from '@/store/slices/formSlice';
 import Breadcrumb from '@/components/Common/Breadcrumb';
-import { useSelector } from 'react-redux';
-
 const FormsMenu = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { isSubscribed } = useSelector((state) => state.revenueCat);
 
   const homeScreenButtonData = [
     {
@@ -31,7 +28,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'submit_claim' }));
         router.push('/forms/menu');
       },
-      disabled: isSubscribed == true ? false : true,
+      disabled: false,
     },
     {
       name: 'File An Appeal',
@@ -39,7 +36,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'file_appeal' }));
         router.push('/forms/menu');
       },
-      disabled: isSubscribed == true ? false : true,
+      disabled: false,
     },
     {
       name: 'Sworn Statements and Misc Forms',
@@ -47,7 +44,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'misc_forms' }));
         router.push('/forms/menu');
       },
-      disabled: isSubscribed == true ? false : true,
+      disabled: false,
     },
     {
       name: 'Request C-file/DD 214',
@@ -55,7 +52,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'request_cfile' }));
         router.push('/forms/menu');
       },
-      disabled: isSubscribed == true ? false : true,
+      disabled: false,
     },
     {
       name: 'Request Buddy Statement (Form 21-10210)',
@@ -63,7 +60,7 @@ const FormsMenu = () => {
         dispatch(setSelectedForm({ id: 'buddy_statement' }));
         router.push('/forms/buddy-requests');
       },
-      disabled: isSubscribed == true ? false : true,
+      disabled: false,
     },
   ];
 

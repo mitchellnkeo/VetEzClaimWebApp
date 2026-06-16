@@ -1,5 +1,6 @@
 import App from '../../App';
 import Head from 'next/head';
+import NonprofitTagline from '../Common/NonprofitTagline';
 
 const AuthLayout = ({ children, title }) => {
   return (
@@ -22,7 +23,10 @@ const AuthLayout = ({ children, title }) => {
       <div className="relative flex min-h-screen items-center justify-center bg-[url('/assets/images/map.png')] bg-cover bg-center dark:bg-[url('/assets/images/map-dark.svg')]">
         <div className="relative w-full max-w-[870px]">
           <div className="flex flex-col justify-center rounded-md bg-[#006092] px-6 py-20  text-white lg:min-h-[95vh]">
-            <div className="mx-auto w-full max-w-[440px]">{children}</div>
+            <div className="mx-auto w-full max-w-[440px]">
+              <NonprofitTagline className="mb-6" />
+              {children}
+            </div>
           </div>
         </div>
       </div>

@@ -24,7 +24,6 @@ import { getFaxBodyData, sendViaSRFax } from '@/services/faxPdfService';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import Breadcrumb from '@/components/Common/Breadcrumb';
-import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const benefitTypeData = [
   'Compensation',
@@ -94,7 +93,6 @@ export default function HigherLevelReviewForm() {
 
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
-  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [recordExists, setRecordsExists] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
@@ -170,7 +168,6 @@ export default function HigherLevelReviewForm() {
         preTitle="Form Menu"
         currentTitle={formTitle}
       />
-      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={HigherLevelReviewValidationSchema}
@@ -309,7 +306,6 @@ export default function HigherLevelReviewForm() {
 
           useEffect(() => {
             if (!router.isReady) return;
-            if (!isSubscribed) return;
             loadData();
           }, [uid, router.isReady, router.query]);
 

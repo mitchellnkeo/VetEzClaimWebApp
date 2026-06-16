@@ -1,129 +1,64 @@
 import FrontLayout from '@/components/layouts/FrontLayout';
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
-import Loader from '@/components/Common/Loader';
 import Breadcrumb from '@/components/Common/Breadcrumb';
-import { revenueCatManager } from '@/services/subscriptionService';
-import { PurchasesError, ErrorCode } from '@revenuecat/purchases-js';
 import { toast } from 'react-toastify';
+import { NONPROFIT_TAGLINE } from '@/constants/branding';
+import ZeffyDonateButton from '@/components/Common/ZeffyDonateButton';
+import {
+  DONATE_SUPPORT,
+  ZEFFY_DONATION_FORM_URL,
+  getDonateDisclaimer,
+  openDonationUrl,
+} from '@/constants/donate';
 
-export default function Subscription() {
+export default function DonatePage() {
   const router = useRouter();
-  const { user, uid } = useSelector((state) => state.auth);
-  const [isloading, setIsLoading] = useState(false);
-  const { isSubscribed } = useSelector((state) => state.revenueCat);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSubscribedStatus, setIsSubscribedStatus] = useState(isSubscribed == true ? true : false);
+  const donateDisclaimer = getDonateDisclaimer();
 
-  process.env.NODE_ENV === 'development' &&
-    console.log('[Subscription] :: isSubscribed:', isSubscribedStatus);
-  // process.env.NODE_ENV === 'development' &&
-  //   console.log('>> Subscription :: user:', user);
-  // process.env.NODE_ENV === 'development' &&
-  //   console.log('>> Subscription :: uid:', uid);
-
-  const openDialog = () => setIsOpen(true);
-  const closeDialog = () => setIsOpen(false);
-
-  const handleSubscribeClick = async () => {
-    setIsLoading(true);
-    try {
-      // Call the singleton purchase function
-      await revenueCatManager.handleSubscribe();
-      // setIsSubscribedStatus(true);
-      openDialog();
-    } catch (err) {
-      process.env.NODE_ENV === 'development' && console.error('>> err:', err);
-      if (
-        err instanceof PurchasesError &&
-        err.errorCode === ErrorCode.UserCancelledError
-      ) {
-        toast.error('Subscription cancelled.');
-      } else {
-        toast.error('Subscription failed. Please try again.');
-      }
-    } finally {
-      setIsLoading(false);
+  const handleDonateFallback = () => {
+    if (openDonationUrl(ZEFFY_DONATION_FORM_URL)) {
+      return;
     }
+    toast.info('Online donation options are coming soon.');
   };
 
   const handleTermsAndConditions = () => {
-    process.env.NODE_ENV === 'development' &&
-      console.log('Terms and Conditions');
     router.push('/terms-conditions');
   };
 
   const handleExploreForms = () => {
-    process.env.NODE_ENV === 'development' && console.log('Explore Forms');
     router.push('/forms');
   };
 
-  const subscribedMessage = (
-    <div className="mt-6 w-full rounded-lg border-l-4 border-green-500 bg-green-100 p-6">
-      <h3 className="mb-2 text-lg font-semibold text-green-800">
-        🎉 Congratulations! You are subscribed.
-      </h3>
-      <p className="text-green-700">
-        You now have full access to all VA forms. Start exploring and submit
-        your forms easily!
-      </p>
-      <button
-        className="mt-4 rounded-lg bg-green-500 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-600"
-        onClick={handleExploreForms}
-      >
-        Explore VA Forms
-      </button>
-    </div>
-  );
-
-  const subscriptionDialog = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-lg">
-        <h2 className="mb-2 text-xl font-bold text-gray-900">
-          🎉 Congratulations!
-        </h2>
-        <p className="mb-4 text-gray-700">
-          You’ve successfully subscribed! Let’s explore VA forms and unlock more
-          features.
-        </p>
-        <button
-          onClick={() => {
-            closeDialog();
-            setIsLoading(true);
-            setTimeout(() => {
-              setIsLoading(false);
-              window.location.replace('/forms');
-            }, 4000);
-          }}
-          className="rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition-colors hover:bg-blue-700"
-        >
-          OK
-        </button>
-      </div>
-    </div>
-  );
-
   return (
-    <FrontLayout title="Subscription">
-      <Loader show={isloading} />
-      <Breadcrumb preUrl="/" preTitle="Home" currentTitle="Subscription" />
+    <FrontLayout title="Donate">
+      <Breadcrumb preUrl="/" preTitle="Home" currentTitle="Donate" />
 
       <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
         <div className="invoice-table">
           <div className="justify-content-between mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
             <div className="flex flex-col gap-2">
-              <h1 className="text-2xl dark:text-white-light">Subscription</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {NONPROFIT_TAGLINE}
+              </p>
+              <h1 className="text-2xl dark:text-white-light">Donate</h1>
+              <p className="text-base text-gray-700 dark:text-gray-300">
+                {DONATE_SUPPORT}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      {isOpen && subscriptionDialog}
-
-      {isSubscribedStatus == true && subscribedMessage}
-      <div className=" mx-auto mt-8 max-w-4xl rounded-lg bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-white-light">
+      <div className="mx-auto mt-8 max-w-4xl rounded-lg bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-white-light">
         <div className="rounded-lg bg-primary p-6 text-white">
+          <h3 className="mb-2 text-lg font-semibold">
+            All features are included at no cost
+          </h3>
+          <p className="mb-4 text-sm opacity-90">
+            After you sign in and complete your profile, you can use every VA
+            form and tool in VetEZ Claim without paying.
+          </p>
           <h3 className="mb-4 text-lg font-semibold">Includes ability to:</h3>
           <ul className="list-none space-y-2">
             <li className="flex items-start">
@@ -160,48 +95,61 @@ export default function Subscription() {
               </span>
             </li>
           </ul>
-
-          <h4 className="mb-3 mt-6 font-semibold text-yellow-400">
-            Additional Features Coming Soon:
-          </h4>
-          <ul className="list-none space-y-2">
-            <li className="flex items-start">
-              <span className="mr-2 mt-1 text-yellow-400">✔</span>
-              <span>Upload supporting documents to the VA.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 mt-1 text-yellow-400">✔</span>
-              <span>Complete Benefits Delivery at Discharge (BDD) Claims.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 mt-1 text-yellow-400">✔</span>
-              <span>
-                Record injuries while on active duty and active-duty training.
-              </span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 mt-1 text-yellow-400">✔</span>
-              <span>And more!</span>
-            </li>
-          </ul>
         </div>
 
         <div className="mt-6 rounded-lg bg-yellow-400 p-4 text-center text-black">
-          <p className="font-bold">Subscription Fee: $9.99</p>
-          <p className="text-sm">Description: Basic Subscription Package</p>
+          <p className="font-bold">Support our mission</p>
+          <p className="mt-2 text-sm">
+            Give once or set up monthly giving on our secure Zeffy page.
+          </p>
         </div>
 
-        {isSubscribedStatus == false && (
-          <button
-            className="mt-4 w-full rounded-lg bg-primary py-3 font-semibold text-white transition-colors hover:bg-primaryHover"
-            onClick={handleSubscribeClick}
-          >
-            Subscribe Now
-          </button>
-        )}
+        <ZeffyDonateButton
+          className="mt-4 w-full rounded-lg bg-primary py-3 font-semibold text-white transition-colors hover:bg-primaryHover"
+          onFallback={handleDonateFallback}
+        >
+          Donate Now
+        </ZeffyDonateButton>
 
         <button
-          className="hover:font-primary mt-4 w-full rounded-lg border border-gray-400 bg-white py-2 font-semibold transition-colors hover:border-primary  hover:font-bold dark:bg-gray"
+          type="button"
+          className="mt-3 w-full rounded-lg border border-primary bg-white py-2 text-sm font-semibold text-primary transition-colors hover:bg-gray-50 dark:bg-gray"
+          onClick={handleDonateFallback}
+        >
+          Open donation page in a new tab
+        </button>
+
+        <div className="mt-6 rounded-lg border border-gray-200 p-4 text-center dark:border-gray-600">
+          <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
+            Prefer to give on your phone?
+          </p>
+          <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+            Scan this code to open our Zeffy donation page.
+          </p>
+          <img
+            src="/assets/zeffy-donate-qr.png"
+            alt="QR code linking to the VetEZ Claim Zeffy donation page"
+            className="mx-auto mt-3 h-40 w-40"
+            width={160}
+            height={160}
+          />
+        </div>
+
+        <p className="mt-4 text-center text-xs text-gray-600 dark:text-gray-400">
+          {donateDisclaimer}
+        </p>
+
+        <button
+          type="button"
+          className="mt-4 w-full rounded-lg border border-gray-400 bg-white py-2 font-semibold transition-colors hover:border-primary hover:font-bold dark:bg-gray"
+          onClick={handleExploreForms}
+        >
+          Explore VA Forms
+        </button>
+
+        <button
+          type="button"
+          className="hover:font-primary mt-4 w-full rounded-lg border border-gray-400 bg-white py-2 font-semibold transition-colors hover:border-primary hover:font-bold dark:bg-gray"
           onClick={handleTermsAndConditions}
         >
           Terms and Conditions

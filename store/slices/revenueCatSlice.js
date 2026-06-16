@@ -83,7 +83,7 @@ const revenueCatSlice = createSlice({
   name: 'revenueCat',
   initialState: {
     isInitialized: false,
-    isSubscribed: false,
+    isSubscribed: true, // SOW Phase 1: all features unlocked; TODO revisit if paywall returns
     error: null,
   },
   reducers: {

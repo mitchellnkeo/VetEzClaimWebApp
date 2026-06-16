@@ -19,6 +19,7 @@ import {
   SystemThemeIcon,
   ToggleThemeIcon,
 } from '../icons/SvgIcons';
+import NonprofitTagline from '../Common/NonprofitTagline';
 
 const Header = () => {
   const { t, i18n } = useTranslation();
@@ -103,7 +104,9 @@ const Header = () => {
             </button>
           </div>
           <div className="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
-            <div className="sm:ltr:mr-auto sm:rtl:ml-auto"></div>
+            <div className="hidden max-w-md flex-1 lg:block">
+              <NonprofitTagline className="text-left ltr:text-left rtl:text-right" />
+            </div>
 
             <div>
               {themeConfig.theme === 'light' ? (

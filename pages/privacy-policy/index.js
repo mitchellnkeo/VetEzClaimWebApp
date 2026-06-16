@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
 
     const serviceItems = [
         'Visit our website at https://vetezclaim.com, or any website of ours that links to this Privacy Notice',
-        'Download and use our mobile application (Vet EZ Claim), or any other application of ours that links to this Privacy Notice',
+        'Download and use our mobile application (VetEZ Claim), or any other application of ours that links to this Privacy Notice',
         'Engage with us in other related ways, including any sales, marketing, or events',
       ];
     
@@ -102,7 +102,7 @@ export default function PrivacyPolicy() {
       <div className="max-w-4xl mx-auto p-6 bg-white text-gray-900 mt-10 rounded-lg shadow-lg p-10 dark:bg-gray-900 dark:text-white-light">
 
       <p className="mb-6 text-justify">
-        This Privacy Notice for EZ Claim LLC (<span className="font-bold">we</span>, <span className="font-bold">us</span>, or <span className="font-bold">our</span>), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services (<span className="font-bold">Services</span>), including when you:
+        This Privacy Notice for VetClaims Alliance, a nonprofit corporation (<span className="font-bold">we</span>, <span className="font-bold">us</span>, or <span className="font-bold">our</span>), operating VetEZ Claim, describes how and why we might access, collect, store, use, and/or share (&quot;process&quot;) your personal information when you use our services (<span className="font-bold">Services</span>), including when you:
       </p>
 
       <ul className="list-disc pl-6 mb-6">
@@ -284,7 +284,7 @@ export default function PrivacyPolicy() {
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">12. DORMANT ACCOUNT STATUS AND VETERAN DATA</h2>
       <p className="mb-6 text-justify">
-        A dormant account will be any account that has been registered, but not accessed, either by user login or continued payment for subscription services, for a period of twelve months. If a user account becomes dormant, Vet Ez Claim will inform the user at the user's registered email address that the account is dormant and will be deleted if the user does not login within thirty days of the notice. If the user does not login within thirty days of the notice, the account and 100% of Veteran data, including non-VA data, will be deleted.
+        A dormant account will be any account that has been registered, but not accessed by user login for a period of twelve months. If a user account becomes dormant, VetEZ Claim will inform the user at the user&apos;s registered email address that the account is dormant and will be deleted if the user does not login within thirty days of the notice. If the user does not login within thirty days of the notice, the account and 100% of Veteran data, including non-VA data, will be deleted.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">13. NOTIFICATION OF DATA BREACH</h2>
@@ -303,9 +303,9 @@ export default function PrivacyPolicy() {
       <p className="mb-6 text-justify">
         If you have questions or comments about this notice, you may email us at support@vetezclaim.com or contact us by post at:
         <br /><br />
-        EZ Claim LLC<br />
-        10532 Gatley Pl<br />
-        Orlando, FL 32832<br />
+        VetClaims Alliance (VetEZ Claim)<br />
+        20 N Orange Ave Suite 1100<br />
+        Orlando, FL 32801<br />
         United States
       </p>
 

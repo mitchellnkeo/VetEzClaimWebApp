@@ -10,7 +10,7 @@ export default function TermsConditions() {
         'USER REPRESENTATIONS',
         'USER REGISTRATION',
         'PURCHASES AND PAYMENT',
-        'SUBSCRIPTIONS',
+        'VOLUNTARY DONATIONS',
         'PROHIBITED ACTIVITIES',
         'USER GENERATED CONTRIBUTIONS',
         'CONTRIBUTION LICENSE',
@@ -147,16 +147,16 @@ export default function TermsConditions() {
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">AGREEMENT TO OUR LEGAL TERMS</h2>
       <p className="mb-6 text-justify">
-        We are Vet EZ Claim LLC (<span className="font-bold">Company</span>, <span className="font-bold">we</span>, <span className="font-bold">us</span>), Suite 1100, Orlando, FL 32801.
+        We are VetClaims Alliance, a nonprofit corporation (<span className="font-bold">Company</span>, <span className="font-bold">we</span>, <span className="font-bold">us</span>), operating the VetEZ Claim applications, with offices at 20 N Orange Ave Suite 1100, Orlando, FL 32801.
       </p>
       <p className="mb-6 text-justify">
-        We operate the mobile application Vet Ez Claim (the "App"), as well as any other related products and services that refer to or link to these legal terms (the <span className="font-bold">Legal Terms</span>) (collectively, the <span className="font-bold">Services</span>).
+        We operate the mobile and web applications VetEZ Claim (the "App"), as well as any other related products and services that refer to or link to these legal terms (the <span className="font-bold">Legal Terms</span>) (collectively, the <span className="font-bold">Services</span>).
       </p>
       <p className="mb-6 text-justify">
         You can contact us by phone at (+1)2532795754, email at paul@vetezclaim.com, or by mail to 20 N Orange Ave Suite 1100, Orlando, FL 32801.
       </p>
       <p className="mb-6 text-justify">
-        These Legal Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity, and Vet EZ Claim LLC, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all of these Legal Terms. If you do not agree with all of these legal terms, then you are expressly prohibited from using the services and you must discontinue use immediately.
+        These Legal Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity, and VetClaims Alliance, a nonprofit corporation, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all of these Legal Terms. If you do not agree with all of these legal terms, then you are expressly prohibited from using the services and you must discontinue use immediately.
         <br /><br />
         We will provide you with prior notice of any scheduled changes to the Services you are using. The modified Legal Terms will become effective upon posting or notifying you from suppourt@vetezclaim.com, as stated in the email message. By continuing to use the Services after the effective date of any changes, you agree to be bound by the modified terms.
         <br /><br />
@@ -258,9 +258,18 @@ export default function TermsConditions() {
         We reserve the right to refuse any order placed through the Services. We may, in our sole discretion, limit or cancel quantities purchased per person, per household, or per order. These restrictions may include orders placed by or under the same customer account, the same payment method, and/or orders that use the same billing or shipping address. We reserve the right to limit or prohibit orders that, in our sole judgment, appear to be placed by dealers, resellers, or distributors.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4">6. SUBSCRIPTIONS</h2>
+      <h2 className="text-2xl font-semibold mt-8 mb-4">6. VOLUNTARY DONATIONS</h2>
       <p className="mb-6 text-justify">
-        Billing Cycle. The subscription fee for the Services and/or any portion of the Services may be automatically renewed at the end of each defined period (each, a "Billing Cycle") unless you cancel your subscription or we cancel it. You must cancel your subscription before it renews to avoid billing of the next periodic subscription fee to your Account. We will bill the periodic subscription fee to the payment method you provide to us during registration (or to a different payment method if you change your payment information).
+        Access to core VetEZ Claim features does not require payment. After you create an account and complete your profile, you may use the Services without paying a subscription fee or making a donation.
+      </p>
+      <p className="mb-6 text-justify">
+        We may offer optional one-time or recurring donations to support our nonprofit mission. Donations are voluntary, are not required to access or use the Services, and do not purchase membership or premium feature access. When available, donations may be processed by a third-party payment provider and are subject to that provider&apos;s terms.
+      </p>
+      <p className="mb-6 text-justify">
+        Unless otherwise required by law or stated at the time of donation, donations are non-refundable. Recurring donations, if offered, will renew only if you opt in and may be canceled through the method provided at the time of donation or by contacting us at suppourt@vetezclaim.com.
+      </p>
+      <p className="mb-6 text-justify">
+        Nothing in this section constitutes tax advice. Whether any donation is tax-deductible depends on your circumstances and applicable law; consult a tax professional.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">7. PROHIBITED ACTIVITIES</h2>
@@ -338,7 +347,7 @@ export default function TermsConditions() {
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">15. GOVERNING LAW</h2>
       <p className="mb-6 text-justify">
-        These Legal Terms shall be governed by and defined following the laws of the United States. Vet EZ Claim LLC and yourself irrevocably consent that the courts of the United States shall have exclusive jurisdiction to resolve any dispute which may arise in connection with these Legal Terms.
+        These Legal Terms shall be governed by and defined following the laws of the United States. VetClaims Alliance, a nonprofit corporation, and yourself irrevocably consent that the courts of the United States shall have exclusive jurisdiction to resolve any dispute which may arise in connection with these Legal Terms.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">16. DISPUTE RESOLUTION</h2>
@@ -396,7 +405,7 @@ export default function TermsConditions() {
         In order to resolve a complaint regarding the Services or to receive further information regarding use of the Services, please contact us at:
       </p>
       <p className="mb-6">
-        <span className="font-bold">Vet EZ Claim LLC</span><br />
+        <span className="font-bold">VetClaims Alliance (VetEZ Claim)</span><br />
         <span className="font-bold">20 N Orange Ave Suite 1100</span><br />
         <span className="font-bold">Orlando, FL 32801</span><br />
         <span className="font-bold">United States</span><br />

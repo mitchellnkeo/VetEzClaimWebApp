@@ -26,7 +26,6 @@ import SectionTitle from '@/components/Common/SectionTitle';
 import Divider from '@/components/Common/Divider';
 import DropDownExtended from '@/components/Common/DropDownExtended';
 import { StateData } from '@/utils/staticData';
-import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 export default function BuddyRequests() {
   const pageTitle = 'Buddy Requests';
@@ -34,7 +33,6 @@ export default function BuddyRequests() {
   const sigCanvas = useRef(null);
   const dispatch = useDispatch();
   const { user, uid } = useSelector((state) => state.auth);
-  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [buddyRequests, setBuddyRequests] = useState([]);
   const [open, setOpen] = useState(false);
   const [responseOpen, setResponseOpen] = useState(false);
@@ -91,7 +89,6 @@ export default function BuddyRequests() {
 
   useEffect(() => {
     if (!uid) return;
-    if (!isSubscribed) return;
     fetchForms();
   }, [uid]);
 
@@ -762,7 +759,6 @@ export default function BuddyRequests() {
         isOpen={outerToastOpen}
         onClose={() => setOuterToastOpen(false)}
       />
-      {isSubscribed != true && <SubscriptionRequired />}
       <FrontLayout title={pageTitle}>
         <Loader show={isloading} />
         <Breadcrumb preUrl="/forms" preTitle="Forms" currentTitle={pageTitle} />

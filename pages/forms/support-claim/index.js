@@ -23,7 +23,6 @@ import Breadcrumb from '@/components/Common/Breadcrumb';
 import { StateData } from '@/utils/staticData';
 import Divider from '@/components/Common/Divider';
 import DropDownExtended from '@/components/Common/DropDownExtended';
-import SubscriptionRequired from '@/components/Common/SubscriptionRequired';
 
 const signatureOption = [
   {
@@ -39,7 +38,6 @@ export default function BoardAppealForm() {
 
   const [isLoading, setIsLoading] = useState(false);
   const { user, uid } = useSelector((state) => state.auth);
-  const { isSubscribed } = useSelector((state) => state.revenueCat);
   const [recordExists, setRecordsExists] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({});
@@ -81,7 +79,6 @@ export default function BoardAppealForm() {
         preTitle="Form Menu"
         currentTitle={formTitle}
       />
-      {isSubscribed != true && <SubscriptionRequired />}
       <Formik
         initialValues={initialValues}
         validationSchema={SupportOfClaimValidationSchema}
@@ -178,7 +175,6 @@ export default function BoardAppealForm() {
 
           useEffect(() => {
             if (!router.isReady) return;
-            if (!isSubscribed) return;
             loadData();
           }, [uid, router.isReady, router.query]);
 

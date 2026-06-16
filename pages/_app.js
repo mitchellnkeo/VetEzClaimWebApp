@@ -12,6 +12,10 @@ import { toast } from 'react-toastify';
 import { appWithI18Next } from 'ni18n';
 import { ni18nConfig } from '../ni18n.config.js';
 
+// SOW: VetEZ Claim is free after login/profile. Donations via Zeffy (external).
+// RevenueCat/IAP init disabled until legacy subscription code is fully removed.
+const ENABLE_REVENUECAT = false;
+
 // Perfect Scrollbar
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
@@ -60,9 +64,9 @@ const RevenueCatInitializer = ({ children }) => {
     process.env.NODE_ENV === 'development' &&
       console.log('isInitialized', isInitialized);
 
-    if (accessToken) {
+    if (accessToken && ENABLE_REVENUECAT) {
       dispatch(initializeRevenueCat(accessToken));
-      startSubscriptionPolling();
+      // startSubscriptionPolling();
     }
   }, [dispatch, isInitialized]);
 
