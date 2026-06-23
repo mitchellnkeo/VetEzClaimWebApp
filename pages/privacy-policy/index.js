@@ -1,5 +1,10 @@
 import FrontLayout from '@/components/layouts/FrontLayout';
 import Breadcrumb from '@/components/Common/Breadcrumb';
+import {
+  COMPANY_ADDRESS_CITY_STATE_ZIP,
+  COMPANY_ADDRESS_STREET,
+  SUPPORT_EMAIL,
+} from '@/constants/branding';
 
 
 export default function PrivacyPolicy() {
@@ -301,11 +306,11 @@ export default function PrivacyPolicy() {
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">15. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</h2>
       <p className="mb-6 text-justify">
-        If you have questions or comments about this notice, you may email us at support@vetezclaim.com or contact us by post at:
+        If you have questions or comments about this notice, you may email us at {SUPPORT_EMAIL} or contact us by post at:
         <br /><br />
         VetClaims Alliance (VetEZ Claim)<br />
-        20 N Orange Ave Suite 1100<br />
-        Orlando, FL 32801<br />
+        {COMPANY_ADDRESS_STREET}<br />
+        {COMPANY_ADDRESS_CITY_STATE_ZIP}<br />
         United States
       </p>
 

@@ -1,5 +1,10 @@
 import FrontLayout from '@/components/layouts/FrontLayout';
 import Breadcrumb from '@/components/Common/Breadcrumb';
+import {
+  COMPANY_ADDRESS_FULL,
+  GOVERNING_LAW_STATE,
+  SUPPORT_EMAIL,
+} from '@/constants/branding';
 
 
 export default function Accessibility() {
@@ -48,10 +53,9 @@ export default function Accessibility() {
     
       const contactInfo = [
         'VetClaims Alliance (VetEZ Claim)',
-        '20 N Orange Ave Suite 1100, Orlando, FL 32801, USA',
-        'Orlando, FL 32801',
+        `${COMPANY_ADDRESS_FULL}, USA`,
         'United States',
-        'suppourt@vetezclaim.com',
+        SUPPORT_EMAIL,
       ];
     
 
@@ -78,7 +82,7 @@ export default function Accessibility() {
      
 
       <p className="mb-6 text-justify">
-        VetEZ Claim is licensed to You (End-User) by VetClaims Alliance, a nonprofit corporation, located and registered at 20 N Orange Ave Suite 1100, Orlando, FL 32801, USA, Orlando, Florida 32801, United States (<span className="font-bold">"Licensor"</span>), for use only under the terms of this License Agreement.
+        VetEZ Claim is licensed to You (End-User) by VetClaims Alliance, a nonprofit corporation, located and registered at {COMPANY_ADDRESS_FULL}, United States (<span className="font-bold">"Licensor"</span>), for use only under the terms of this License Agreement.
         <br /><br />
         By downloading the Licensed Application from Apple's software distribution platform ("App Store") and Google's software distribution platform ("Play Store"), and any update thereto (as permitted by this License Agreement), You indicate that You agree to be bound by all of the terms and conditions of this License Agreement, and that You accept this License Agreement. App Store and Play Store are referred to in this License Agreement as <span className="font-bold">"Services."</span>
         <br /><br />
@@ -239,7 +243,7 @@ export default function Accessibility() {
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">16. APPLICABLE LAW</h2>
       <p className="mb-6 text-justify">
-        This License Agreement is governed by the laws of the State of Florida excluding its conflicts of law rules.
+        This License Agreement is governed by the laws of the State of {GOVERNING_LAW_STATE} excluding its conflicts of law rules.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">17. MISCELLANEOUS</h2>

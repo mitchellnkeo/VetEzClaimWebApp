@@ -1,5 +1,12 @@
 import FrontLayout from '@/components/layouts/FrontLayout';
 import Breadcrumb from '@/components/Common/Breadcrumb';
+import {
+  COMPANY_ADDRESS_CITY_STATE_ZIP,
+  COMPANY_ADDRESS_FULL,
+  COMPANY_ADDRESS_STREET,
+  GOVERNING_LAW_STATE,
+  SUPPORT_EMAIL,
+} from '@/constants/branding';
 
 
 export default function TermsConditions() {
@@ -147,18 +154,18 @@ export default function TermsConditions() {
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">AGREEMENT TO OUR LEGAL TERMS</h2>
       <p className="mb-6 text-justify">
-        We are VetClaims Alliance, a nonprofit corporation (<span className="font-bold">Company</span>, <span className="font-bold">we</span>, <span className="font-bold">us</span>), operating the VetEZ Claim applications, with offices at 20 N Orange Ave Suite 1100, Orlando, FL 32801.
+        We are VetClaims Alliance, a nonprofit corporation (<span className="font-bold">Company</span>, <span className="font-bold">we</span>, <span className="font-bold">us</span>), operating the VetEZ Claim applications, with offices at {COMPANY_ADDRESS_FULL}.
       </p>
       <p className="mb-6 text-justify">
         We operate the mobile and web applications VetEZ Claim (the "App"), as well as any other related products and services that refer to or link to these legal terms (the <span className="font-bold">Legal Terms</span>) (collectively, the <span className="font-bold">Services</span>).
       </p>
       <p className="mb-6 text-justify">
-        You can contact us by phone at (+1)2532795754, email at paul@vetezclaim.com, or by mail to 20 N Orange Ave Suite 1100, Orlando, FL 32801.
+        You can contact us by email at {SUPPORT_EMAIL} or by mail to {COMPANY_ADDRESS_FULL}.
       </p>
       <p className="mb-6 text-justify">
         These Legal Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity, and VetClaims Alliance, a nonprofit corporation, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all of these Legal Terms. If you do not agree with all of these legal terms, then you are expressly prohibited from using the services and you must discontinue use immediately.
         <br /><br />
-        We will provide you with prior notice of any scheduled changes to the Services you are using. The modified Legal Terms will become effective upon posting or notifying you from suppourt@vetezclaim.com, as stated in the email message. By continuing to use the Services after the effective date of any changes, you agree to be bound by the modified terms.
+        We will provide you with prior notice of any scheduled changes to the Services you are using. The modified Legal Terms will become effective upon posting or notifying you from support@vetezclaim.com, as stated in the email message. By continuing to use the Services after the effective date of any changes, you agree to be bound by the modified terms.
         <br /><br />
         The Services are intended for users who are at least 18 years old. Persons under the age of 18 are not permitted to use or register for the Services.
         <br /><br />
@@ -201,7 +208,7 @@ export default function TermsConditions() {
       <p className="mb-6 text-justify">
         Except as set out in this section or elsewhere in our Legal Terms, no part of the Services and no Content or Marks may be copied or reproduced. No part may be republished, uploaded, posted, publicly displayed, or encoded. No part may be translated, transmitted, distributed, sold, licensed, or otherwise exploited for any commercial purpose whatsoever. Exceptions to this require our express prior written permission.
         <br /><br />
-        If you want to make any use of the Services, Content, or Marks, please send your request to: suppourt@vetezclaim.com. This is for any use other than as set out in this section or elsewhere in our Legal Terms. If we grant you the permission to post, reproduce, or publicly display any part of our Services or Content, you must identify us as the owners or licensors of the Services, Content, or Marks. You must also ensure that any copyright or proprietary notice appears or is visible on posting, reproducing, or displaying our Content.
+        If you want to make any use of the Services, Content, or Marks, please send your request to: support@vetezclaim.com. This is for any use other than as set out in this section or elsewhere in our Legal Terms. If we grant you the permission to post, reproduce, or publicly display any part of our Services or Content, you must identify us as the owners or licensors of the Services, Content, or Marks. You must also ensure that any copyright or proprietary notice appears or is visible on posting, reproducing, or displaying our Content.
         <br /><br />
         We reserve all rights not expressly granted to you in and to the Services, Content, and Marks.
         <br /><br />
@@ -266,7 +273,7 @@ export default function TermsConditions() {
         We may offer optional one-time or recurring donations to support our nonprofit mission. Donations are voluntary, are not required to access or use the Services, and do not purchase membership or premium feature access. When available, donations may be processed by a third-party payment provider and are subject to that provider&apos;s terms.
       </p>
       <p className="mb-6 text-justify">
-        Unless otherwise required by law or stated at the time of donation, donations are non-refundable. Recurring donations, if offered, will renew only if you opt in and may be canceled through the method provided at the time of donation or by contacting us at suppourt@vetezclaim.com.
+        Unless otherwise required by law or stated at the time of donation, donations are non-refundable. Recurring donations, if offered, will renew only if you opt in and may be canceled through the method provided at the time of donation or by contacting us at support@vetezclaim.com.
       </p>
       <p className="mb-6 text-justify">
         Nothing in this section constitutes tax advice. Whether any donation is tax-deductible depends on your circumstances and applicable law; consult a tax professional.
@@ -347,12 +354,12 @@ export default function TermsConditions() {
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">15. GOVERNING LAW</h2>
       <p className="mb-6 text-justify">
-        These Legal Terms shall be governed by and defined following the laws of the United States. VetClaims Alliance, a nonprofit corporation, and yourself irrevocably consent that the courts of the United States shall have exclusive jurisdiction to resolve any dispute which may arise in connection with these Legal Terms.
+        These Legal Terms and your use of the Services are governed by and construed in accordance with the laws of the State of {GOVERNING_LAW_STATE}. These laws are applicable to agreements made and to be entirely performed within the State of {GOVERNING_LAW_STATE}, without regard to its conflict of law principles. VetClaims Alliance, a nonprofit corporation, and yourself irrevocably consent that the state and federal courts located in Tacoma, {GOVERNING_LAW_STATE} shall have exclusive jurisdiction to resolve any dispute which may arise in connection with these Legal Terms.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">16. DISPUTE RESOLUTION</h2>
       <p className="mb-6 text-justify">
-        Any legal action of whatever nature brought by either you or us (collectively, the "Parties" and individually, a "Party") shall be commenced or prosecuted in the state and federal courts located in the United States, and the Parties hereby consent to, and waive all defenses of lack of personal jurisdiction and forum non conveniens with respect to venue and jurisdiction in such state and federal courts. Application of the United Nations Convention on Contracts for the International Sale of Goods and the Uniform Computer Information Transaction Act (UCITA) are excluded from these Legal Terms.
+        Any legal action of whatever nature brought by either you or us (collectively, the "Parties" and individually, a "Party") shall be commenced or prosecuted in the state and federal courts located in Tacoma, {GOVERNING_LAW_STATE}, and the Parties hereby consent to, and waive all defenses of lack of personal jurisdiction and forum non conveniens with respect to venue and jurisdiction in such state and federal courts. Application of the United Nations Convention on Contracts for the International Sale of Goods and the Uniform Computer Information Transaction Act (UCITA) are excluded from these Legal Terms.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">17. CORRECTIONS</h2>
@@ -406,11 +413,10 @@ export default function TermsConditions() {
       </p>
       <p className="mb-6">
         <span className="font-bold">VetClaims Alliance (VetEZ Claim)</span><br />
-        <span className="font-bold">20 N Orange Ave Suite 1100</span><br />
-        <span className="font-bold">Orlando, FL 32801</span><br />
+        <span className="font-bold">{COMPANY_ADDRESS_STREET}</span><br />
+        <span className="font-bold">{COMPANY_ADDRESS_CITY_STATE_ZIP}</span><br />
         <span className="font-bold">United States</span><br />
-        <span className="font-bold">Phone: (+1)2532795754</span><br />
-        <span className="font-bold">suppourt@vetezclaim.com</span>
+        <span className="font-bold">{SUPPORT_EMAIL}</span>
       </p>
     </div>
       
