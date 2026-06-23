@@ -134,9 +134,9 @@ const LoginForm = () => {
       toast.success('Login Success!');
       setTimeout(() => {
         if (isAiAssistant) {
-          window.location.replace(`/?assist=true`);
+          window.location.replace(`/dashboard?assist=true`);
         } else {
-          window.location.replace('/');
+          window.location.replace('/dashboard');
         }
       }, 500);
       process.env.NODE_ENV === 'development' && console.log('User:', result);
@@ -170,9 +170,9 @@ const LoginForm = () => {
       toast.success('OTP verified successfully');
       setTimeout(() => {
         if (isAiAssistant) {
-          window.location.replace(`/?assist=true`);
+          window.location.replace(`/dashboard?assist=true`);
         } else {
-          window.location.replace('/');
+          window.location.replace('/dashboard');
         }
       }, 500);
     } catch (error) {

@@ -88,7 +88,7 @@ const Header = () => {
       <div className="shadow-sm">
         <div className="relative flex w-full items-center bg-[#006092] px-5 py-2.5 dark:bg-gray">
           <div className="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
-            <Link href="/" className="main-logo flex shrink-0 items-center">
+            <Link href="/dashboard" className="main-logo flex shrink-0 items-center">
               <img
                 className="inline w-12 ltr:-ml-1 rtl:-mr-1"
                 src="/assets/images/logo.svg"

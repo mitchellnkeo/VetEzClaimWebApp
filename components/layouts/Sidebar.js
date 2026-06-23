@@ -47,7 +47,7 @@ const Sidebar = () => {
 
   const menuList = [
     {
-      path: '/',
+      path: '/dashboard',
       title: 'Dashboard',
       icon: <DashboardIcon />,
     },
@@ -106,7 +106,7 @@ const Sidebar = () => {
         <div className="h-full bg-[#006092] dark:bg-gray">
           {/* Logo & toggle button */}
           <div className="flex items-center justify-between px-4 py-3 ">
-            <Link href="/" className="main-logo flex shrink-0 items-center">
+            <Link href="/dashboard" className="main-logo flex shrink-0 items-center">
               <img
                 className="w-40 flex-none"
                 src="/assets/images/vetez-sidelogo.png"

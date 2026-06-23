@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 // List of paths that don't require authentication
 const authExemptPaths = [
+  '/',
   '/login',
   '/registration',
   '/forgot-password',
@@ -15,15 +16,17 @@ const authExemptPaths = [
   '/calculators/va-rating',
 ];
 
+const authEntryPaths = ['/', '/login', '/registration'];
+
 export async function middleware(request) {
   const path = request.nextUrl.pathname;
   const accessToken = request.cookies.get('user_access_token')?.value;
 
   // Allow access to auth-exempt paths
-  if (authExemptPaths.some(exemptPath => path.startsWith(exemptPath))) {
-    // If user is already logged in, redirect to dashboard
-    if (accessToken) {
-      return NextResponse.redirect(new URL('/', request.url));
+  if (authExemptPaths.some((exemptPath) => path.startsWith(exemptPath))) {
+    // Signed-in users skip the welcome/login/register entry screens
+    if (accessToken && authEntryPaths.some((entryPath) => path === entryPath)) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
     }
     return NextResponse.next();
   }

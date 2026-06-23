@@ -23,7 +23,7 @@ const Profile = () => {
       <div>
         <ul className="flex space-x-2 rtl:space-x-reverse">
           <li>
-            <Link href="/" className="text-primary hover:underline">
+            <Link href="/dashboard" className="text-primary hover:underline">
               Home
             </Link>
           </li>

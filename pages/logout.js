@@ -19,7 +19,7 @@ const Logout = () => {
         localStorage.removeItem("chatSessionId");
         localStorage.removeItem("anonymousUid");
         window.location.replace(
-          redirectUrl ? `/login?redirectUrl=${redirectUrl}` : `/login`
+          redirectUrl ? `/?redirectUrl=${redirectUrl}` : `/`
         );
       })
       .catch((error) => {
