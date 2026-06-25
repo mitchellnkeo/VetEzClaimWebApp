@@ -93,12 +93,13 @@ const zipCodeValidation = yup
     'Zip Code must be in the format XXXXX or XXXXX-XXXX'
   );
 
+const US_PHONE_REGEX = /^(\d{10}|\d{3}-\d{3}-\d{4})$/;
+const US_PHONE_MESSAGE =
+  'Enter a 10-digit phone number (5554443333 or 555-444-3333).';
+
 const phoneValidation = yup
   .string()
-  .matches(
-    /^\d{3}-\d{3}-\d{4}$/,
-    'Phone number must be in the format xxx-xxx-xxxx'
-  )
+  .matches(US_PHONE_REGEX, US_PHONE_MESSAGE)
   .notRequired();
 
 const internationalPhoneValidation = yup
@@ -186,7 +187,7 @@ export const SignUpValidationSchema = yup.object().shape({
     }),
   phone: yup
     .string()
-    .matches(/^\d{3}-\d{3}-\d{4}$/, 'Phone number is not valid.')
+    .matches(US_PHONE_REGEX, US_PHONE_MESSAGE)
     .required('Phone number is required.'),
   agreeToTerms: yup
     .bool()
@@ -204,10 +205,7 @@ export const profileValidation = yup.object().shape({
   birthday: yup.string().required('Date of Birth is required'),
   phone: yup
     .string()
-    .matches(
-      /^\d{3}-\d{3}-\d{4}$/,
-      'Phone number must be in the format xxx-xxx-xxxx.'
-    )
+    .matches(US_PHONE_REGEX, US_PHONE_MESSAGE)
     .required('Phone Number is required.'),
   ssn: ssnValidation,
   branchOfService: yup.string().required('Branch of Service is required.'),

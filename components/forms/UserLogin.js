@@ -117,7 +117,7 @@ const LoginForm = () => {
       ).unwrap();
 
       setIsOtpSent(true);
-      toast.success('OTP sent. Please verify to continue.');
+      toast.success('A verification code was sent to your email.');
     } catch (err) {
       process.env.NODE_ENV === 'development' &&
         console.error('Login failed:', err);
@@ -131,13 +131,18 @@ const LoginForm = () => {
     setLoadingGoogle(true);
     try {
       const result = await dispatch(googleLogin()).unwrap();
-      toast.success('Login Success!');
+      toast.success(
+        result.isNewProfile
+          ? 'Account created! Complete your profile to get started.'
+          : 'Login Success!'
+      );
       setTimeout(() => {
-        if (isAiAssistant) {
-          window.location.replace(`/dashboard?assist=true`);
-        } else {
-          window.location.replace('/dashboard');
-        }
+        const destination = result.isNewProfile
+          ? '/profile/settings'
+          : isAiAssistant
+            ? `/dashboard?assist=true`
+            : '/dashboard';
+        window.location.replace(destination);
       }, 500);
       process.env.NODE_ENV === 'development' && console.log('User:', result);
     } catch (err) {
@@ -304,13 +309,16 @@ const LoginForm = () => {
 
             {isOtpSent && (
               <div>
-                <label htmlFor="otp">OTP</label>
+                <p className="mb-2 text-sm text-white/90">
+                  Enter the 6-digit code sent to your email address.
+                </p>
+                <label htmlFor="otp">Verification code</label>
                 <Field
                   autoComplete="off"
                   id="otp"
                   name="otp"
                   className="form-input"
-                  placeholder="Enter OTP"
+                  placeholder="Enter code"
                   type="text"
                   maxLength={6}
                 />
@@ -356,7 +364,7 @@ const LoginForm = () => {
                 loading={isSubmitting}
                 // onClick={isOtpSent ? handleOtpSubmission : handleLogin}
               >
-                {isOtpSent ? 'Submit OTP' : 'Sign In'}
+                {isOtpSent ? 'Verify email' : 'Sign In'}
               </Button>
             </div>
 

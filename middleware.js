@@ -14,6 +14,9 @@ const authExemptPaths = [
   // Same calculators as above, nested under /calculators (no login required)
   '/calculators/va-back-pay',
   '/calculators/va-rating',
+  '/donate',
+  '/terms-conditions',
+  '/privacy-policy',
 ];
 
 const authEntryPaths = ['/', '/login', '/registration'];

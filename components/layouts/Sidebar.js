@@ -84,7 +84,7 @@ const Sidebar = () => {
       title: 'Donate',
       icon: <SubscriptionIcon />,
       keyID: 'Donate',
-      disabled: buttonStatus < 2,
+      disabled: false,
     },
     {
       path: '/analyze',

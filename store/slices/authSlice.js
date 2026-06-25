@@ -7,7 +7,7 @@ import {
   EmailAuthProvider,
   signInAnonymously,
 } from 'firebase/auth';
-import { doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { auth, db, provider } from '@/firebase/firebase';
 import { sendOtp, verifyOtp } from '@/services/auth';
 import { seed, deltCookie } from '@/helpers/sessionHelper';
@@ -114,7 +114,8 @@ export const googleLogin = createAsyncThunk(
 
       const profileRef = doc(db, 'profile', user.uid);
       const profileSnap = await getDoc(profileRef);
-      const profileData = profileSnap.data();
+      let profileData = profileSnap.data();
+      let isNewProfile = false;
       if (
         profileData?.isDeactivated ||
         (profileData?.deletionDate && profileData.deletionDate.length > 0)
@@ -141,10 +142,38 @@ export const googleLogin = createAsyncThunk(
           }
         }
       } else if (!profileData) {
-        await deleteDoc(profileRef);
-        await user.delete();
-        await signOut(auth);
-        return rejectWithValue('Register with email and password first.');
+        const displayName = (user.displayName || '').trim();
+        const nameParts = displayName ? displayName.split(/\s+/) : [];
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+        const now = new Date();
+        const createdAt = `${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}/${now.getFullYear()}`;
+
+        const newProfile = {
+          createdAt,
+          firstName,
+          lastName,
+          email: user.email || '',
+          birthday: '',
+          phone: '',
+          street: '',
+          unitNumber: '',
+          city: '',
+          province: '',
+          country: '',
+          zipCode: '',
+          agreeToTerms: true,
+          agreeToReceiveEmails: true,
+          isDeactivated: false,
+          isAccountLive: true,
+          deletionDate: '',
+          uid: user.uid,
+          hasChatbotConsent: false,
+        };
+
+        await setDoc(profileRef, newProfile);
+        profileData = newProfile;
+        isNewProfile = true;
       }
       seed(user.uid);
       return {
@@ -152,6 +181,7 @@ export const googleLogin = createAsyncThunk(
         email: user.email,
         profileData: profileData,
         accessToken: user.uid,
+        isNewProfile,
       };
     } catch (error) {
       process.env.NODE_ENV === 'development' && console.log('err >> ', error);
@@ -417,7 +447,7 @@ export const authSlice = createSlice({
     });
     builder.addCase(updateProfile.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.user = action.payload;
+      state.user = { ...state.user, ...action.payload };
       state.error = null;
     });
     builder.addCase(updateProfile.rejected, (state, action) => {

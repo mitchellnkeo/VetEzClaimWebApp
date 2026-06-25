@@ -6,6 +6,7 @@ import { updateProfile } from '@/store/slices/authSlice';
 import TextError from '@/components/TextError';
 import DateSelector from '../Common/DateSelector';
 import { useRouter } from 'next/router';
+import { getProfileStatus, normalizeUSPhone } from '@/utils/common';
 import { profileValidation } from '@/utils/validators';
 import { db } from '@/firebase/firebase';
 import { doc, getDoc } from 'firebase/firestore';
@@ -84,8 +85,12 @@ const UpdateProfileForm = () => {
     process.env.NODE_ENV === 'development' &&
       console.log(' >> handleUpdateProfile : ', values);
     try {
+      const normalizedValues = {
+        ...values,
+        phone: normalizeUSPhone(values.phone),
+      };
       const updatePostBody = Object.fromEntries(
-        Object.entries(values).filter(
+        Object.entries(normalizedValues).filter(
           ([, value]) => value !== '' && value !== null
         )
       );
@@ -98,6 +103,11 @@ const UpdateProfileForm = () => {
       ).unwrap();
       await fetchDataOnMount();
       toast.success('Profile update successfully!');
+
+      const mergedUser = { ...user, ...updatePostBody };
+      if (getProfileStatus(mergedUser) === 2) {
+        router.push('/dashboard');
+      }
     } catch (error) {
       toast.error('Profile update failed!');
       process.env.NODE_ENV === 'development' && console.log('error', error);
@@ -175,7 +185,7 @@ const UpdateProfileForm = () => {
                     id="phone"
                     name="phone"
                     className="form-input"
-                    placeholder="Enter Phone Number"
+                    placeholder="5554443333 or 555-444-3333"
                     maxLength={12}
                   />
                   <ErrorMessage name="phone" component={TextError} />

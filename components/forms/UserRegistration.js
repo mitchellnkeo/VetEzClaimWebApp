@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import { getCookie } from 'cookies-next';
 import moment from 'moment';
 import DateSelector from '../Common/DateSelector';
+import { normalizeUSPhone } from '@/utils/common';
 
 const UserRegistration = () => {
   const router = useRouter();
@@ -60,7 +61,7 @@ const UserRegistration = () => {
         lastName: values.lastName,
         email: values.email,
         birthday: values.birthday,
-        phone: values.phone,
+        phone: normalizeUSPhone(values.phone),
         street: '',
         unitNumber: '',
         city: '',
@@ -206,7 +207,7 @@ const UserRegistration = () => {
                   id="phone"
                   name="phone"
                   className="form-input w-full"
-                  placeholder="XXX-XXX-XXXX"
+                  placeholder="5554443333 or 555-444-3333"
                   type="text"
                   maxLength={12}
                 />

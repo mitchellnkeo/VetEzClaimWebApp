@@ -1,3 +1,15 @@
+/** Accept 5554443333 or 555-444-3333; store dashed for PDF field splitting. */
+export const normalizeUSPhone = (value) => {
+  if (!value || typeof value !== 'string') {
+    return value;
+  }
+  const digits = value.replace(/\D/g, '');
+  if (digits.length !== 10) {
+    return value.trim();
+  }
+  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+};
+
 export const isUserOver18 = (dob) => {
   if (!dob || typeof dob !== 'string') {
     return false;

@@ -10,11 +10,16 @@ const DONATE_DISCLAIMER_PENDING =
 const DONATE_DISCLAIMER_CONFIGURED =
   `${DONATE_DISCLAIMER_BASE} You will complete your gift on Zeffy's secure donation page (one-time or monthly).`;
 
+const ZEFFY_CAMPAIGN_URL =
+  'https://www.zeffy.com/en-US/donation-form/suppourt-assisting-veterans';
+
 export const ZEFFY_DONATION_FORM_URL =
-  process.env.NEXT_PUBLIC_ZEFFY_DONATION_FORM_URL?.trim() || '';
+  process.env.NEXT_PUBLIC_ZEFFY_DONATION_FORM_URL?.trim() ||
+  ZEFFY_CAMPAIGN_URL;
 
 export const ZEFFY_EMBED_FORM_URL =
-  process.env.NEXT_PUBLIC_ZEFFY_EMBED_FORM_URL?.trim() || '';
+  process.env.NEXT_PUBLIC_ZEFFY_EMBED_FORM_URL?.trim() ||
+  'https://www.zeffy.com/embed/donation-form/suppourt-assisting-veterans?modal=true';
 
 export const ZEFFY_EMBED_SCRIPT_URL =
   'https://zeffy-scripts.s3.ca-central-1.amazonaws.com/embed-form-script.min.js';
